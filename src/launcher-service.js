@@ -33,8 +33,10 @@ class LauncherService {
       cacheDir: path.join(root, 'cache'),
       authFile: path.join(root, 'auth.json'),
       discordAuthFile: path.join(root, 'discord-auth.json'),
-      managedFile: path.join(root, 'managed-files.json')
+      managedFile: path.join(root, 'managed-files.json'),
+      preferencesFile: path.join(root, 'launcher-preferences.json')
     };
+    this.preferences = this.loadPreferences();
     this.activateProfile(this.profileId);
     for (const p of Object.values(this.paths)) if (!path.extname(p)) fs.mkdirSync(p, { recursive: true });
     fs.mkdirSync(path.join(this.paths.gameDir, 'mods'), { recursive: true });
@@ -71,6 +73,7 @@ class LauncherService {
     this.config.minecraft = { ...(this.baseConfig.minecraft || {}), ...(profile.minecraft || {}) };
     this.config.minecraft.serverAddress = profile.serverAddress || this.config.minecraft.serverAddress || 'poke.vilanexo.com';
     this.config.minecraft.serverPort = Number(profile.serverPort || this.config.minecraft.serverPort || 25565);
+    this.applyPreferences();
     this.config.distribution = { ...(this.baseConfig.distribution || {}), ...(profile.distribution || {}) };
     if (this.paths) {
       this.paths.gameDir = path.join(this.paths.root, 'profiles', profileId);
@@ -81,6 +84,30 @@ class LauncherService {
       this.state.profileId = profileId;
       this.state.profileName = profile.name || profileId;
     }
+  }
+  loadPreferences() { try { return JSON.parse(fs.readFileSync(this.paths.preferencesFile, 'utf8')); } catch { return {}; } }
+  savePreferences() { fs.mkdirSync(this.paths.root, { recursive: true }); fs.writeFileSync(this.paths.preferencesFile, JSON.stringify(this.preferences, null, 2)); }
+  applyPreferences() {
+    if (!this.preferences) return;
+    const min = Number(this.preferences.memoryMinMb);
+    const max = Number(this.preferences.memoryMaxMb);
+    if (Number.isFinite(min)) this.config.minecraft.memoryMinMb = min;
+    if (Number.isFinite(max)) this.config.minecraft.memoryMaxMb = max;
+    if (['balanced', 'performance', 'quality'].includes(this.preferences.performance)) this.config.minecraft.performance = this.preferences.performance;
+  }
+  updateSettings(settings = {}) {
+    const min = Math.round(Number(settings.memoryMinMb));
+    const max = Math.round(Number(settings.memoryMaxMb));
+    const performance = String(settings.performance || 'balanced');
+    if (!Number.isFinite(min) || min < 1024 || min > 16384) throw new Error('A memória inicial deve ficar entre 1024 e 16384 MB.');
+    if (!Number.isFinite(max) || max < 2048 || max > 32768) throw new Error('A memória máxima deve ficar entre 2048 e 32768 MB.');
+    if (min > max) throw new Error('A memória inicial não pode ser maior que a memória máxima.');
+    if (!['balanced', 'performance', 'quality'].includes(performance)) throw new Error('Modo de desempenho inválido.');
+    this.preferences = { memoryMinMb: min, memoryMaxMb: max, performance };
+    this.savePreferences();
+    this.applyPreferences();
+    this.log(`Configurações salvas: ${min}-${max} MB, modo ${performance}.`, 'SUCESSO');
+    return this.getPublicConfig();
   }
   async checkForUpdate() {
     const url = this.config.launcher?.updateUrl || 'https://www.vilanexo.com/launcher/update.json';
@@ -1214,6 +1241,11 @@ class LauncherService {
     }
 
     const memory = [`-Xms${this.config.minecraft.memoryMinMb}M`, `-Xmx${this.config.minecraft.memoryMaxMb}M`];
+    const performanceArgs = {
+      balanced: ['-XX:+UseG1GC', '-XX:MaxGCPauseMillis=200'],
+      performance: ['-XX:+UseG1GC', '-XX:+UseStringDeduplication', '-XX:MaxGCPauseMillis=100'],
+      quality: ['-XX:+UseG1GC', '-XX:MaxGCPauseMillis=300']
+    }[this.config.minecraft.performance || 'balanced'];
     // MantÃ©m o servidor salvo no Multiplayer e conecta diretamente ao clicar em Jogar.
     if (this.config.minecraft.serverAddress && !this.config.minecraft.serverAddress.includes('SEU-IP')) {
       gameArgs.push('--server', this.config.minecraft.serverAddress, '--port', String(this.config.minecraft.serverPort || 25565));
@@ -1237,7 +1269,7 @@ class LauncherService {
     try { fs.writeFileSync(path.join(this.paths.root, 'ultimo-launch.json'), JSON.stringify(debug, null, 2), 'utf8'); } catch {}
 
     this.log(`Launch ${(this.config.minecraft.loader || 'Fabric').toUpperCase()} preparado com ${dedupedCp.length} entradas no classpath.`, 'SUCESSO');
-    return { command: javaPath, args: [...memory, ...jvmArgs, v.mainClass, ...gameArgs] };
+    return { command: javaPath, args: [...memory, ...performanceArgs, ...jvmArgs, v.mainClass, ...gameArgs] };
   }
 
   nbtUtf(value) {

@@ -57,6 +57,7 @@ ipcMain.handle('window:maximize', () => mainWindow.isMaximized() ? mainWindow.un
 ipcMain.handle('window:close', () => mainWindow.close());
 
 ipcMain.handle('launcher:get-config', () => launcher.getPublicConfig());
+ipcMain.handle('launcher:update-settings', (_, settings) => launcher.updateSettings(settings));
 ipcMain.handle('launcher:get-state', () => launcher.getState());
 ipcMain.handle('launcher:check-update', () => launcher.checkForUpdate());
 ipcMain.handle('app:install-update', () => autoUpdater.quitAndInstall());

@@ -245,7 +245,10 @@ async function init() {
   const state = await window.vilaNexoLauncher.getState();
   updateState(state);
   renderHomeSkin();
-   $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
+    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
+   $('memoryMinMb').value = config.minecraft.memoryMinMb || 2048;
+   $('memoryMaxMb').value = config.minecraft.memoryMaxMb || 6144;
+   $('performanceMode').value = config.minecraft.performance || 'balanced';
   applyTheme(localStorage.getItem('vilanexo-theme') || '#8d46ff', false);
   setupSkinInteraction();
   logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Launcher iniciado.' });
@@ -381,6 +384,16 @@ document.querySelectorAll('.theme-presets button').forEach(b => b.onclick = () =
 $('resetTheme').onclick = () => applyTheme('#8d46ff');
 
 $('clearLogs').onclick = () => $('logBox').textContent = '';
+$('saveSettings').onclick = async () => {
+  const button = $('saveSettings');
+  try {
+    button.disabled = true;
+    config = await window.vilaNexoLauncher.updateSettings({ memoryMinMb: $('memoryMinMb').value, memoryMaxMb: $('memoryMaxMb').value, performance: $('performanceMode').value });
+    $('settingsMessage').textContent = 'Configurações salvas. Elas serão usadas no próximo jogo.';
+    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
+  } catch (e) { $('settingsMessage').textContent = e.message; }
+  finally { button.disabled = false; }
+};
 window.vilaNexoLauncher.onLog(logLine);
 window.vilaNexoLauncher.onMods(updateMods);
 window.vilaNexoLauncher.onProgress(p => {

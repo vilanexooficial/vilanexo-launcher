@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('vilaNexoLauncher', {
   getConfig: () => ipcRenderer.invoke('launcher:get-config'),
+  updateSettings: (settings) => ipcRenderer.invoke('launcher:update-settings', settings),
   getState: () => ipcRenderer.invoke('launcher:get-state'),
   checkUpdate: () => ipcRenderer.invoke('launcher:check-update'),
   installUpdate: () => ipcRenderer.invoke('app:install-update'),

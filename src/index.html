@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VilaNexo Launcher</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refresh.css"><link rel="stylesheet" href="wallpaper.css"><link rel="stylesheet" href="pokemon.css"><link rel="stylesheet" href="professional.css"><link rel="stylesheet" href="dashboard.css"><link rel="stylesheet" href="mockup.css"><link rel="stylesheet" href="stability.css"><link rel="stylesheet" href="skinfix.css"><link rel="stylesheet" href="home-skin.css"><link rel="stylesheet" href="reference-final.css"><link rel="stylesheet" href="final-fix.css"><link rel="stylesheet" href="creator-card.css"><link rel="stylesheet" href="dual-server.css"><link rel="stylesheet" href="skin-dual.css"><link rel="stylesheet" href="status-fix.css"><link rel="stylesheet" href="mods-list.css"></head>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VilaNexo Launcher</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refresh.css"><link rel="stylesheet" href="wallpaper.css"><link rel="stylesheet" href="pokemon.css"><link rel="stylesheet" href="professional.css"><link rel="stylesheet" href="dashboard.css"><link rel="stylesheet" href="mockup.css"><link rel="stylesheet" href="stability.css"><link rel="stylesheet" href="skinfix.css"><link rel="stylesheet" href="home-skin.css"><link rel="stylesheet" href="reference-final.css"><link rel="stylesheet" href="final-fix.css"><link rel="stylesheet" href="creator-card.css"><link rel="stylesheet" href="dual-server.css"><link rel="stylesheet" href="skin-dual.css"><link rel="stylesheet" href="status-fix.css"><link rel="stylesheet" href="mods-list.css"><link rel="stylesheet" href="settings-performance.css"></head>
 <body>
   <div class="bg"></div><div class="shade"></div>
   <header class="topbar"><div class="brand"><span class="brand-kicker">VILANEXO</span><span class="brand-title">COBBLEMON</span></div><div class="drag"></div><button id="min">—</button><button id="max">□</button><button id="close">×</button></header>
@@ -142,9 +142,10 @@
        <div id="modsList" class="mods-list"><div class="mods-loading">Carregando mods do VilaNexo...</div></div>
      </section>
 
-    <section id="settings" class="page content-page">
-       <h2>Configurações</h2>
-      <div id="configSummary" class="config-card"></div>
+     <section id="settings" class="page content-page settings-page">
+        <h2>Configurações</h2>
+       <div id="configSummary" class="config-card"></div>
+       <div class="config-card performance-card"><div><h3>Desempenho do Minecraft</h3><p class="muted">Ajuste a memória usada pelo jogo. Feche o Minecraft antes de alterar.</p></div><div class="performance-grid"><label>Memória inicial (MB)<input id="memoryMinMb" type="number" min="1024" max="16384" step="256"></label><label>Memória máxima (MB)<input id="memoryMaxMb" type="number" min="2048" max="32768" step="256"></label><label>Perfil de desempenho<select id="performanceMode"><option value="balanced">Equilibrado</option><option value="performance">Mais desempenho</option><option value="quality">Estabilidade</option></select></label></div><button id="saveSettings" class="primary">Salvar configurações</button><span id="settingsMessage" class="muted"></span></div>
        <div class="config-card server-card"><div class="server-icon">VN</div><div><h3>Servidor oficial</h3><strong>VilaNexo Cobblemon</strong><p>poke.vilanexo.com:25566</p><span class="server-ready">● Fabric 1.21.1 • conexão automática</span></div></div>
     </section>
   </main>

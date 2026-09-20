@@ -7,7 +7,8 @@
     "memoryMinMb": 2048,
     "memoryMaxMb": 6144,
     "serverAddress": "poke.vilanexo.com",
-    "serverPort": 25566
+    "serverPort": 25566,
+    "performance": "balanced"
   },
   "profiles": {
     "cobblemon": {
@@ -44,6 +45,11 @@
   },
   "launcher": {
     "updateUrl": "https://www.vilanexo.com/launcher/update.json"
+  },
+  "auth": {
+    "launcherStartUrl": "https://www.vilanexo.com/auth/launcher-start.ashx",
+    "launcherStatusUrl": "https://www.vilanexo.com/auth/launcher-status.ashx",
+    "verifyUrl": "https://www.vilanexo.com/auth/verify.ashx"
   },
   "links": {
     "store": "https://www.vilanexo.com/loja",
