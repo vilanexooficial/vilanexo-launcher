@@ -44,7 +44,8 @@
     "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
   },
   "launcher": {
-    "updateUrl": "https://www.vilanexo.com/launcher/update.json"
+    "updateUrl": "https://www.vilanexo.com/launcher/update.json",
+    "displayVersion": "1.0"
   },
   "auth": {
     "launcherStartUrl": "https://www.vilanexo.com/auth/launcher-start.ashx",

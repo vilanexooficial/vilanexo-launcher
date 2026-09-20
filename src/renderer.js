@@ -248,6 +248,9 @@ async function init() {
     $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
    $('memoryMinMb').value = config.minecraft.memoryMinMb || 2048;
    $('memoryMaxMb').value = config.minecraft.memoryMaxMb || 6144;
+   $('memoryMaxSlider').value = config.minecraft.memoryMaxMb || 6144;
+   $('ramValue').textContent = `${((config.minecraft.memoryMaxMb || 6144) / 1024).toFixed(1).replace('.0', '')} GB`;
+   $('launcherDisplayVersion').textContent = config.launcher?.displayVersion || '1.0';
    $('performanceMode').value = config.minecraft.performance || 'balanced';
   applyTheme(localStorage.getItem('vilanexo-theme') || '#8d46ff', false);
   setupSkinInteraction();
@@ -392,6 +395,15 @@ $('saveSettings').onclick = async () => {
     $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
   } catch (e) { $('settingsMessage').textContent = e.message; }
   finally { button.disabled = false; }
+};
+$('memoryMaxSlider').oninput = e => {
+  $('memoryMaxMb').value = e.target.value;
+  $('ramValue').textContent = `${(Number(e.target.value) / 1024).toFixed(1).replace('.0', '')} GB`;
+};
+$('memoryMaxMb').oninput = e => {
+  const value = Math.max(2048, Math.min(32768, Number(e.target.value) || 6144));
+  $('memoryMaxSlider').value = value;
+  $('ramValue').textContent = `${(value / 1024).toFixed(1).replace('.0', '')} GB`;
 };
 window.vilaNexoLauncher.onLog(logLine);
 window.vilaNexoLauncher.onMods(updateMods);
