@@ -23,7 +23,7 @@
 .skins-page.active-page .skin-preview-panel,.skins-page.active-page .skin-manager-panel{min-width:0!important;max-width:100%!important}
 .skins-page.active-page .skin-preview-wrap,.skins-page.active-page .skin-panel-heading{min-width:0!important;max-width:100%!important}
 .dual-log-heading{display:flex!important;align-items:center;gap:14px}
-.dual-home .dual-hero .update-notice{position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;transform:none!important;width:max-content;max-width:100%;margin-top:14px;z-index:4}
+.dual-home .dual-hero .update-notice{position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;transform:none!important;width:max-content;max-width:100%;margin-top:14px;margin-left:clamp(0px,14vw,180px);z-index:4}
 
 @media(max-width:1250px){
   .skins-page.active-page{padding-left:22px!important;padding-right:22px!important}
@@ -33,7 +33,7 @@
 }
 
 @media(max-width:620px){
-  .dual-home .dual-hero .update-notice{width:100%;white-space:normal}
+  .dual-home .dual-hero .update-notice{width:100%;white-space:normal;margin-left:0}
   .dual-log-heading{gap:8px}
   .dual-log-heading #status{font-size:9px}
 }
