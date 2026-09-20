@@ -324,7 +324,6 @@ $('logout').onclick = async () => { await window.vilaNexoLauncher.logout(); upda
 if ($('folderGame')) $('folderGame').onclick = () => window.vilaNexoLauncher.openGame();
 if ($('folderLogs')) $('folderLogs').onclick = () => window.vilaNexoLauncher.openLogs();
 if ($('store')) $('store').onclick = () => window.vilaNexoLauncher.openUrl(config.links.store);
-if ($('support')) $('support').onclick = () => window.vilaNexoLauncher.openUrl(config.links.support);
 
 $('chooseSkin').onclick = async () => {
   try {
