@@ -1,0 +1,22 @@
+VilaNexo Launcher 1.2.1
+
+CORREÇÃO DE MODS:
+- O launcher detecta e desativa automaticamente Fabric API em um perfil Forge 1.20.1.
+- Cópias duplicadas com sufixo " (1).jar" são movidas para a pasta mods-desativados quando o original existe.
+- Nenhum arquivo é apagado; arquivos incompatíveis são movidos para mods-desativados ao lado da pasta mods.
+
+VILANEXO LAUNCHER 1.8.1
+
+Esta versão melhora bastante o primeiro download:
+- 12 downloads simultâneos de bibliotecas
+- 16 downloads simultâneos de assets
+- cache: arquivos válidos não são baixados novamente
+- timeout e até 3 tentativas automáticas
+- progresso do Forge com MB/MB e velocidade
+- indicador de atividade durante a instalação do Forge
+
+Servidor Cobblemon: poke.vilanexo.com
+Minecraft: 1.20.1
+Forge: 47.4.0
+
+Coloque seus mods .jar na pasta mods antes de gerar/distribuir uma build.

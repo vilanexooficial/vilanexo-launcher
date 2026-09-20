@@ -1,0 +1,27 @@
+VilaNexo Launcher 2.2.1 / Modpack Cobblemon 3.1.3
+
+Mapa:
+- Xaero's Minimap 26.5.0 e World Map 1.46.0, NeoForge 1.21.1.
+- XaeroLib 1.7.3 vem embutida nos mods.
+- O minimapa FTB Chunks fica desativado por padrao; claims continuam funcionando.
+- Overrides locais antigos do minimapa sao migrados uma vez, com backup.
+- Configuracao padrao: config/ftbchunks-client.snbt no manifesto remoto.
+
+Multiplayer:
+- VilaNexo Cobblemon / poke.vilanexo.com ja aparece na primeira abertura do jogo.
+- O DNS SRV de poke.vilanexo.com encaminha para a porta 25566.
+- servers.dat agora usa NBT Java sem gzip.
+- A lista existente e preservada, sem duplicar a entrada oficial.
+- Arquivos antigos compactados sao convertidos automaticamente com backup.
+- A lista fica na pasta do perfil selecionado em %APPDATA%/VilaNexo/profiles/.
+
+Distribuicao:
+- Instalador: https://www.vilanexo.com/launcher/download.ashx
+- Quem ja usa o launcher precisa instalar 2.2.1 para receber a correcao de servers.dat.
+- Os mods sao atualizados pelo manifesto ao clicar em Jogar no perfil Cobblemon.
+
+Verificacoes:
+- npm run check
+- node --test scripts/server-list.test.js
+- Integridade SHA256 dos arquivos publicados e metadados NeoForge dos mods.
+- Teste visual dentro do jogo ainda precisa ser feito com o cliente modded.

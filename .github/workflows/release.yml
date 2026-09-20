@@ -1,0 +1,29 @@
+name: Publicar launcher
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Instalar dependências
+        run: npm ci
+      - name: Validar código
+        run: npm run check
+      - name: Gerar e publicar instalador
+        run: npm run dist:publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

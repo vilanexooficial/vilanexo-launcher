@@ -1,0 +1,28 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('vilaNexoLauncher', {
+  getConfig: () => ipcRenderer.invoke('launcher:get-config'),
+  getState: () => ipcRenderer.invoke('launcher:get-state'),
+  checkUpdate: () => ipcRenderer.invoke('launcher:check-update'),
+  installUpdate: () => ipcRenderer.invoke('app:install-update'),
+  loginOffline: (username) => ipcRenderer.invoke('launcher:login-offline', username),
+  loginDiscord: () => ipcRenderer.invoke('launcher:discord-login'),
+  pollDiscord: (nonce) => ipcRenderer.invoke('launcher:discord-poll', nonce),
+  logout: () => ipcRenderer.invoke('launcher:logout'),
+  play: (profileId) => ipcRenderer.invoke('launcher:play', profileId),
+  sync: () => ipcRenderer.invoke('launcher:sync'),
+  openGame: () => ipcRenderer.invoke('launcher:open-game'),
+  openLogs: () => ipcRenderer.invoke('launcher:open-logs'),
+  chooseSkin: () => ipcRenderer.invoke('launcher:choose-skin'),
+  uploadSkin: (filePath, variant, offlineName) => ipcRenderer.invoke('launcher:upload-skin', { filePath, variant, offlineName }),
+  getSavedSkin: (username) => ipcRenderer.invoke('launcher:get-saved-skin', username),
+  openUrl: (url) => ipcRenderer.invoke('launcher:open-url', url),
+  minimize: () => ipcRenderer.invoke('window:minimize'),
+  maximize: () => ipcRenderer.invoke('window:maximize'),
+  close: () => ipcRenderer.invoke('window:close'),
+  onLog: (cb) => ipcRenderer.on('launcher:log', (_, data) => cb(data)),
+  onProgress: (cb) => ipcRenderer.on('launcher:progress', (_, data) => cb(data)),
+  onState: (cb) => ipcRenderer.on('launcher:state', (_, data) => cb(data)),
+  onMods: (cb) => ipcRenderer.on('launcher:mods', (_, data) => cb(data)),
+  onUpdate: (cb) => ipcRenderer.on('app:update', (_, data) => cb(data))
+});

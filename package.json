@@ -1,0 +1,57 @@
+{
+  "name": "vilanexo-launcher",
+  "version": "2.2.5",
+  "description": "VilaNexo Cobblemon Launcher - Minecraft 1.21.1 Fabric com sincronização de modpack",
+  "main": "src/main.js",
+  "author": "VilaNexo",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js && node --check src/launcher-service.js",
+    "dist": "electron-builder --win nsis --x64",
+    "dist:publish": "electron-builder --win nsis --x64 --publish always",
+    "dist:portable": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "38.0.0",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "com.vilanexo.launcher",
+    "productName": "VilaNexo Launcher",
+    "artifactName": "VilaNexo-Launcher-Setup-${version}.${ext}",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "launcher.config.json",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/launcher-icon.png",
+      "target": [
+        "nsis"
+      ],
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "VilaNexo Launcher"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "vilanexooficial",
+        "repo": "vilanexo-launcher",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "prismarine-nbt": "^2.8.0"
+  }
+}

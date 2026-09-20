@@ -1,0 +1,53 @@
+{
+  "minecraft": {
+    "version": "1.21.1",
+    "loader": "neoforge",
+    "loaderVersion": "21.1.249",
+    "neoforgeVersion": "21.1.249",
+    "memoryMinMb": 2048,
+    "memoryMaxMb": 6144,
+    "serverAddress": "poke.vilanexo.com",
+    "serverPort": 25566
+  },
+  "profiles": {
+    "cobblemon": {
+      "name": "VilaNexo Cobblemon",
+      "localModsDir": "mods",
+      "serverAddress": "poke.vilanexo.com",
+      "serverPort": 25566,
+      "minecraft": {
+        "version": "1.21.1",
+        "loader": "neoforge",
+        "loaderVersion": "21.1.249",
+        "neoforgeVersion": "21.1.249"
+      },
+      "distribution": {
+        "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
+      }
+    },
+    "rpg": {
+      "name": "VilaNexo RPG",
+      "localModsDir": "profiles/rpg/mods",
+      "serverAddress": "jogar.vilanexo.com",
+      "serverPort": 25565,
+      "minecraft": {
+        "version": "1.20.1",
+        "loader": "forge",
+        "forgeVersion": "47.4.23",
+        "memoryMinMb": 2048,
+        "memoryMaxMb": 6144
+      }
+    }
+  },
+  "distribution": {
+    "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
+  },
+  "launcher": {
+    "updateUrl": "https://www.vilanexo.com/launcher/update.json"
+  },
+  "links": {
+    "store": "https://www.vilanexo.com/loja",
+    "wiki": "https://www.vilanexo.com/",
+    "support": "https://discord.gg/vilanexo"
+  }
+}

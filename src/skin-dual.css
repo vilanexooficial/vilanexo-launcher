@@ -1,0 +1,4 @@
+.page:not(.active-page){display:none!important}
+.content-page.active-page{display:block!important;position:fixed!important;inset:0;left:218px;top:58px;overflow:auto;background:#080312;z-index:12;padding:32px}
+.skins-page.active-page{display:block!important;left:218px;top:58px;right:0;bottom:0;padding:28px 34px 38px!important}
+@media(max-width:850px){.skins-page.active-page{left:72px;padding:22px!important}}

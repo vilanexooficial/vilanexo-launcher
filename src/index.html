@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VilaNexo Launcher</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refresh.css"><link rel="stylesheet" href="wallpaper.css"><link rel="stylesheet" href="pokemon.css"><link rel="stylesheet" href="professional.css"><link rel="stylesheet" href="dashboard.css"><link rel="stylesheet" href="mockup.css"><link rel="stylesheet" href="stability.css"><link rel="stylesheet" href="skinfix.css"><link rel="stylesheet" href="home-skin.css"><link rel="stylesheet" href="reference-final.css"><link rel="stylesheet" href="final-fix.css"><link rel="stylesheet" href="creator-card.css"><link rel="stylesheet" href="dual-server.css"><link rel="stylesheet" href="skin-dual.css"><link rel="stylesheet" href="status-fix.css"></head>
+<body>
+  <div class="bg"></div><div class="shade"></div>
+  <header class="topbar"><div class="brand"><span class="brand-kicker">VILANEXO</span><span class="brand-title">COBBLEMON</span></div><div class="drag"></div><button id="min">—</button><button id="max">□</button><button id="close">×</button></header>
+  <aside class="sidebar">
+   <div class="logo-mark"><img src="../assets/logocobblevilanexo.png" alt="VilaNexo"></div><h1>VilaNexo<br><span>Launcher</span></h1>
+    <nav>
+       <button class="active" data-page="home">⌂ <span>Início</span></button>
+       <button data-page="skins">◉ <span>Skin</span></button>
+       <button data-page="accounts">● <span>Perfil</span></button>
+       <button id="store">▦ <span>Servidor</span></button>
+       <button id="wiki">✚ <span>Mods</span></button>
+       <button id="support">⚙ <span>Configurações</span></button>
+     </nav>
+    <div class="profile"><small>PERFIL ATIVO</small><strong id="profileName">VilaNexo</strong><span id="profileWelcome">Bem-vindo ao VilaNexo!</span></div>
+  </aside>
+  <main>
+     <section id="home" class="page active-page dual-home">
+       <div class="dual-hero"><span class="dual-kicker">VILANEXO LAUNCHER</span><h2>DOIS MUNDOS.<br><em>UMA SÓ AVENTURA.</em></h2><p>Escolha seu modpack, prepare sua jornada e entre no universo VilaNexo.</p><div class="dual-profile"><span class="dual-profile-dot"></span><span>PERFIL ATIVO</span><strong id="dashboardProfileName">VilaNexo</strong></div></div>
+        <aside id="homeSkinPanel" class="home-skin-card">
+          <div class="home-skin-heading"><span>SEU PERSONAGEM</span><strong>PREVIEW 3D DA SKIN</strong></div>
+        </aside>
+        <div class="server-grid">
+         <article class="server-choice cobblemon-choice selected" data-profile="cobblemon">
+            <div class="server-art"><img src="../assets/server-cobblemon.png" alt="VilaNexo Cobblemon"></div>
+           <div class="server-card-content"><span class="server-type">MINECRAFT 1.21.1 • FABRIC</span><h3>VILANEXO <b>COBBLEMON</b></h3><h4>CAPTURE • TREINE • EVOLUA</h4><p>Explore, capture e treine seus Pokémon!<br>Economia, eventos, aventuras e muito mais.</p><div class="server-meta"><span><i></i> SERVIDOR ONLINE</span><small>34 mods • poke.vilanexo.com</small></div><button class="server-play"><span>▶</span> JOGAR NO COBBLEMON</button></div>
+         </article>
+           <article class="server-choice rpg-choice" data-profile="rpg">
+            <div class="server-art rpg-art"><img src="../assets/server-rpg.png" alt="VilaNexo RPG"></div>
+             <div class="server-card-content"><span class="server-type">MINECRAFT 1.20.1 • FORGE</span><h3>VILANEXO <b>RPG</b></h3><h4>CRIE SUA HISTÓRIA</h4><p>Crie seu personagem e viva sua própria aventura!<br>Missões, classes, economia, PvP e muito mais.</p><div class="server-meta rpg-status"><span><i></i> EM MANUTENÇÃO</span><small>101 mods • jogar.vilanexo.com</small></div><div class="server-maintenance" role="status"><span>⚒</span> RPG EM MANUTENÇÃO</div></div>
+         </article>
+       </div>
+       <div class="dual-footer"><span>● Servidores online</span><strong>VILANEXO</strong><small>Escolha seu mundo para começar</small><div class="dual-social">◉　◈　◎　◌　⚙</div></div>
+       <div id="status" class="status">● Launcher pronto</div><div id="updateNotice" class="update-notice hidden"><span id="updateText"></span><button id="updateLauncher">Atualizar Launcher</button></div>
+       <section class="dual-log"><div>ATIVIDADE DO LAUNCHER <button id="clearLogs">Limpar</button></div><pre id="logBox"></pre></section>
+     </section>
+
+    <section id="accounts" class="page content-page">
+      <h2>Perfil</h2>
+      <p>Escolha o nick que será usado para entrar no VilaNexo.</p>
+      <div class="account-grid single-account">
+        <div class="config-card account-card local-profile-card">
+          <div class="profile-orb">VN</div>
+          <div>
+            <h3>Perfil VilaNexo</h3>
+            <p class="muted">Use de 3 a 16 caracteres: letras, números ou _.</p>
+            <input id="offlineName" maxlength="16" placeholder="Seu nick">
+            <button id="loginOffline" class="primary">Salvar perfil</button>
+          </div>
+        </div>
+        <div class="config-card account-card local-profile-card">
+          <div class="profile-orb">DC</div>
+          <div>
+            <h3>Login Discord</h3>
+            <p class="muted">Entre com sua conta Discord para liberar o acesso ao jogo.</p>
+            <button id="loginDiscord" class="primary">Entrar com Discord</button>
+            <p id="discordStatus" class="muted">Discord não conectado.</p>
+          </div>
+        </div>
+      </div>
+      <button id="logout" class="secondary">Remover perfil salvo</button>
+    </section>
+
+    <section id="skins" class="page content-page skins-page">
+      <div class="skins-header">
+        <div><span class="skins-kicker">PERSONALIZAÇÃO DO JOGADOR</span><h2>Skins</h2><p>Visualize seu personagem como um modelo Minecraft de verdade, com profundidade e rotação completa.</p></div>
+        <div class="skins-header-badge"><span></span> PREVIEW 3D REAL</div>
+      </div>
+
+      <div class="skin-studio-layout">
+        <div class="skin-preview-panel">
+          <div class="skin-panel-heading">
+            <div class="skin-heading-icon">◇</div>
+            <div><strong>PREVIEW 3D DA SKIN</strong><span>Arraste para girar • Scroll para zoom • Veja todos os lados</span></div>
+          </div>
+
+          <div class="skin-preview-wrap modern-preview">
+            <div class="preview-scene-light light-a"></div><div class="preview-scene-light light-b"></div>
+            <div class="preview-back-wall"><span>VILA</span><b>NEXO</b></div>
+            <div class="preview-aura"></div>
+            <div id="skin3d" class="skin3d-stage">
+              <div class="skin-grid-floor"></div>
+              <div class="skin-depth-ring ring-one"></div><div class="skin-depth-ring ring-two"></div>
+              <canvas id="skinCanvas" class="skin-webgl-canvas" aria-label="Preview 3D real da skin"></canvas>
+              <div id="skinPlaceholder" class="skin-placeholder"><div><b>Seu personagem aparece aqui</b><span>Selecione uma skin PNG para abrir o modelo 3D.</span></div></div>
+            </div>
+            <div class="skin-pedestal"><span></span></div>
+            <div class="preview-hint"><span>🖱 Arraste para rotacionar</span><span>↕ Scroll para zoom</span><span>◈ Modelo com profundidade real</span></div>
+          </div>
+
+          <div class="skin-view-controls" aria-label="Ângulos da skin">
+            <button type="button" data-skin-view="front" class="active"><b>♟</b><span>Frente</span></button>
+            <button type="button" data-skin-view="back"><b>♟</b><span>Costas</span></button>
+            <button type="button" data-skin-view="left"><b>‹</b><span>Esquerda</span></button>
+            <button type="button" data-skin-view="right"><b>›</b><span>Direita</span></button>
+            <button type="button" data-skin-view="top"><b>⌃</b><span>Topo</span></button>
+            <button type="button" data-skin-view="bottom"><b>⌄</b><span>Base</span></button>
+            <button id="resetView" type="button" data-skin-view="reset"><b>◎</b><span>Centralizar</span></button>
+          </div>
+        </div>
+
+        <aside class="skin-manager-panel">
+          <div class="skin-panel-heading compact"><div class="skin-heading-icon">♕</div><div><strong>SUA SKIN</strong><span>Gerencie e visualize localmente.</span></div></div>
+          <div class="current-skin-card">
+            <div class="skin-mini-head" id="skinMiniHead"><span>VN</span></div>
+            <div class="current-skin-info"><strong>Skin atual</strong><span id="skinCurrentName">Perfil VilaNexo</span></div>
+            <span class="skin-active-pill">ATIVA</span>
+          </div>
+
+          <div class="skin-controls skin-modern-controls">
+            <label>Nick da skin</label>
+            <input id="skinOfflineName" maxlength="16" placeholder="Ex.: SeuNick">
+            <label>Modelo do jogador</label>
+            <div class="skin-model-options">
+              <button type="button" class="model-choice active" data-variant="classic"><span>♟</span><b>Steve</b><small>Padrão</small></button>
+              <button type="button" class="model-choice" data-variant="slim"><span>♙</span><b>Alex</b><small>Slim</small></button>
+            </div>
+            <select id="skinVariant" class="hidden"><option value="classic">Clássico / Steve</option><option value="slim">Slim / Alex</option></select>
+            <button id="chooseSkin" class="primary skin-main-action">⇧ Alterar Skin</button>
+            <button id="uploadSkin" class="secondary skin-apply-action" disabled>✓ Aplicar skin</button>
+            <div id="skinFileName" class="muted skin-file-name">Selecione uma imagem PNG.</div>
+            <div id="skinMessage" class="skin-message"></div>
+          </div>
+
+          <div class="skin-info-note"><b>Visualização 3D aprimorada</b><span>O modelo agora possui cabeça, tronco, braços e pernas como cubos completos, incluindo laterais, costas, topo e base.</span></div>
+        </aside>
+      </div>
+
+      <div class="theme-card skin-theme-card">
+        <div><h3>Cor do launcher</h3><p class="muted">Personalize o destaque visual do VilaNexo.</p></div>
+        <div class="theme-picker-row"><input id="launcherColor" type="color" value="#8d46ff"><span id="launcherColorValue">#8D46FF</span></div>
+        <div class="theme-presets"><button data-color="#8d46ff" title="Roxo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00b894" title="Verde"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#d63031" title="Vermelho"></button></div>
+        <button id="resetTheme" class="secondary">Restaurar roxo VilaNexo</button>
+      </div>
+      <p class="muted skin-storage-note">A skin é salva localmente em <b>CustomSkinLoader/LocalSkin/skins/&lt;NICK&gt;.png</b>.</p>
+    </section>
+
+    <section id="settings" class="page content-page">
+       <h2>Configurações</h2>
+      <div id="configSummary" class="config-card"></div>
+       <div class="config-card server-card"><div class="server-icon">VN</div><div><h3>Servidor oficial</h3><strong>VilaNexo Cobblemon</strong><p>poke.vilanexo.com:25566</p><span class="server-ready">● Fabric 1.21.1 • conexão automática</span></div></div>
+    </section>
+  </main>
+<script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.2/bundles/skinview3d.bundle.js"></script>
+<script src="renderer.js"></script></body></html>

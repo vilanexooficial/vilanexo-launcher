@@ -1,0 +1,1212 @@
+{
+    "modpack":  "Vilanexo RPG",
+    "minecraft":  "1.20.1",
+    "loader":  "Forge 47.4.23",
+    "version":  "1.9.1",
+    "files":  [
+                  {
+                      "path":  "mods/aestheticshelving-1.20.1_forge_v2.0.0.jar",
+                      "sha256":  "950a1ee1054fcfa0c1270b2d826ee5666ff03f13e2c2253ff22f39a2540433bf",
+                      "size":  2186697,
+                      "url":  "https://www.vilanexo.com/launcher/mods/aestheticshelving-1.20.1_forge_v2.0.0.jar"
+                  },
+                  {
+                      "path":  "mods/alexscaves-2.0.2.jar",
+                      "sha256":  "131e205ce3eed384d701b336d8a0d4a671108ed56b6eff6014f0e407db2997f0",
+                      "size":  74871657,
+                      "url":  "https://www.vilanexo.com/launcher/mods/alexscaves-2.0.2.jar"
+                  },
+                  {
+                      "path":  "mods/alexsdelight-1.5.jar",
+                      "sha256":  "439da92c904959e805c2237ebda9e96db60870dd3b58b4b402547d494fa0057a",
+                      "size":  55398,
+                      "url":  "https://www.vilanexo.com/launcher/mods/alexsdelight-1.5.jar"
+                  },
+                  {
+                      "path":  "mods/alexsmobs-1.22.9.jar",
+                      "sha256":  "16bc5bcc19db9029c24f951346ec71098e6f5b0afef96e61894a2e9407aad37c",
+                      "size":  26350793,
+                      "url":  "https://www.vilanexo.com/launcher/mods/alexsmobs-1.22.9.jar"
+                  },
+                  {
+                      "path":  "mods/AmbientSounds_FORGE_v6.3.8_mc1.20.1.jar",
+                      "sha256":  "41688a2ba90e5b07beb0e1844cfd0b21a4294b1073de144ae0a7f519b336a18b",
+                      "size":  53429226,
+                      "url":  "https://www.vilanexo.com/launcher/mods/AmbientSounds_FORGE_v6.3.8_mc1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/apexcore-1.20.1-10.0.0.jar",
+                      "sha256":  "ba713663dff20cd9a9e599a8f7c87cf7359fedd5ebc9f5c2bac749e20155ad7a",
+                      "size":  556266,
+                      "url":  "https://www.vilanexo.com/launcher/mods/apexcore-1.20.1-10.0.0.jar"
+                  },
+                  {
+                      "path":  "mods/architectury-9.2.14-forge.jar",
+                      "sha256":  "218b471d0b8a1f6cda14cfc1beb9eeb0df54304500acc6c5613d9b88ec65d9af",
+                      "size":  580602,
+                      "url":  "https://www.vilanexo.com/launcher/mods/architectury-9.2.14-forge.jar"
+                  },
+                  {
+                      "path":  "mods/Ascensao_dos_Chefes_V2_tyron.jar",
+                      "sha256":  "74de8e38ee93a19bc4681873db00ee1b96df52356330825a862bcee8fbbe2936",
+                      "size":  23951232,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Ascensao_dos_Chefes_V2_tyron.jar"
+                  },
+                  {
+                      "path":  "mods/AuthMod_PTBR_unico.jar",
+                      "sha256":  "812f808c0301aa66bce6a79a1371ca8826cf5cc6649315b61fa557102d74c043",
+                      "size":  25719,
+                      "url":  "https://www.vilanexo.com/launcher/mods/AuthMod_PTBR_unico.jar"
+                  },
+                  {
+                      "path":  "mods/balm-forge-1.20.1-7.3.42.jar",
+                      "sha256":  "1abe13b5de575af91ebc073b19e4e2cfedbe795b15f406e9516ed52cbd2de3a6",
+                      "size":  561670,
+                      "url":  "https://www.vilanexo.com/launcher/mods/balm-forge-1.20.1-7.3.42.jar"
+                  },
+                  {
+                      "path":  "mods/better_weaponry-1.1.3-forge-1.20.1.jar",
+                      "sha256":  "eeb86114548e87a115de70a58ea066bbe8846c9f57a8902bb564dd06919c36cb",
+                      "size":  650331,
+                      "url":  "https://www.vilanexo.com/launcher/mods/better_weaponry-1.1.3-forge-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/bettercombat-forge-1.9.0+1.20.1.jar",
+                      "sha256":  "49c69dccf2c641246b4e3deca81ebac21f0ee119e81fc713b838b8e33569eea1",
+                      "size":  1054339,
+                      "url":  "https://www.vilanexo.com/launcher/mods/bettercombat-forge-1.9.0%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/betterhealthbar-1.20.1.jar",
+                      "sha256":  "73ef548a2754132929fdd6972940f31d4e61ee8184954766bb52eb01d7ad7c6f",
+                      "size":  652251,
+                      "url":  "https://www.vilanexo.com/launcher/mods/betterhealthbar-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/BiomesOPlenty-forge-1.20.1-19.0.0.96.jar",
+                      "sha256":  "330f482487ac3135557b6e898d7e1ae5330321e9cfd5ba63e13a16cf2e8d8b98",
+                      "size":  22381010,
+                      "url":  "https://www.vilanexo.com/launcher/mods/BiomesOPlenty-forge-1.20.1-19.0.0.96.jar"
+                  },
+                  {
+                      "path":  "mods/Born_in_Chaos_1.20.1_1.7.5_HP_x2.jar",
+                      "sha256":  "7a4e2f06d0dbc49d695fa9da7e2cb1aa0671756755ce5aab5334d5b1a4171686",
+                      "size":  11771047,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Born_in_Chaos_1.20.1_1.7.5_HP_x2.jar"
+                  },
+                  {
+                      "path":  "mods/butchery_alexs_mobs-1.0.1-BETA-forge-1.20.1 - Copia.jar",
+                      "sha256":  "e99621dad283e4c9018c92754ac8309597e58249f7af903bb9d5465116100d6a",
+                      "size":  633782,
+                      "url":  "https://www.vilanexo.com/launcher/mods/butchery_alexs_mobs-1.0.1-BETA-forge-1.20.1%20-%20Copia.jar"
+                  },
+                  {
+                      "path":  "mods/butchery-5.2-forge-1.20.1.jar",
+                      "sha256":  "37242582bc10a7edf5d891ee19f44221a3200367739ead2e3dcc14108a743a16",
+                      "size":  16571825,
+                      "url":  "https://www.vilanexo.com/launcher/mods/butchery-5.2-forge-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/caelus-forge-3.2.0+1.20.1.jar",
+                      "sha256":  "37495445e79df8b30a3a038a0051f3c8aa8447f91a9d0aa0d20baef69dda9368",
+                      "size":  40125,
+                      "url":  "https://www.vilanexo.com/launcher/mods/caelus-forge-3.2.0%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/citadel-2.6.3-1.20.1.jar",
+                      "sha256":  "56c7ab87348a5292583aac787b6cf11b5193e77f02af1d17ea75a96f8640b3ce",
+                      "size":  3185275,
+                      "url":  "https://www.vilanexo.com/launcher/mods/citadel-2.6.3-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/cloth-config-11.1.136-forge.jar",
+                      "sha256":  "1e895e85cf5b1e1905ef3178ec155c8badfe22a1577b92c09143a5aa1f4ce0f2",
+                      "size":  1181413,
+                      "url":  "https://www.vilanexo.com/launcher/mods/cloth-config-11.1.136-forge.jar"
+                  },
+                  {
+                      "path":  "mods/comforts-forge-6.4.0+1.20.1.jar",
+                      "sha256":  "56398103e0e3821c98f21a5b556d57deb0686b9f50868b4278ecb73cc9d2f42c",
+                      "size":  382083,
+                      "url":  "https://www.vilanexo.com/launcher/mods/comforts-forge-6.4.0%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/Controlling-forge-1.20.1-12.0.2.jar",
+                      "sha256":  "516308a93824119f6a1ebc75425aa21ee8f8de0c331942793a054ba6d9c24944",
+                      "size":  115280,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Controlling-forge-1.20.1-12.0.2.jar"
+                  },
+                  {
+                      "path":  "mods/create-1.20.1-6.0.8.jar",
+                      "sha256":  "6fbb910c367dbce8e4fc7e5bf64b6edd4de980906ed00af8e47e4af843c0d9b0",
+                      "size":  19170905,
+                      "url":  "https://www.vilanexo.com/launcher/mods/create-1.20.1-6.0.8.jar"
+                  },
+                  {
+                      "path":  "mods/create-confectionery1.20.1_v1.1.3.jar",
+                      "sha256":  "20c3fd80603c9d9531e23829802e52d1214c665510df5d9e428167622212315d",
+                      "size":  2140544,
+                      "url":  "https://www.vilanexo.com/launcher/mods/create-confectionery1.20.1_v1.1.3.jar"
+                  },
+                  {
+                      "path":  "mods/createdeco-2.0.3-1.20.1-forge.jar",
+                      "sha256":  "7d6dd0094d18d6bab64fcd7de680ea736015d1a1ffc472d3fe03122bc7aa0864",
+                      "size":  3509013,
+                      "url":  "https://www.vilanexo.com/launcher/mods/createdeco-2.0.3-1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/CreativeCore_FORGE_v2.12.39_mc1.20.1.jar",
+                      "sha256":  "3565ddea132785a044ddfca670610a870c976e52d47a957d0a5f1db78563d046",
+                      "size":  1144128,
+                      "url":  "https://www.vilanexo.com/launcher/mods/CreativeCore_FORGE_v2.12.39_mc1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/creraces-1.20.1-2.0.0pre1-PTBR-SEM-VOO.jar",
+                      "sha256":  "d55633acc75460145dfb030557373199471791a1643a07aad96d2c7a455c55dd",
+                      "size":  22692094,
+                      "url":  "https://www.vilanexo.com/launcher/mods/creraces-1.20.1-2.0.0pre1-PTBR-SEM-VOO.jar"
+                  },
+                  {
+                      "path":  "mods/Croptopia-1.20.1-FORGE-4.0.1.jar",
+                      "sha256":  "bbd35cbdbe8b9d20a70ab79a42781a82f19f51de068861c431879becbce66d28",
+                      "size":  2155802,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Croptopia-1.20.1-FORGE-4.0.1.jar"
+                  },
+                  {
+                      "path":  "mods/curios-forge-5.14.1+1.20.1.jar",
+                      "sha256":  "1e817919a35b37cf30524aaec73f0ca5130452f23f168f844854df282eb8e51f",
+                      "size":  398066,
+                      "url":  "https://www.vilanexo.com/launcher/mods/curios-forge-5.14.1%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/CustomSkinLoader_ForgeV2-14.28.jar",
+                      "sha256":  "2edbc47d4cb378d4cab9a7968b578e9f9dd4aad1dcb7400a9b7af29eda89bd3f",
+                      "size":  153877,
+                      "url":  "https://www.vilanexo.com/launcher/mods/CustomSkinLoader_ForgeV2-14.28.jar"
+                  },
+                  {
+                      "path":  "mods/delivery-1.0.2-1.20.1.jar",
+                      "sha256":  "419351c233882284aa972aa4a16e21b3a5b3449015c1de0463b707133381d943",
+                      "size":  1076840,
+                      "url":  "https://www.vilanexo.com/launcher/mods/delivery-1.0.2-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/DungeonsArise-1.20.x-2.1.58-release.jar",
+                      "sha256":  "f8f1254dbe7ed7c1d5403f20361a36f0d0587c82b71313e3f427c7f1ce7c8a90",
+                      "size":  8762342,
+                      "url":  "https://www.vilanexo.com/launcher/mods/DungeonsArise-1.20.x-2.1.58-release.jar"
+                  },
+                  {
+                      "path":  "mods/elegantelytrasHeadwingsUpdateFirstWave-2.1.2-forge-1.20.1.jar",
+                      "sha256":  "f6598d399ebd371b7760a8741b04a49f5996359b46c71673292fd9098dc8dc01",
+                      "size":  393052,
+                      "url":  "https://www.vilanexo.com/launcher/mods/elegantelytrasHeadwingsUpdateFirstWave-2.1.2-forge-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/embeddium-0.3.31+mc1.20.1.jar",
+                      "sha256":  "eed3d1325f2acc2fd4e69bb495e5ccb91d962126ac5330f0582ebc2a3daf47fb",
+                      "size":  1320675,
+                      "url":  "https://www.vilanexo.com/launcher/mods/embeddium-0.3.31%2Bmc1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/emotecraft-borrow-their-emote-1.0.1+1.20.1+forge.jar",
+                      "sha256":  "483fbbe851b9cbb26f7449f92c4cadc5ff8e75b8dd4078ade479b5c94a5ef776",
+                      "size":  488494,
+                      "url":  "https://www.vilanexo.com/launcher/mods/emotecraft-borrow-their-emote-1.0.1%2B1.20.1%2Bforge.jar"
+                  },
+                  {
+                      "path":  "mods/enemyexpansion-2.3.1-forge-1.20.1.jar",
+                      "sha256":  "c7b13fc90273427594aaf83e436999c0ea5ecb44b30a8049dcd3323ce23e7268",
+                      "size":  1006273,
+                      "url":  "https://www.vilanexo.com/launcher/mods/enemyexpansion-2.3.1-forge-1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/EpheroLib-1.20.1-FORGE-1.2.0.jar",
+                      "sha256":  "8924a015f28348c806e6680addc2d5a8bcaf8439dd51ce48ce3b2f2b0e522407",
+                      "size":  756864,
+                      "url":  "https://www.vilanexo.com/launcher/mods/EpheroLib-1.20.1-FORGE-1.2.0.jar"
+                  },
+                  {
+                      "path":  "mods/epic-fight-20.14.17-mc1.20.1-forge.jar",
+                      "sha256":  "69566cf70ae2d91d3f2564c608f014c87e290cef6215c2a27719851165485f73",
+                      "size":  8071119,
+                      "url":  "https://www.vilanexo.com/launcher/mods/epic-fight-20.14.17-mc1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/fabric-api-0.92.6+1.11.15+1.20.1.jar",
+                      "sha256":  "ffb61c81b9025297048fd647902f4c67c016073c0e94da100125e9aa1168c194",
+                      "size":  3065815,
+                      "url":  "https://www.vilanexo.com/launcher/mods/fabric-api-0.92.6%2B1.11.15%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/FarmersDelight-1.20.1-1.3.3.jar",
+                      "sha256":  "a287d9fc0315c1958d0582c4585468e3c0b9f7dbbff54898189068f3c96c01dd",
+                      "size":  3311381,
+                      "url":  "https://www.vilanexo.com/launcher/mods/FarmersDelight-1.20.1-1.3.3.jar"
+                  },
+                  {
+                      "path":  "mods/fastconfigapi-2.1.2.jar",
+                      "sha256":  "fa985f4785293e54a84920f5193b693b57c51fcdb64579e8e177fd3d45ee8546",
+                      "size":  289886,
+                      "url":  "https://www.vilanexo.com/launcher/mods/fastconfigapi-2.1.2.jar"
+                  },
+                  {
+                      "path":  "mods/flan-1.20.1-1.11.16-forge.jar",
+                      "sha256":  "9c596c210095a07474671d9c4776ae2a0a17d56f21bcd840645575f615cb4251",
+                      "size":  894692,
+                      "url":  "https://www.vilanexo.com/launcher/mods/flan-1.20.1-1.11.16-forge.jar"
+                  },
+                  {
+                      "path":  "mods/framework-forge-1.20.1-0.8.0.jar",
+                      "sha256":  "37c267f46d8b8dfa81bae8c9fa9fa6467e456cadecae10722ee91b43437f25a0",
+                      "size":  383868,
+                      "url":  "https://www.vilanexo.com/launcher/mods/framework-forge-1.20.1-0.8.0.jar"
+                  },
+                  {
+                      "path":  "mods/friendsandfoes-forge-mc1.20.1-3.0.9.jar",
+                      "sha256":  "2f7d8dae6bde58bd04a6dd65b9d08f8b8d3576488eadcd908d197cb219504eff",
+                      "size":  3622128,
+                      "url":  "https://www.vilanexo.com/launcher/mods/friendsandfoes-forge-mc1.20.1-3.0.9.jar"
+                  },
+                  {
+                      "path":  "mods/ftb-chunks-forge-2001.3.8.jar",
+                      "sha256":  "783f7aa42089b6f72500801284796f7cc8eb641ecddcf76f65bf586c017efb02",
+                      "size":  1159043,
+                      "url":  "https://www.vilanexo.com/launcher/mods/ftb-chunks-forge-2001.3.8.jar"
+                  },
+                  {
+                      "path":  "mods/ftb-library-forge-2001.2.13.jar",
+                      "sha256":  "41810281b65336265cae2c88412022d02f2f0a3f28c66a06173d86f98acf14a7",
+                      "size":  780558,
+                      "url":  "https://www.vilanexo.com/launcher/mods/ftb-library-forge-2001.2.13.jar"
+                  },
+                  {
+                      "path":  "mods/FTB-Ranks-Forge-1.20.1-PTBR.jar",
+                      "sha256":  "1281221ca8bdb7905b2e24c10d505a80afe03242c0153e5bf0aa01731a7dc815",
+                      "size":  85949,
+                      "url":  "https://www.vilanexo.com/launcher/mods/FTB-Ranks-Forge-1.20.1-PTBR.jar"
+                  },
+                  {
+                      "path":  "mods/ftb-teams-forge-2001.3.2.jar",
+                      "sha256":  "b1cb4d82ea9f137a87e12a7aaf3329619294b56f7d70337dfd557a76e10b6e07",
+                      "size":  252579,
+                      "url":  "https://www.vilanexo.com/launcher/mods/ftb-teams-forge-2001.3.2.jar"
+                  },
+                  {
+                      "path":  "mods/geckolib-forge-1.20.1-4.8.4.jar",
+                      "sha256":  "c04abba4fd354dd8c0e8a732f1f05f4dca893d2e1d962b2ab128bbd411478747",
+                      "size":  1038209,
+                      "url":  "https://www.vilanexo.com/launcher/mods/geckolib-forge-1.20.1-4.8.4.jar"
+                  },
+                  {
+                      "path":  "mods/GlitchCore-forge-1.20.1-0.0.1.1.jar",
+                      "sha256":  "e42a8b513da08a910c133caeafad9fc2fcc22fdaaa2eb3e2516e9112a5a0db61",
+                      "size":  87550,
+                      "url":  "https://www.vilanexo.com/launcher/mods/GlitchCore-forge-1.20.1-0.0.1.1.jar"
+                  },
+                  {
+                      "path":  "mods/gravestone-forge-1.20.1-1.0.35.jar",
+                      "sha256":  "3d31bd224bc1f9055c502cf675416ae8046dbc15bf2db6627e26a032da437e85",
+                      "size":  317181,
+                      "url":  "https://www.vilanexo.com/launcher/mods/gravestone-forge-1.20.1-1.0.35.jar"
+                  },
+                  {
+                      "path":  "mods/immersive_armors-1.7.2+1.20.1-forge.jar",
+                      "sha256":  "e4d36920377ec184648f181bfd38c44ccf53868934284265dfa081be9c788b9b",
+                      "size":  1264260,
+                      "url":  "https://www.vilanexo.com/launcher/mods/immersive_armors-1.7.2%2B1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/immersive_furniture-forge-0.3.3+1.20.1.jar",
+                      "sha256":  "c6b1962d08c3543874b22b495f5d75550f3094709744818043dc1014279c419c",
+                      "size":  988737,
+                      "url":  "https://www.vilanexo.com/launcher/mods/immersive_furniture-forge-0.3.3%2B1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/immersive_melodies-0.7.0+1.20.1-forge.jar",
+                      "sha256":  "a481c5ffe1b5ee02cb03c71a1582be70af141f5d5ebf5bdda27a4508ed686f23",
+                      "size":  5532544,
+                      "url":  "https://www.vilanexo.com/launcher/mods/immersive_melodies-0.7.0%2B1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/immersive_paintings-0.6.13+1.20.1-forge.jar",
+                      "sha256":  "069d5dffa4060d965899e607fad725c4d80a8086cef64f1d7563259b0a070633",
+                      "size":  4856103,
+                      "url":  "https://www.vilanexo.com/launcher/mods/immersive_paintings-0.6.13%2B1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/infusedfoods-1.20.1-10.0.0.jar",
+                      "sha256":  "2792fe1dedbebc3e34bb5a798c44bf08813f181816abc30d4f774e870e4628b7",
+                      "size":  834297,
+                      "url":  "https://www.vilanexo.com/launcher/mods/infusedfoods-1.20.1-10.0.0.jar"
+                  },
+                  {
+                      "path":  "mods/ironchest-1.20.1-14.4.4.jar",
+                      "sha256":  "6bc75f288d2e8158d2e23c6881a1b341a894c38bab129ca0f20db6abd59d373f",
+                      "size":  311290,
+                      "url":  "https://www.vilanexo.com/launcher/mods/ironchest-1.20.1-14.4.4.jar"
+                  },
+                  {
+                      "path":  "mods/irons_lib-1.20.1-2.1.0.jar",
+                      "sha256":  "db4c7cc853c0ffb1d36a0f19af22c224a8608b2a55c747adc70fb44455baf097",
+                      "size":  428969,
+                      "url":  "https://www.vilanexo.com/launcher/mods/irons_lib-1.20.1-2.1.0.jar"
+                  },
+                  {
+                      "path":  "mods/irons_spellbooks-1.20.1-3.16.3.jar",
+                      "sha256":  "54b5aaa52887c38f570fbd820288171234d8541c17a5e953f9271189fdd480fb",
+                      "size":  15570397,
+                      "url":  "https://www.vilanexo.com/launcher/mods/irons_spellbooks-1.20.1-3.16.3.jar"
+                  },
+                  {
+                      "path":  "mods/jei-1.20.1-forge-15.49.0.194.jar",
+                      "sha256":  "9ad93d03a9a8bfa09f6829d67171b2b40e2e8d55c7bd886c1c7de27d4b950f43",
+                      "size":  1673634,
+                      "url":  "https://www.vilanexo.com/launcher/mods/jei-1.20.1-forge-15.49.0.194.jar"
+                  },
+                  {
+                      "path":  "mods/JourneyMap-6.0.2-NoPlayerIcons-FIXED.jar",
+                      "sha256":  "83c959d557e3e75fbeb180fd402cf10cc3399cc05738f64fd013305b917f13bf",
+                      "size":  4307414,
+                      "url":  "https://www.vilanexo.com/launcher/mods/JourneyMap-6.0.2-NoPlayerIcons-FIXED.jar"
+                  },
+                  {
+                      "path":  "mods/kubejs-forge-2001.6.5-build.26.jar",
+                      "sha256":  "1769312192fbf9d72f45054ba61130523bfb471b5f480a4bff8c210ec09400bb",
+                      "size":  1658792,
+                      "url":  "https://www.vilanexo.com/launcher/mods/kubejs-forge-2001.6.5-build.26.jar"
+                  },
+                  {
+                      "path":  "mods/labellingcontainers-1.8.2.jar",
+                      "sha256":  "7ff065c6a8d1593ff6da7eb7e77637ef2d6696c04a8f661f5ddb6a820f3680f9",
+                      "size":  377824,
+                      "url":  "https://www.vilanexo.com/launcher/mods/labellingcontainers-1.8.2.jar"
+                  },
+                  {
+                      "path":  "mods/LightmansCurrency-PTBR.jar",
+                      "sha256":  "afecb5e234ef0530a14373b11eca8d22dc553f9b8e2bddd825b36309c77b7036",
+                      "size":  10293021,
+                      "url":  "https://www.vilanexo.com/launcher/mods/LightmansCurrency-PTBR.jar"
+                  },
+                  {
+                      "path":  "mods/lootr-forge-1.20-0.7.35.94.jar",
+                      "sha256":  "01200ee5889e6bcc3c5fa8f32b7b49a4bd58e653699eeb655c6f2dd314e3ce51",
+                      "size":  463485,
+                      "url":  "https://www.vilanexo.com/launcher/mods/lootr-forge-1.20-0.7.35.94.jar"
+                  },
+                  {
+                      "path":  "mods/LuckPerms-Forge-5.4.102.jar",
+                      "sha256":  "935beff65a4d248880e004ccb5fc2f1cc5d63d3f24870ff8d472cbefa31016da",
+                      "size":  1398478,
+                      "url":  "https://www.vilanexo.com/launcher/mods/LuckPerms-Forge-5.4.102.jar"
+                  },
+                  {
+                      "path":  "mods/luckpermsgui-1.0.2.jar",
+                      "sha256":  "0b98e539c6a05531a152970e568e12c619a2a7c9440237235c77ade531bc087b",
+                      "size":  94207,
+                      "url":  "https://www.vilanexo.com/launcher/mods/luckpermsgui-1.0.2.jar"
+                  },
+                  {
+                      "path":  "mods/mahoutsukai-1.20.1-v1.34.81.jar",
+                      "sha256":  "761b489b86de68d1d05fe516e68337c43858eb0bd4d1d1e8228f7b72a4d32d5a",
+                      "size":  4442849,
+                      "url":  "https://www.vilanexo.com/launcher/mods/mahoutsukai-1.20.1-v1.34.81.jar"
+                  },
+                  {
+                      "path":  "mods/Minetales.jar",
+                      "sha256":  "0e5c956bad5cdab0159b9c630f80aa21b8d04e6eff3fd67e07fdea1ee21290be",
+                      "size":  242629,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Minetales.jar"
+                  },
+                  {
+                      "path":  "mods/moremobvariants-forge+1.20.1-1.3.0.1.jar",
+                      "sha256":  "d1c8c6922bce56092896056e73d235cb651787f3b6821e825bf5095c9b16cb13",
+                      "size":  379988,
+                      "url":  "https://www.vilanexo.com/launcher/mods/moremobvariants-forge%2B1.20.1-1.3.0.1.jar"
+                  },
+                  {
+                      "path":  "mods/morevillagers-forge-1.20.1-5.0.0.jar",
+                      "sha256":  "44b86176f3c9905c4dc2fc9b8b38c31693da7e10ab10b53fd108e985be8f4658",
+                      "size":  233335,
+                      "url":  "https://www.vilanexo.com/launcher/mods/morevillagers-forge-1.20.1-5.0.0.jar"
+                  },
+                  {
+                      "path":  "mods/MossyLib-1.5.0+1.20.1+forge.jar",
+                      "sha256":  "a304e5cfbc94408f636591ddab142bab63b765fd945d28955b641b6717776585",
+                      "size":  374174,
+                      "url":  "https://www.vilanexo.com/launcher/mods/MossyLib-1.5.0%2B1.20.1%2Bforge.jar"
+                  },
+                  {
+                      "path":  "mods/Multiverse-Reforged-Forge-1.20.1-0.2.0.jar",
+                      "sha256":  "5b4f2e16677ae894983cf0f6921b6321268bb4099889e1afeefe2281c2a72fda",
+                      "size":  50633,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Multiverse-Reforged-Forge-1.20.1-0.2.0.jar"
+                  },
+                  {
+                      "path":  "mods/NefsMedievalPub+v2.1(1.20.1).jar",
+                      "sha256":  "7a67b5cbb448166da5ab4335c8cccf92143068027c9f723302c0f8c309349bc0",
+                      "size":  6502321,
+                      "url":  "https://www.vilanexo.com/launcher/mods/NefsMedievalPub%2Bv2.1(1.20.1).jar"
+                  },
+                  {
+                      "path":  "mods/oculus-mc1.20.1-1.8.0.jar",
+                      "sha256":  "0945df0cba0f62b3901dd80c3268e5311b770ece78c78037a45db12ac0425fef",
+                      "size":  2851119,
+                      "url":  "https://www.vilanexo.com/launcher/mods/oculus-mc1.20.1-1.8.0.jar"
+                  },
+                  {
+                      "path":  "mods/particlerain-4.0.0-beta.11+1.20.1-forge.jar",
+                      "sha256":  "d0a0cfde04071f186c43bd5b18ccfac3a247d8c74ca334b5cf36e1288532dc5a",
+                      "size":  1252832,
+                      "url":  "https://www.vilanexo.com/launcher/mods/particlerain-4.0.0-beta.11%2B1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/Pehkui-3.8.2+1.20.1-forge.jar",
+                      "sha256":  "54210f454c166f65a1bcbbfe4ea52e6f73e07844a793c7132f1af4076a0f42fc",
+                      "size":  671605,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Pehkui-3.8.2%2B1.20.1-forge.jar"
+                  },
+                  {
+                      "path":  "mods/player-animation-lib-forge-1.0.2-rc1+1.20.jar",
+                      "sha256":  "90d9965cb9efdbda29fdc5610be3914cf7008bf5c392ff34f7ab25f96a852691",
+                      "size":  181437,
+                      "url":  "https://www.vilanexo.com/launcher/mods/player-animation-lib-forge-1.0.2-rc1%2B1.20.jar"
+                  },
+                  {
+                      "path":  "mods/plonk-1.20.1-10.0.5-forge.jar",
+                      "sha256":  "3f1a8cff6c6be95fdc81917f4f296b9e6a513803a33c3ddc20c402f0cfc7b9da",
+                      "size":  151684,
+                      "url":  "https://www.vilanexo.com/launcher/mods/plonk-1.20.1-10.0.5-forge.jar"
+                  },
+                  {
+                      "path":  "mods/puffish_skills-0.19.0-1.20-forge.jar",
+                      "sha256":  "7989a0bc5a0297b9845b47f3f85951f97fce0eceb73614d7cf879e6208c7f62b",
+                      "size":  643069,
+                      "url":  "https://www.vilanexo.com/launcher/mods/puffish_skills-0.19.0-1.20-forge.jar"
+                  },
+                  {
+                      "path":  "mods/rhino-forge-2001.2.3-build.10.jar",
+                      "sha256":  "fed2211429301bf043864183cab9ab8e92d4cc4dbb9e488ce6c75217c54584a6",
+                      "size":  1798244,
+                      "url":  "https://www.vilanexo.com/launcher/mods/rhino-forge-2001.2.3-build.10.jar"
+                  },
+                  {
+                      "path":  "mods/RPG_Style_More_Bosses_1.0.3_Forge_1.20.1_NO_PORTAL_SPAWN.jar",
+                      "sha256":  "1aa4bca41924209678d9901743046b45218bb16d85318bf87cb2d4a2e93faae7",
+                      "size":  5747321,
+                      "url":  "https://www.vilanexo.com/launcher/mods/RPG_Style_More_Bosses_1.0.3_Forge_1.20.1_NO_PORTAL_SPAWN.jar"
+                  },
+                  {
+                      "path":  "mods/Searchables-forge-1.20.1-1.0.3.jar",
+                      "sha256":  "c1a76e93886210574d3f298c0461241fb711e52ac22c7a04d3236840f29e6576",
+                      "size":  77732,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Searchables-forge-1.20.1-1.0.3.jar"
+                  },
+                  {
+                      "path":  "mods/SereneSeasons-forge-1.20.1-9.1.0.3.jar",
+                      "sha256":  "650c35858d335d45adea5445ffaed25ccd433f5cbfe4936ac2694b250177b674",
+                      "size":  160885,
+                      "url":  "https://www.vilanexo.com/launcher/mods/SereneSeasons-forge-1.20.1-9.1.0.3.jar"
+                  },
+                  {
+                      "path":  "mods/SignPlates-Forge-1.20.1-1.1.2.jar",
+                      "sha256":  "552eb4a1deaa4f7ea7e612d387956c6ec7ce5a600661e29a2bd8439db0c44f1a",
+                      "size":  904950,
+                      "url":  "https://www.vilanexo.com/launcher/mods/SignPlates-Forge-1.20.1-1.1.2.jar"
+                  },
+                  {
+                      "path":  "mods/signpost-1.20.1-2.02.0.jar",
+                      "sha256":  "930aa44ae426a8e67d144baf7a5bf5028acd2c39b919b0614fae401ccec924b7",
+                      "size":  977052,
+                      "url":  "https://www.vilanexo.com/launcher/mods/signpost-1.20.1-2.02.0.jar"
+                  },
+                  {
+                      "path":  "mods/skills_mastery.jar",
+                      "sha256":  "2e73b746ec4d14429d354ebc0f5e8d027168df8699760df1e88db7fe5b329420",
+                      "size":  19246,
+                      "url":  "https://www.vilanexo.com/launcher/mods/skills_mastery.jar"
+                  },
+                  {
+                      "path":  "mods/sophisticatedbackpacks-1.20.1-3.24.67.2109.jar",
+                      "sha256":  "1e241870bc8aab7b709847e447156e12abc44d727ed7954b1c618da74347aa3b",
+                      "size":  1159096,
+                      "url":  "https://www.vilanexo.com/launcher/mods/sophisticatedbackpacks-1.20.1-3.24.67.2109.jar"
+                  },
+                  {
+                      "path":  "mods/sophisticatedcore-1.20.1-1.3.84.2308.jar",
+                      "sha256":  "b9262af063edc20459262d3e99890f0a3ea68c86eeddebe63c806ce386079a96",
+                      "size":  1640160,
+                      "url":  "https://www.vilanexo.com/launcher/mods/sophisticatedcore-1.20.1-1.3.84.2308.jar"
+                  },
+                  {
+                      "path":  "mods/sound-physics-remastered-forge-1.20.1-1.5.1.jar",
+                      "sha256":  "591fa317c4e462039dae01967bf370acb284d5118cf5839a33f1d01b6c0def3c",
+                      "size":  206984,
+                      "url":  "https://www.vilanexo.com/launcher/mods/sound-physics-remastered-forge-1.20.1-1.5.1.jar"
+                  },
+                  {
+                      "path":  "mods/Steam_Rails-1.7.3+forge-mc1.20.1.jar",
+                      "sha256":  "0e98b72472ff78464f6e69025bb47f942e7f66a976382fbb87ceff765a8b00cf",
+                      "size":  17042037,
+                      "url":  "https://www.vilanexo.com/launcher/mods/Steam_Rails-1.7.3%2Bforge-mc1.20.1.jar"
+                  },
+                  {
+                      "path":  "mods/tan__a_curios_expansion-forge-1.20.1-3.1.1.jar",
+                      "sha256":  "b9f5862df330229e2b515f01643003bc7b6a7e370628210ab478a982302b7768",
+                      "size":  3027403,
+                      "url":  "https://www.vilanexo.com/launcher/mods/tan__a_curios_expansion-forge-1.20.1-3.1.1.jar"
+                  },
+                  {
+                      "path":  "mods/TerraBlender-forge-1.20.1-3.0.1.10.jar",
+                      "sha256":  "c109016f46ca9bdae69976bf080bbf2e8e5968cb66c0a78845f8ca6af5dbbeb1",
+                      "size":  107532,
+                      "url":  "https://www.vilanexo.com/launcher/mods/TerraBlender-forge-1.20.1-3.0.1.10.jar"
+                  },
+                  {
+                      "path":  "mods/ToughAsNails-forge-1.20.1-9.2.0.171.jar",
+                      "sha256":  "78e7a0932395a2d8550d422e1ed86352edd8fa5d693711c1366eb60abfae0e7e",
+                      "size":  459479,
+                      "url":  "https://www.vilanexo.com/launcher/mods/ToughAsNails-forge-1.20.1-9.2.0.171.jar"
+                  },
+                  {
+                      "path":  "mods/TreeChop-1.20.1-forge-0.19.0-fixed.jar",
+                      "sha256":  "219fbe5bf8d862dc7b524ca5a0151f66bba4d53a01010858e136a9e8c4d55d4f",
+                      "size":  517225,
+                      "url":  "https://www.vilanexo.com/launcher/mods/TreeChop-1.20.1-forge-0.19.0-fixed.jar"
+                  },
+                  {
+                      "path":  "mods/twilight_lib-1.20.1-forge-dev260819a.jar",
+                      "sha256":  "82aa7591e7da44bdcfb61a27c43e5bcb5869dd3a141b2fd6a4d2fe686233f234",
+                      "size":  604571,
+                      "url":  "https://www.vilanexo.com/launcher/mods/twilight_lib-1.20.1-forge-dev260819a.jar"
+                  },
+                  {
+                      "path":  "mods/voicechat-forge-1.20.1-2.6.22-PERMITIDO-JAVA17.jar",
+                      "sha256":  "1b94e9f96effd56b5d660817d3996c92b14f93d27cbd07f8d269c3a8c4bff02d",
+                      "size":  4908146,
+                      "url":  "https://www.vilanexo.com/launcher/mods/voicechat-forge-1.20.1-2.6.22-PERMITIDO-JAVA17.jar"
+                  },
+                  {
+                      "path":  "mods/void_lib-1.1.6.jar",
+                      "sha256":  "ddef97c426f2d48beda2068eb0a725392d926dcbad2a522ca1d724572286e4f6",
+                      "size":  226583,
+                      "url":  "https://www.vilanexo.com/launcher/mods/void_lib-1.1.6.jar"
+                  },
+                  {
+                      "path":  "mods/waystones-forge-1.20.1-14.1.20.jar",
+                      "sha256":  "5ecc6535596b5954f6293224be6b35805c64f4d4aedc2b9e32d9508dd529cabd",
+                      "size":  533738,
+                      "url":  "https://www.vilanexo.com/launcher/mods/waystones-forge-1.20.1-14.1.20.jar"
+                  },
+                  {
+                      "path":  "mods/weedcraft-2.7.2.jar",
+                      "sha256":  "08ead6a6ce6ba013c1778a407a4c3e5d1136dd9a16649a28f97d04da49dfbfef",
+                      "size":  649223,
+                      "url":  "https://www.vilanexo.com/launcher/mods/weedcraft-2.7.2.jar"
+                  }
+              ],
+    "mods":  [
+                 {
+                     "file":  "aestheticshelving-1.20.1_forge_v2.0.0.jar",
+                     "sha256":  "950a1ee1054fcfa0c1270b2d826ee5666ff03f13e2c2253ff22f39a2540433bf",
+                     "size":  2186697,
+                     "url":  "https://www.vilanexo.com/launcher/mods/aestheticshelving-1.20.1_forge_v2.0.0.jar"
+                 },
+                 {
+                     "file":  "alexscaves-2.0.2.jar",
+                     "sha256":  "131e205ce3eed384d701b336d8a0d4a671108ed56b6eff6014f0e407db2997f0",
+                     "size":  74871657,
+                     "url":  "https://www.vilanexo.com/launcher/mods/alexscaves-2.0.2.jar"
+                 },
+                 {
+                     "file":  "alexsdelight-1.5.jar",
+                     "sha256":  "439da92c904959e805c2237ebda9e96db60870dd3b58b4b402547d494fa0057a",
+                     "size":  55398,
+                     "url":  "https://www.vilanexo.com/launcher/mods/alexsdelight-1.5.jar"
+                 },
+                 {
+                     "file":  "alexsmobs-1.22.9.jar",
+                     "sha256":  "16bc5bcc19db9029c24f951346ec71098e6f5b0afef96e61894a2e9407aad37c",
+                     "size":  26350793,
+                     "url":  "https://www.vilanexo.com/launcher/mods/alexsmobs-1.22.9.jar"
+                 },
+                 {
+                     "file":  "AmbientSounds_FORGE_v6.3.8_mc1.20.1.jar",
+                     "sha256":  "41688a2ba90e5b07beb0e1844cfd0b21a4294b1073de144ae0a7f519b336a18b",
+                     "size":  53429226,
+                     "url":  "https://www.vilanexo.com/launcher/mods/AmbientSounds_FORGE_v6.3.8_mc1.20.1.jar"
+                 },
+                 {
+                     "file":  "apexcore-1.20.1-10.0.0.jar",
+                     "sha256":  "ba713663dff20cd9a9e599a8f7c87cf7359fedd5ebc9f5c2bac749e20155ad7a",
+                     "size":  556266,
+                     "url":  "https://www.vilanexo.com/launcher/mods/apexcore-1.20.1-10.0.0.jar"
+                 },
+                 {
+                     "file":  "architectury-9.2.14-forge.jar",
+                     "sha256":  "218b471d0b8a1f6cda14cfc1beb9eeb0df54304500acc6c5613d9b88ec65d9af",
+                     "size":  580602,
+                     "url":  "https://www.vilanexo.com/launcher/mods/architectury-9.2.14-forge.jar"
+                 },
+                 {
+                     "file":  "Ascensao_dos_Chefes_V2_tyron.jar",
+                     "sha256":  "74de8e38ee93a19bc4681873db00ee1b96df52356330825a862bcee8fbbe2936",
+                     "size":  23951232,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Ascensao_dos_Chefes_V2_tyron.jar"
+                 },
+                 {
+                     "file":  "AuthMod_PTBR_unico.jar",
+                     "sha256":  "812f808c0301aa66bce6a79a1371ca8826cf5cc6649315b61fa557102d74c043",
+                     "size":  25719,
+                     "url":  "https://www.vilanexo.com/launcher/mods/AuthMod_PTBR_unico.jar"
+                 },
+                 {
+                     "file":  "balm-forge-1.20.1-7.3.42.jar",
+                     "sha256":  "1abe13b5de575af91ebc073b19e4e2cfedbe795b15f406e9516ed52cbd2de3a6",
+                     "size":  561670,
+                     "url":  "https://www.vilanexo.com/launcher/mods/balm-forge-1.20.1-7.3.42.jar"
+                 },
+                 {
+                     "file":  "better_weaponry-1.1.3-forge-1.20.1.jar",
+                     "sha256":  "eeb86114548e87a115de70a58ea066bbe8846c9f57a8902bb564dd06919c36cb",
+                     "size":  650331,
+                     "url":  "https://www.vilanexo.com/launcher/mods/better_weaponry-1.1.3-forge-1.20.1.jar"
+                 },
+                 {
+                     "file":  "bettercombat-forge-1.9.0+1.20.1.jar",
+                     "sha256":  "49c69dccf2c641246b4e3deca81ebac21f0ee119e81fc713b838b8e33569eea1",
+                     "size":  1054339,
+                     "url":  "https://www.vilanexo.com/launcher/mods/bettercombat-forge-1.9.0%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "betterhealthbar-1.20.1.jar",
+                     "sha256":  "73ef548a2754132929fdd6972940f31d4e61ee8184954766bb52eb01d7ad7c6f",
+                     "size":  652251,
+                     "url":  "https://www.vilanexo.com/launcher/mods/betterhealthbar-1.20.1.jar"
+                 },
+                 {
+                     "file":  "BiomesOPlenty-forge-1.20.1-19.0.0.96.jar",
+                     "sha256":  "330f482487ac3135557b6e898d7e1ae5330321e9cfd5ba63e13a16cf2e8d8b98",
+                     "size":  22381010,
+                     "url":  "https://www.vilanexo.com/launcher/mods/BiomesOPlenty-forge-1.20.1-19.0.0.96.jar"
+                 },
+                 {
+                     "file":  "Born_in_Chaos_1.20.1_1.7.5_HP_x2.jar",
+                     "sha256":  "7a4e2f06d0dbc49d695fa9da7e2cb1aa0671756755ce5aab5334d5b1a4171686",
+                     "size":  11771047,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Born_in_Chaos_1.20.1_1.7.5_HP_x2.jar"
+                 },
+                 {
+                     "file":  "butchery_alexs_mobs-1.0.1-BETA-forge-1.20.1 - Copia.jar",
+                     "sha256":  "e99621dad283e4c9018c92754ac8309597e58249f7af903bb9d5465116100d6a",
+                     "size":  633782,
+                     "url":  "https://www.vilanexo.com/launcher/mods/butchery_alexs_mobs-1.0.1-BETA-forge-1.20.1%20-%20Copia.jar"
+                 },
+                 {
+                     "file":  "butchery-5.2-forge-1.20.1.jar",
+                     "sha256":  "37242582bc10a7edf5d891ee19f44221a3200367739ead2e3dcc14108a743a16",
+                     "size":  16571825,
+                     "url":  "https://www.vilanexo.com/launcher/mods/butchery-5.2-forge-1.20.1.jar"
+                 },
+                 {
+                     "file":  "caelus-forge-3.2.0+1.20.1.jar",
+                     "sha256":  "37495445e79df8b30a3a038a0051f3c8aa8447f91a9d0aa0d20baef69dda9368",
+                     "size":  40125,
+                     "url":  "https://www.vilanexo.com/launcher/mods/caelus-forge-3.2.0%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "citadel-2.6.3-1.20.1.jar",
+                     "sha256":  "56c7ab87348a5292583aac787b6cf11b5193e77f02af1d17ea75a96f8640b3ce",
+                     "size":  3185275,
+                     "url":  "https://www.vilanexo.com/launcher/mods/citadel-2.6.3-1.20.1.jar"
+                 },
+                 {
+                     "file":  "cloth-config-11.1.136-forge.jar",
+                     "sha256":  "1e895e85cf5b1e1905ef3178ec155c8badfe22a1577b92c09143a5aa1f4ce0f2",
+                     "size":  1181413,
+                     "url":  "https://www.vilanexo.com/launcher/mods/cloth-config-11.1.136-forge.jar"
+                 },
+                 {
+                     "file":  "comforts-forge-6.4.0+1.20.1.jar",
+                     "sha256":  "56398103e0e3821c98f21a5b556d57deb0686b9f50868b4278ecb73cc9d2f42c",
+                     "size":  382083,
+                     "url":  "https://www.vilanexo.com/launcher/mods/comforts-forge-6.4.0%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "Controlling-forge-1.20.1-12.0.2.jar",
+                     "sha256":  "516308a93824119f6a1ebc75425aa21ee8f8de0c331942793a054ba6d9c24944",
+                     "size":  115280,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Controlling-forge-1.20.1-12.0.2.jar"
+                 },
+                 {
+                     "file":  "create-1.20.1-6.0.8.jar",
+                     "sha256":  "6fbb910c367dbce8e4fc7e5bf64b6edd4de980906ed00af8e47e4af843c0d9b0",
+                     "size":  19170905,
+                     "url":  "https://www.vilanexo.com/launcher/mods/create-1.20.1-6.0.8.jar"
+                 },
+                 {
+                     "file":  "create-confectionery1.20.1_v1.1.3.jar",
+                     "sha256":  "20c3fd80603c9d9531e23829802e52d1214c665510df5d9e428167622212315d",
+                     "size":  2140544,
+                     "url":  "https://www.vilanexo.com/launcher/mods/create-confectionery1.20.1_v1.1.3.jar"
+                 },
+                 {
+                     "file":  "createdeco-2.0.3-1.20.1-forge.jar",
+                     "sha256":  "7d6dd0094d18d6bab64fcd7de680ea736015d1a1ffc472d3fe03122bc7aa0864",
+                     "size":  3509013,
+                     "url":  "https://www.vilanexo.com/launcher/mods/createdeco-2.0.3-1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "CreativeCore_FORGE_v2.12.39_mc1.20.1.jar",
+                     "sha256":  "3565ddea132785a044ddfca670610a870c976e52d47a957d0a5f1db78563d046",
+                     "size":  1144128,
+                     "url":  "https://www.vilanexo.com/launcher/mods/CreativeCore_FORGE_v2.12.39_mc1.20.1.jar"
+                 },
+                 {
+                     "file":  "creraces-1.20.1-2.0.0pre1-PTBR-SEM-VOO.jar",
+                     "sha256":  "d55633acc75460145dfb030557373199471791a1643a07aad96d2c7a455c55dd",
+                     "size":  22692094,
+                     "url":  "https://www.vilanexo.com/launcher/mods/creraces-1.20.1-2.0.0pre1-PTBR-SEM-VOO.jar"
+                 },
+                 {
+                     "file":  "Croptopia-1.20.1-FORGE-4.0.1.jar",
+                     "sha256":  "bbd35cbdbe8b9d20a70ab79a42781a82f19f51de068861c431879becbce66d28",
+                     "size":  2155802,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Croptopia-1.20.1-FORGE-4.0.1.jar"
+                 },
+                 {
+                     "file":  "curios-forge-5.14.1+1.20.1.jar",
+                     "sha256":  "1e817919a35b37cf30524aaec73f0ca5130452f23f168f844854df282eb8e51f",
+                     "size":  398066,
+                     "url":  "https://www.vilanexo.com/launcher/mods/curios-forge-5.14.1%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "CustomSkinLoader_ForgeV2-14.28.jar",
+                     "sha256":  "2edbc47d4cb378d4cab9a7968b578e9f9dd4aad1dcb7400a9b7af29eda89bd3f",
+                     "size":  153877,
+                     "url":  "https://www.vilanexo.com/launcher/mods/CustomSkinLoader_ForgeV2-14.28.jar"
+                 },
+                 {
+                     "file":  "delivery-1.0.2-1.20.1.jar",
+                     "sha256":  "419351c233882284aa972aa4a16e21b3a5b3449015c1de0463b707133381d943",
+                     "size":  1076840,
+                     "url":  "https://www.vilanexo.com/launcher/mods/delivery-1.0.2-1.20.1.jar"
+                 },
+                 {
+                     "file":  "DungeonsArise-1.20.x-2.1.58-release.jar",
+                     "sha256":  "f8f1254dbe7ed7c1d5403f20361a36f0d0587c82b71313e3f427c7f1ce7c8a90",
+                     "size":  8762342,
+                     "url":  "https://www.vilanexo.com/launcher/mods/DungeonsArise-1.20.x-2.1.58-release.jar"
+                 },
+                 {
+                     "file":  "elegantelytrasHeadwingsUpdateFirstWave-2.1.2-forge-1.20.1.jar",
+                     "sha256":  "f6598d399ebd371b7760a8741b04a49f5996359b46c71673292fd9098dc8dc01",
+                     "size":  393052,
+                     "url":  "https://www.vilanexo.com/launcher/mods/elegantelytrasHeadwingsUpdateFirstWave-2.1.2-forge-1.20.1.jar"
+                 },
+                 {
+                     "file":  "embeddium-0.3.31+mc1.20.1.jar",
+                     "sha256":  "eed3d1325f2acc2fd4e69bb495e5ccb91d962126ac5330f0582ebc2a3daf47fb",
+                     "size":  1320675,
+                     "url":  "https://www.vilanexo.com/launcher/mods/embeddium-0.3.31%2Bmc1.20.1.jar"
+                 },
+                 {
+                     "file":  "emotecraft-borrow-their-emote-1.0.1+1.20.1+forge.jar",
+                     "sha256":  "483fbbe851b9cbb26f7449f92c4cadc5ff8e75b8dd4078ade479b5c94a5ef776",
+                     "size":  488494,
+                     "url":  "https://www.vilanexo.com/launcher/mods/emotecraft-borrow-their-emote-1.0.1%2B1.20.1%2Bforge.jar"
+                 },
+                 {
+                     "file":  "enemyexpansion-2.3.1-forge-1.20.1.jar",
+                     "sha256":  "c7b13fc90273427594aaf83e436999c0ea5ecb44b30a8049dcd3323ce23e7268",
+                     "size":  1006273,
+                     "url":  "https://www.vilanexo.com/launcher/mods/enemyexpansion-2.3.1-forge-1.20.1.jar"
+                 },
+                 {
+                     "file":  "EpheroLib-1.20.1-FORGE-1.2.0.jar",
+                     "sha256":  "8924a015f28348c806e6680addc2d5a8bcaf8439dd51ce48ce3b2f2b0e522407",
+                     "size":  756864,
+                     "url":  "https://www.vilanexo.com/launcher/mods/EpheroLib-1.20.1-FORGE-1.2.0.jar"
+                 },
+                 {
+                     "file":  "epic-fight-20.14.17-mc1.20.1-forge.jar",
+                     "sha256":  "69566cf70ae2d91d3f2564c608f014c87e290cef6215c2a27719851165485f73",
+                     "size":  8071119,
+                     "url":  "https://www.vilanexo.com/launcher/mods/epic-fight-20.14.17-mc1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "fabric-api-0.92.6+1.11.15+1.20.1.jar",
+                     "sha256":  "ffb61c81b9025297048fd647902f4c67c016073c0e94da100125e9aa1168c194",
+                     "size":  3065815,
+                     "url":  "https://www.vilanexo.com/launcher/mods/fabric-api-0.92.6%2B1.11.15%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "FarmersDelight-1.20.1-1.3.3.jar",
+                     "sha256":  "a287d9fc0315c1958d0582c4585468e3c0b9f7dbbff54898189068f3c96c01dd",
+                     "size":  3311381,
+                     "url":  "https://www.vilanexo.com/launcher/mods/FarmersDelight-1.20.1-1.3.3.jar"
+                 },
+                 {
+                     "file":  "fastconfigapi-2.1.2.jar",
+                     "sha256":  "fa985f4785293e54a84920f5193b693b57c51fcdb64579e8e177fd3d45ee8546",
+                     "size":  289886,
+                     "url":  "https://www.vilanexo.com/launcher/mods/fastconfigapi-2.1.2.jar"
+                 },
+                 {
+                     "file":  "flan-1.20.1-1.11.16-forge.jar",
+                     "sha256":  "9c596c210095a07474671d9c4776ae2a0a17d56f21bcd840645575f615cb4251",
+                     "size":  894692,
+                     "url":  "https://www.vilanexo.com/launcher/mods/flan-1.20.1-1.11.16-forge.jar"
+                 },
+                 {
+                     "file":  "framework-forge-1.20.1-0.8.0.jar",
+                     "sha256":  "37c267f46d8b8dfa81bae8c9fa9fa6467e456cadecae10722ee91b43437f25a0",
+                     "size":  383868,
+                     "url":  "https://www.vilanexo.com/launcher/mods/framework-forge-1.20.1-0.8.0.jar"
+                 },
+                 {
+                     "file":  "friendsandfoes-forge-mc1.20.1-3.0.9.jar",
+                     "sha256":  "2f7d8dae6bde58bd04a6dd65b9d08f8b8d3576488eadcd908d197cb219504eff",
+                     "size":  3622128,
+                     "url":  "https://www.vilanexo.com/launcher/mods/friendsandfoes-forge-mc1.20.1-3.0.9.jar"
+                 },
+                 {
+                     "file":  "ftb-chunks-forge-2001.3.8.jar",
+                     "sha256":  "783f7aa42089b6f72500801284796f7cc8eb641ecddcf76f65bf586c017efb02",
+                     "size":  1159043,
+                     "url":  "https://www.vilanexo.com/launcher/mods/ftb-chunks-forge-2001.3.8.jar"
+                 },
+                 {
+                     "file":  "ftb-library-forge-2001.2.13.jar",
+                     "sha256":  "41810281b65336265cae2c88412022d02f2f0a3f28c66a06173d86f98acf14a7",
+                     "size":  780558,
+                     "url":  "https://www.vilanexo.com/launcher/mods/ftb-library-forge-2001.2.13.jar"
+                 },
+                 {
+                     "file":  "FTB-Ranks-Forge-1.20.1-PTBR.jar",
+                     "sha256":  "1281221ca8bdb7905b2e24c10d505a80afe03242c0153e5bf0aa01731a7dc815",
+                     "size":  85949,
+                     "url":  "https://www.vilanexo.com/launcher/mods/FTB-Ranks-Forge-1.20.1-PTBR.jar"
+                 },
+                 {
+                     "file":  "ftb-teams-forge-2001.3.2.jar",
+                     "sha256":  "b1cb4d82ea9f137a87e12a7aaf3329619294b56f7d70337dfd557a76e10b6e07",
+                     "size":  252579,
+                     "url":  "https://www.vilanexo.com/launcher/mods/ftb-teams-forge-2001.3.2.jar"
+                 },
+                 {
+                     "file":  "geckolib-forge-1.20.1-4.8.4.jar",
+                     "sha256":  "c04abba4fd354dd8c0e8a732f1f05f4dca893d2e1d962b2ab128bbd411478747",
+                     "size":  1038209,
+                     "url":  "https://www.vilanexo.com/launcher/mods/geckolib-forge-1.20.1-4.8.4.jar"
+                 },
+                 {
+                     "file":  "GlitchCore-forge-1.20.1-0.0.1.1.jar",
+                     "sha256":  "e42a8b513da08a910c133caeafad9fc2fcc22fdaaa2eb3e2516e9112a5a0db61",
+                     "size":  87550,
+                     "url":  "https://www.vilanexo.com/launcher/mods/GlitchCore-forge-1.20.1-0.0.1.1.jar"
+                 },
+                 {
+                     "file":  "gravestone-forge-1.20.1-1.0.35.jar",
+                     "sha256":  "3d31bd224bc1f9055c502cf675416ae8046dbc15bf2db6627e26a032da437e85",
+                     "size":  317181,
+                     "url":  "https://www.vilanexo.com/launcher/mods/gravestone-forge-1.20.1-1.0.35.jar"
+                 },
+                 {
+                     "file":  "immersive_armors-1.7.2+1.20.1-forge.jar",
+                     "sha256":  "e4d36920377ec184648f181bfd38c44ccf53868934284265dfa081be9c788b9b",
+                     "size":  1264260,
+                     "url":  "https://www.vilanexo.com/launcher/mods/immersive_armors-1.7.2%2B1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "immersive_furniture-forge-0.3.3+1.20.1.jar",
+                     "sha256":  "c6b1962d08c3543874b22b495f5d75550f3094709744818043dc1014279c419c",
+                     "size":  988737,
+                     "url":  "https://www.vilanexo.com/launcher/mods/immersive_furniture-forge-0.3.3%2B1.20.1.jar"
+                 },
+                 {
+                     "file":  "immersive_melodies-0.7.0+1.20.1-forge.jar",
+                     "sha256":  "a481c5ffe1b5ee02cb03c71a1582be70af141f5d5ebf5bdda27a4508ed686f23",
+                     "size":  5532544,
+                     "url":  "https://www.vilanexo.com/launcher/mods/immersive_melodies-0.7.0%2B1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "immersive_paintings-0.6.13+1.20.1-forge.jar",
+                     "sha256":  "069d5dffa4060d965899e607fad725c4d80a8086cef64f1d7563259b0a070633",
+                     "size":  4856103,
+                     "url":  "https://www.vilanexo.com/launcher/mods/immersive_paintings-0.6.13%2B1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "infusedfoods-1.20.1-10.0.0.jar",
+                     "sha256":  "2792fe1dedbebc3e34bb5a798c44bf08813f181816abc30d4f774e870e4628b7",
+                     "size":  834297,
+                     "url":  "https://www.vilanexo.com/launcher/mods/infusedfoods-1.20.1-10.0.0.jar"
+                 },
+                 {
+                     "file":  "ironchest-1.20.1-14.4.4.jar",
+                     "sha256":  "6bc75f288d2e8158d2e23c6881a1b341a894c38bab129ca0f20db6abd59d373f",
+                     "size":  311290,
+                     "url":  "https://www.vilanexo.com/launcher/mods/ironchest-1.20.1-14.4.4.jar"
+                 },
+                 {
+                     "file":  "irons_lib-1.20.1-2.1.0.jar",
+                     "sha256":  "db4c7cc853c0ffb1d36a0f19af22c224a8608b2a55c747adc70fb44455baf097",
+                     "size":  428969,
+                     "url":  "https://www.vilanexo.com/launcher/mods/irons_lib-1.20.1-2.1.0.jar"
+                 },
+                 {
+                     "file":  "irons_spellbooks-1.20.1-3.16.3.jar",
+                     "sha256":  "54b5aaa52887c38f570fbd820288171234d8541c17a5e953f9271189fdd480fb",
+                     "size":  15570397,
+                     "url":  "https://www.vilanexo.com/launcher/mods/irons_spellbooks-1.20.1-3.16.3.jar"
+                 },
+                 {
+                     "file":  "jei-1.20.1-forge-15.49.0.194.jar",
+                     "sha256":  "9ad93d03a9a8bfa09f6829d67171b2b40e2e8d55c7bd886c1c7de27d4b950f43",
+                     "size":  1673634,
+                     "url":  "https://www.vilanexo.com/launcher/mods/jei-1.20.1-forge-15.49.0.194.jar"
+                 },
+                 {
+                     "file":  "JourneyMap-6.0.2-NoPlayerIcons-FIXED.jar",
+                     "sha256":  "83c959d557e3e75fbeb180fd402cf10cc3399cc05738f64fd013305b917f13bf",
+                     "size":  4307414,
+                     "url":  "https://www.vilanexo.com/launcher/mods/JourneyMap-6.0.2-NoPlayerIcons-FIXED.jar"
+                 },
+                 {
+                     "file":  "kubejs-forge-2001.6.5-build.26.jar",
+                     "sha256":  "1769312192fbf9d72f45054ba61130523bfb471b5f480a4bff8c210ec09400bb",
+                     "size":  1658792,
+                     "url":  "https://www.vilanexo.com/launcher/mods/kubejs-forge-2001.6.5-build.26.jar"
+                 },
+                 {
+                     "file":  "labellingcontainers-1.8.2.jar",
+                     "sha256":  "7ff065c6a8d1593ff6da7eb7e77637ef2d6696c04a8f661f5ddb6a820f3680f9",
+                     "size":  377824,
+                     "url":  "https://www.vilanexo.com/launcher/mods/labellingcontainers-1.8.2.jar"
+                 },
+                 {
+                     "file":  "LightmansCurrency-PTBR.jar",
+                     "sha256":  "afecb5e234ef0530a14373b11eca8d22dc553f9b8e2bddd825b36309c77b7036",
+                     "size":  10293021,
+                     "url":  "https://www.vilanexo.com/launcher/mods/LightmansCurrency-PTBR.jar"
+                 },
+                 {
+                     "file":  "lootr-forge-1.20-0.7.35.94.jar",
+                     "sha256":  "01200ee5889e6bcc3c5fa8f32b7b49a4bd58e653699eeb655c6f2dd314e3ce51",
+                     "size":  463485,
+                     "url":  "https://www.vilanexo.com/launcher/mods/lootr-forge-1.20-0.7.35.94.jar"
+                 },
+                 {
+                     "file":  "LuckPerms-Forge-5.4.102.jar",
+                     "sha256":  "935beff65a4d248880e004ccb5fc2f1cc5d63d3f24870ff8d472cbefa31016da",
+                     "size":  1398478,
+                     "url":  "https://www.vilanexo.com/launcher/mods/LuckPerms-Forge-5.4.102.jar"
+                 },
+                 {
+                     "file":  "luckpermsgui-1.0.2.jar",
+                     "sha256":  "0b98e539c6a05531a152970e568e12c619a2a7c9440237235c77ade531bc087b",
+                     "size":  94207,
+                     "url":  "https://www.vilanexo.com/launcher/mods/luckpermsgui-1.0.2.jar"
+                 },
+                 {
+                     "file":  "mahoutsukai-1.20.1-v1.34.81.jar",
+                     "sha256":  "761b489b86de68d1d05fe516e68337c43858eb0bd4d1d1e8228f7b72a4d32d5a",
+                     "size":  4442849,
+                     "url":  "https://www.vilanexo.com/launcher/mods/mahoutsukai-1.20.1-v1.34.81.jar"
+                 },
+                 {
+                     "file":  "Minetales.jar",
+                     "sha256":  "0e5c956bad5cdab0159b9c630f80aa21b8d04e6eff3fd67e07fdea1ee21290be",
+                     "size":  242629,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Minetales.jar"
+                 },
+                 {
+                     "file":  "moremobvariants-forge+1.20.1-1.3.0.1.jar",
+                     "sha256":  "d1c8c6922bce56092896056e73d235cb651787f3b6821e825bf5095c9b16cb13",
+                     "size":  379988,
+                     "url":  "https://www.vilanexo.com/launcher/mods/moremobvariants-forge%2B1.20.1-1.3.0.1.jar"
+                 },
+                 {
+                     "file":  "morevillagers-forge-1.20.1-5.0.0.jar",
+                     "sha256":  "44b86176f3c9905c4dc2fc9b8b38c31693da7e10ab10b53fd108e985be8f4658",
+                     "size":  233335,
+                     "url":  "https://www.vilanexo.com/launcher/mods/morevillagers-forge-1.20.1-5.0.0.jar"
+                 },
+                 {
+                     "file":  "MossyLib-1.5.0+1.20.1+forge.jar",
+                     "sha256":  "a304e5cfbc94408f636591ddab142bab63b765fd945d28955b641b6717776585",
+                     "size":  374174,
+                     "url":  "https://www.vilanexo.com/launcher/mods/MossyLib-1.5.0%2B1.20.1%2Bforge.jar"
+                 },
+                 {
+                     "file":  "Multiverse-Reforged-Forge-1.20.1-0.2.0.jar",
+                     "sha256":  "5b4f2e16677ae894983cf0f6921b6321268bb4099889e1afeefe2281c2a72fda",
+                     "size":  50633,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Multiverse-Reforged-Forge-1.20.1-0.2.0.jar"
+                 },
+                 {
+                     "file":  "NefsMedievalPub+v2.1(1.20.1).jar",
+                     "sha256":  "7a67b5cbb448166da5ab4335c8cccf92143068027c9f723302c0f8c309349bc0",
+                     "size":  6502321,
+                     "url":  "https://www.vilanexo.com/launcher/mods/NefsMedievalPub%2Bv2.1(1.20.1).jar"
+                 },
+                 {
+                     "file":  "oculus-mc1.20.1-1.8.0.jar",
+                     "sha256":  "0945df0cba0f62b3901dd80c3268e5311b770ece78c78037a45db12ac0425fef",
+                     "size":  2851119,
+                     "url":  "https://www.vilanexo.com/launcher/mods/oculus-mc1.20.1-1.8.0.jar"
+                 },
+                 {
+                     "file":  "particlerain-4.0.0-beta.11+1.20.1-forge.jar",
+                     "sha256":  "d0a0cfde04071f186c43bd5b18ccfac3a247d8c74ca334b5cf36e1288532dc5a",
+                     "size":  1252832,
+                     "url":  "https://www.vilanexo.com/launcher/mods/particlerain-4.0.0-beta.11%2B1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "Pehkui-3.8.2+1.20.1-forge.jar",
+                     "sha256":  "54210f454c166f65a1bcbbfe4ea52e6f73e07844a793c7132f1af4076a0f42fc",
+                     "size":  671605,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Pehkui-3.8.2%2B1.20.1-forge.jar"
+                 },
+                 {
+                     "file":  "player-animation-lib-forge-1.0.2-rc1+1.20.jar",
+                     "sha256":  "90d9965cb9efdbda29fdc5610be3914cf7008bf5c392ff34f7ab25f96a852691",
+                     "size":  181437,
+                     "url":  "https://www.vilanexo.com/launcher/mods/player-animation-lib-forge-1.0.2-rc1%2B1.20.jar"
+                 },
+                 {
+                     "file":  "plonk-1.20.1-10.0.5-forge.jar",
+                     "sha256":  "3f1a8cff6c6be95fdc81917f4f296b9e6a513803a33c3ddc20c402f0cfc7b9da",
+                     "size":  151684,
+                     "url":  "https://www.vilanexo.com/launcher/mods/plonk-1.20.1-10.0.5-forge.jar"
+                 },
+                 {
+                     "file":  "puffish_skills-0.19.0-1.20-forge.jar",
+                     "sha256":  "7989a0bc5a0297b9845b47f3f85951f97fce0eceb73614d7cf879e6208c7f62b",
+                     "size":  643069,
+                     "url":  "https://www.vilanexo.com/launcher/mods/puffish_skills-0.19.0-1.20-forge.jar"
+                 },
+                 {
+                     "file":  "rhino-forge-2001.2.3-build.10.jar",
+                     "sha256":  "fed2211429301bf043864183cab9ab8e92d4cc4dbb9e488ce6c75217c54584a6",
+                     "size":  1798244,
+                     "url":  "https://www.vilanexo.com/launcher/mods/rhino-forge-2001.2.3-build.10.jar"
+                 },
+                 {
+                     "file":  "RPG_Style_More_Bosses_1.0.3_Forge_1.20.1_NO_PORTAL_SPAWN.jar",
+                     "sha256":  "1aa4bca41924209678d9901743046b45218bb16d85318bf87cb2d4a2e93faae7",
+                     "size":  5747321,
+                     "url":  "https://www.vilanexo.com/launcher/mods/RPG_Style_More_Bosses_1.0.3_Forge_1.20.1_NO_PORTAL_SPAWN.jar"
+                 },
+                 {
+                     "file":  "Searchables-forge-1.20.1-1.0.3.jar",
+                     "sha256":  "c1a76e93886210574d3f298c0461241fb711e52ac22c7a04d3236840f29e6576",
+                     "size":  77732,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Searchables-forge-1.20.1-1.0.3.jar"
+                 },
+                 {
+                     "file":  "SereneSeasons-forge-1.20.1-9.1.0.3.jar",
+                     "sha256":  "650c35858d335d45adea5445ffaed25ccd433f5cbfe4936ac2694b250177b674",
+                     "size":  160885,
+                     "url":  "https://www.vilanexo.com/launcher/mods/SereneSeasons-forge-1.20.1-9.1.0.3.jar"
+                 },
+                 {
+                     "file":  "SignPlates-Forge-1.20.1-1.1.2.jar",
+                     "sha256":  "552eb4a1deaa4f7ea7e612d387956c6ec7ce5a600661e29a2bd8439db0c44f1a",
+                     "size":  904950,
+                     "url":  "https://www.vilanexo.com/launcher/mods/SignPlates-Forge-1.20.1-1.1.2.jar"
+                 },
+                 {
+                     "file":  "signpost-1.20.1-2.02.0.jar",
+                     "sha256":  "930aa44ae426a8e67d144baf7a5bf5028acd2c39b919b0614fae401ccec924b7",
+                     "size":  977052,
+                     "url":  "https://www.vilanexo.com/launcher/mods/signpost-1.20.1-2.02.0.jar"
+                 },
+                 {
+                     "file":  "skills_mastery.jar",
+                     "sha256":  "2e73b746ec4d14429d354ebc0f5e8d027168df8699760df1e88db7fe5b329420",
+                     "size":  19246,
+                     "url":  "https://www.vilanexo.com/launcher/mods/skills_mastery.jar"
+                 },
+                 {
+                     "file":  "sophisticatedbackpacks-1.20.1-3.24.67.2109.jar",
+                     "sha256":  "1e241870bc8aab7b709847e447156e12abc44d727ed7954b1c618da74347aa3b",
+                     "size":  1159096,
+                     "url":  "https://www.vilanexo.com/launcher/mods/sophisticatedbackpacks-1.20.1-3.24.67.2109.jar"
+                 },
+                 {
+                     "file":  "sophisticatedcore-1.20.1-1.3.84.2308.jar",
+                     "sha256":  "b9262af063edc20459262d3e99890f0a3ea68c86eeddebe63c806ce386079a96",
+                     "size":  1640160,
+                     "url":  "https://www.vilanexo.com/launcher/mods/sophisticatedcore-1.20.1-1.3.84.2308.jar"
+                 },
+                 {
+                     "file":  "sound-physics-remastered-forge-1.20.1-1.5.1.jar",
+                     "sha256":  "591fa317c4e462039dae01967bf370acb284d5118cf5839a33f1d01b6c0def3c",
+                     "size":  206984,
+                     "url":  "https://www.vilanexo.com/launcher/mods/sound-physics-remastered-forge-1.20.1-1.5.1.jar"
+                 },
+                 {
+                     "file":  "Steam_Rails-1.7.3+forge-mc1.20.1.jar",
+                     "sha256":  "0e98b72472ff78464f6e69025bb47f942e7f66a976382fbb87ceff765a8b00cf",
+                     "size":  17042037,
+                     "url":  "https://www.vilanexo.com/launcher/mods/Steam_Rails-1.7.3%2Bforge-mc1.20.1.jar"
+                 },
+                 {
+                     "file":  "tan__a_curios_expansion-forge-1.20.1-3.1.1.jar",
+                     "sha256":  "b9f5862df330229e2b515f01643003bc7b6a7e370628210ab478a982302b7768",
+                     "size":  3027403,
+                     "url":  "https://www.vilanexo.com/launcher/mods/tan__a_curios_expansion-forge-1.20.1-3.1.1.jar"
+                 },
+                 {
+                     "file":  "TerraBlender-forge-1.20.1-3.0.1.10.jar",
+                     "sha256":  "c109016f46ca9bdae69976bf080bbf2e8e5968cb66c0a78845f8ca6af5dbbeb1",
+                     "size":  107532,
+                     "url":  "https://www.vilanexo.com/launcher/mods/TerraBlender-forge-1.20.1-3.0.1.10.jar"
+                 },
+                 {
+                     "file":  "ToughAsNails-forge-1.20.1-9.2.0.171.jar",
+                     "sha256":  "78e7a0932395a2d8550d422e1ed86352edd8fa5d693711c1366eb60abfae0e7e",
+                     "size":  459479,
+                     "url":  "https://www.vilanexo.com/launcher/mods/ToughAsNails-forge-1.20.1-9.2.0.171.jar"
+                 },
+                 {
+                     "file":  "TreeChop-1.20.1-forge-0.19.0-fixed.jar",
+                     "sha256":  "219fbe5bf8d862dc7b524ca5a0151f66bba4d53a01010858e136a9e8c4d55d4f",
+                     "size":  517225,
+                     "url":  "https://www.vilanexo.com/launcher/mods/TreeChop-1.20.1-forge-0.19.0-fixed.jar"
+                 },
+                 {
+                     "file":  "twilight_lib-1.20.1-forge-dev260819a.jar",
+                     "sha256":  "82aa7591e7da44bdcfb61a27c43e5bcb5869dd3a141b2fd6a4d2fe686233f234",
+                     "size":  604571,
+                     "url":  "https://www.vilanexo.com/launcher/mods/twilight_lib-1.20.1-forge-dev260819a.jar"
+                 },
+                 {
+                     "file":  "voicechat-forge-1.20.1-2.6.22-PERMITIDO-JAVA17.jar",
+                     "sha256":  "1b94e9f96effd56b5d660817d3996c92b14f93d27cbd07f8d269c3a8c4bff02d",
+                     "size":  4908146,
+                     "url":  "https://www.vilanexo.com/launcher/mods/voicechat-forge-1.20.1-2.6.22-PERMITIDO-JAVA17.jar"
+                 },
+                 {
+                     "file":  "void_lib-1.1.6.jar",
+                     "sha256":  "ddef97c426f2d48beda2068eb0a725392d926dcbad2a522ca1d724572286e4f6",
+                     "size":  226583,
+                     "url":  "https://www.vilanexo.com/launcher/mods/void_lib-1.1.6.jar"
+                 },
+                 {
+                     "file":  "waystones-forge-1.20.1-14.1.20.jar",
+                     "sha256":  "5ecc6535596b5954f6293224be6b35805c64f4d4aedc2b9e32d9508dd529cabd",
+                     "size":  533738,
+                     "url":  "https://www.vilanexo.com/launcher/mods/waystones-forge-1.20.1-14.1.20.jar"
+                 },
+                 {
+                     "file":  "weedcraft-2.7.2.jar",
+                     "sha256":  "08ead6a6ce6ba013c1778a407a4c3e5d1136dd9a16649a28f97d04da49dfbfef",
+                     "size":  649223,
+                     "url":  "https://www.vilanexo.com/launcher/mods/weedcraft-2.7.2.jar"
+                 }
+             ],
+    "baseUrl":  "https://www.vilanexo.com/launcher/mods/",
+    "generatedAt":  "2026-09-14T01:19:31Z"
+}

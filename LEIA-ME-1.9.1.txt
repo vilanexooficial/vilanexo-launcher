@@ -1,0 +1,8 @@
+VilaNexo Launcher 1.9.1
+
+- Preview de skin trocado por renderização WebGL 3D real com skinview3d/Three.js.
+- Cabeça, corpo, braços e pernas são geometrias 3D reais, com profundidade, laterais, costas, topo e base.
+- Arraste para rotacionar e use a roda do mouse para zoom.
+- Mantida a correção do Forge e o sistema de mods/servidor das versões anteriores.
+
+Observação: o motor skinview3d é carregado do CDN jsDelivr ao abrir o launcher; é necessária conexão com a internet para o preview 3D.
