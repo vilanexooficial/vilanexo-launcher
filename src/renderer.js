@@ -13,6 +13,7 @@ let skinViewerResizeObserver = null;
 let discordPollTimer = null;
 let homeSkinViewer = null;
 let selectedProfile = 'cobblemon';
+let modsCatalog = [];
 
 function renderHomeSkin(dataUrl) {
   const side = document.querySelector('#homeSkinPanel, .dashboard-side');
@@ -64,6 +65,48 @@ function showPage(id) {
 function updateMods(m) {
   if (!$('modsStatus')) return;
   $('modsStatus').textContent = `${m?.count || 0} mod(s) sincronizado(s)`;
+}
+
+function prettyModName(path) {
+  const file = decodeURIComponent(String(path || '').split('/').pop() || 'Mod');
+  return file.replace(/\.jar$/i, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function renderModsList(filter = '') {
+  const list = $('modsList');
+  if (!list) return;
+  const term = filter.trim().toLowerCase();
+  const visible = modsCatalog.filter(mod => mod.name.toLowerCase().includes(term) || mod.file.toLowerCase().includes(term));
+  list.textContent = '';
+  if (!visible.length) { list.innerHTML = '<div class="mods-empty">Nenhum mod encontrado.</div>'; return; }
+  visible.forEach(mod => {
+    const card = document.createElement('article');
+    card.className = 'mod-card';
+    const name = document.createElement('strong');
+    name.textContent = mod.name;
+    const file = document.createElement('small');
+    file.textContent = mod.file;
+    card.append(name, file);
+    list.appendChild(card);
+  });
+}
+
+async function loadModsCatalog() {
+  if (!$('modsList')) return;
+  try {
+    const url = config.profiles?.cobblemon?.distribution?.manifestUrl || config.distribution?.manifestUrl;
+    const manifest = await fetch(`${url}${url.includes('?') ? '&' : '?'}launcher=${Date.now()}`).then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    });
+    modsCatalog = (manifest.files || []).filter(f => /^mods\//i.test(f.path || '')).map(f => ({ name: prettyModName(f.path), file: decodeURIComponent(String(f.path).split('/').pop()) }));
+    $('modsSummary').textContent = `${modsCatalog.length} mods • ${manifest.version || 'versão atual'}`;
+    renderModsList();
+  } catch (e) {
+    $('modsSummary').textContent = 'Lista indisponível';
+    $('modsList').innerHTML = '<div class="mods-empty">Não foi possível carregar a lista de mods agora.</div>';
+    logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Não foi possível carregar a lista de mods.' });
+  }
 }
 
 function updateState(s) {
@@ -220,6 +263,8 @@ async function init() {
       $('updateLauncher').onclick = () => window.vilaNexoLauncher.installUpdate();
     }
   });
+  loadModsCatalog();
+  if ($('modsSearch')) $('modsSearch').oninput = e => renderModsList(e.target.value);
   if (state.account?.name) {
     await loadSavedSkin(state.account.name);
   }
@@ -276,7 +321,6 @@ $('logout').onclick = async () => { await window.vilaNexoLauncher.logout(); upda
 if ($('folderGame')) $('folderGame').onclick = () => window.vilaNexoLauncher.openGame();
 if ($('folderLogs')) $('folderLogs').onclick = () => window.vilaNexoLauncher.openLogs();
 if ($('store')) $('store').onclick = () => window.vilaNexoLauncher.openUrl(config.links.store);
-if ($('wiki')) $('wiki').onclick = () => window.vilaNexoLauncher.openUrl(config.links.wiki);
 if ($('support')) $('support').onclick = () => window.vilaNexoLauncher.openUrl(config.links.support);
 
 $('chooseSkin').onclick = async () => {
