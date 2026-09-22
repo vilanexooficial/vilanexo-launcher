@@ -14,6 +14,8 @@
     "cobblemon": {
       "name": "VilaNexo Cobblemon",
       "localModsDir": "mods",
+      "requiresDiscordLogin": true,
+      "requiresWhitelist": false,
       "serverAddress": "poke.vilanexo.com",
       "serverPort": 25566,
       "minecraft": {
@@ -29,6 +31,8 @@
     "rpg": {
       "name": "VilaNexo RPG",
       "localModsDir": "profiles/rpg/mods",
+      "requiresDiscordLogin": true,
+      "requiresWhitelist": true,
       "serverAddress": "jogar.vilanexo.com",
       "serverPort": 25565,
       "minecraft": {
@@ -42,6 +46,11 @@
   },
   "distribution": {
     "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
+  },
+  "skins": {
+    "uploadUrl": "https://www.vilanexo.com/skins/skin.ashx",
+    "indexUrl": "https://www.vilanexo.com/skins/index.ashx",
+    "baseUrl": "https://www.vilanexo.com/skins/skin.ashx?name="
   },
   "launcher": {
     "updateUrl": "https://www.vilanexo.com/launcher/update.json",

@@ -5,3 +5,4 @@ profiles/
 mods-forge-backup-1.9.6/
 *.exe
 *.blockmap
+_claude/

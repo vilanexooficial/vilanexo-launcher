@@ -427,6 +427,12 @@ class LauncherService {
     return data;
   }
 
+  ensureDiscordLogin() {
+    const auth = this.loadDiscordAuth();
+    if (!auth?.token) throw new Error('Faça login com Discord antes de entrar no servidor.');
+    return auth;
+  }
+
 
   async ensureCustomSkinLoader() {
     const modsDir = this.getGameModsDir();
@@ -455,6 +461,14 @@ class LauncherService {
     }
 
     const wantedLine = isNeoForge ? /forgev3/i : /forgev2/i;
+    // Remove o bootstrap Universal que não inicia corretamente no NeoForge.
+    if (isNeoForge) {
+      for (const dir of [modsDir, this.getModsDir()]) {
+        for (const file of fs.readdirSync(dir).filter(n => /customskinloader/i.test(n) && /universal/i.test(n) && n.toLowerCase().endsWith('.jar'))) {
+          fs.rmSync(path.join(dir, file), { force: true });
+        }
+      }
+    }
     const existing = fs.readdirSync(modsDir).find(n => /customskinloader/i.test(n) && wantedLine.test(n) && n.toLowerCase().endsWith('.jar'));
     if (existing) return path.join(modsDir, existing);
 
@@ -476,8 +490,7 @@ class LauncherService {
     const versions = await this.fetchJson(api, { headers: { 'User-Agent': 'VilaNexoLauncher/2.1.9' } });
     if (!Array.isArray(versions) || !versions.length) throw new Error(`Não foi encontrada uma versão do CustomSkinLoader para ${loaderQuery} ${gameVersion}.`);
 
-    // NeoForge 1.21.x usa ForgeV3. Forge 1.20.1 usa ForgeV2.
-    // Evita Universal/bootstrap, que pode criar conflitos no ModuleLayer.
+    // NeoForge 1.21.x usa a linha ForgeV3 específica.
     let selected = null;
     for (const v of versions) {
       const f = (v.files || []).find(x => wantedLine.test(String(x.filename || '')) && String(x.filename || '').toLowerCase().endsWith('.jar'));
@@ -507,11 +520,14 @@ class LauncherService {
     const config = {
       enable: true,
       loadlist: [
-        { name: 'VilaNexo LocalSkin', type: 'Legacy', root: 'LocalSkin', checkPNG: true },
-        { name: 'Mojang', type: 'MojangAPI' }
+        // Legacy reads `skin`, not `root`. USERNAME selects our local PNG;
+        // it does not perform a Mojang lookup (unlike UUID placeholders).
+        { name: 'VilaNexo LocalSkin', type: 'Legacy', skin: 'LocalSkin/skins/{USERNAME}.png', checkPNG: true }
       ],
       enableDynamicSkull: true,
-      enableTransparentSkin: true
+      enableTransparentSkin: true,
+      enableLocalProfileCache: false,
+      enableLogStdOut: true
     };
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
     const officialDir = path.join(this.getOfficialMinecraftDir(), 'CustomSkinLoader');
@@ -575,7 +591,8 @@ class LauncherService {
     const savedDir = path.join(this.paths.root, 'skins');
     fs.mkdirSync(savedDir, { recursive: true });
     await fsp.copyFile(filePath, path.join(savedDir, `${name}.png`));
-    try { await this.publishSkin(filePath, name); }
+     const ownerUuid = this.loadAuth()?.profile?.id || this.offlineUuid(name);
+     try { await this.publishSkin(filePath, name, ownerUuid); }
     catch (e) { this.log(`Skin salva localmente; sincronizaÃ§Ã£o online falhou: ${e.message}`, 'AVISO'); }
 
     // MantÃ©m uma cÃ³pia simples das preferÃªncias do VilaNexo. O CustomSkinLoader
@@ -590,33 +607,37 @@ class LauncherService {
     return { name, local: true, path: dest };
   }
 
-  async publishSkin(filePath, name) {
+  async publishSkin(filePath, name, uuid = '') {
     const url = this.config.skins?.uploadUrl;
     if (!url) return;
     const bytes = await fsp.readFile(filePath);
     const form = new FormData();
     form.append('name', name);
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(uuid))) form.append('uuid', String(uuid).toLowerCase());
     form.append('skin', new Blob([bytes], { type: 'image/png' }), `${name}.png`);
     const res = await fetch(url, { method: 'POST', body: form });
     if (!res.ok) throw new Error(`NÃ£o foi possÃ­vel sincronizar a skin (HTTP ${res.status}).`);
     this.log(`Skin sincronizada no servidor para ${name}.`, 'SUCESSO');
   }
 
-  async syncServerSkins() {
+   async syncServerSkins() {
     const indexUrl = this.config.skins?.indexUrl;
     const baseUrl = this.config.skins?.baseUrl;
     if (!indexUrl || !baseUrl) return;
-    const names = await this.fetchJson(indexUrl, { headers: { 'User-Agent': 'VilaNexoLauncher/1.9.1' } });
-    if (!Array.isArray(names)) return;
+      const entries = await this.fetchJson(indexUrl, { headers: { 'User-Agent': 'VilaNexoLauncher/2.3.8' } });
+     if (!Array.isArray(entries)) return;
     const dir = path.join(this.paths.gameDir, 'CustomSkinLoader', 'LocalSkin', 'skins');
     fs.mkdirSync(dir, { recursive: true });
-    for (const name of names) {
-      if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) continue;
-      const target = path.join(dir, `${name}.png`);
-      try { fs.rmSync(target, { force: true }); } catch {}
-      await this.download(`${baseUrl}${encodeURIComponent(name)}&v=${Date.now()}`, target, null, null, { label: `Skin ${name}` });
-    }
-    this.log(`Skins sincronizadas: ${names.length}.`, 'SUCESSO');
+      for (const entry of entries) {
+       const name = typeof entry === 'string' ? entry : String(entry?.name || '');
+       const uuid = typeof entry === 'object' ? String(entry.uuid || '') : '';
+       if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) continue;
+       const target = path.join(dir, `${name}.png`);
+       try { fs.rmSync(target, { force: true }); } catch {}
+       const skinUrl = uuid ? `${baseUrl.replace(/name=$/, '')}uuid=${encodeURIComponent(uuid)}&name=${encodeURIComponent(name)}&v=${Date.now()}` : `${baseUrl}${encodeURIComponent(name)}&v=${Date.now()}`;
+        await this.download(skinUrl, target, null, null, { label: `Skin ${name}` });
+      }
+      this.log(`Skins sincronizadas por UUID: ${entries.length}.`, 'SUCESSO');
   }
 
   async uploadSkin(filePath, variant = 'classic', offlineName = '') {
@@ -625,7 +646,9 @@ class LauncherService {
     if (!['classic', 'slim'].includes(variant)) throw new Error('Modelo de skin invÃ¡lido.');
     if (path.extname(filePath).toLowerCase() !== '.png') throw new Error('A skin precisa estar no formato PNG.');
     const auth = this.loadAuth();
-    const name = String(offlineName || auth?.profile?.name || '').trim();
+    // The active account is authoritative. Never let a stale nick field
+    // publish the skin under another player identity.
+    const name = String(auth?.profile?.name || auth?.profile?.username || offlineName || '').trim();
     return this.applyLocalSkin(filePath, name, variant);
   }
 
@@ -1329,7 +1352,14 @@ ClientEvents.tick(event => {
     this.setBusy(true);
     try {
       const auth = await this.refreshAuthIfNeeded();
-      await this.verifyDiscordAccess();
+      if (this.profile.requiresDiscordLogin === true) {
+        this.ensureDiscordLogin();
+      }
+      // A whitelist is required only for the RPG server. Cobblemon still
+      // requires Discord login, but does not require whitelist approval.
+      if (this.profile.requiresWhitelist === true) {
+        await this.verifyDiscordAccess();
+      }
       await this.importExistingMinecraft();
        const java = await this.ensureJava21();
        await this.installVanilla();
@@ -1339,8 +1369,9 @@ ClientEvents.tick(event => {
        if (this.profileId === 'cobblemon') migrateMapConfig(this.paths.gameDir);
         await this.ensureCustomSkinLoader();
         this.ensureCustomSkinLoaderConfig();
-      await this.syncServerSkins();
-      this.restoreSavedSkin(auth.profile.name);
+       try { await this.syncServerSkins(); }
+       catch (e) { this.log(`Sincronização de skins indisponível: ${e.message}`, 'AVISO'); }
+       finally { this.restoreSavedSkin(auth.profile.name); }
         this.ensureVilaNexoServerEntry();
       this.progress('Iniciando jogo', 95);
        const launch = await this.buildLaunch(java, auth, profileId);
