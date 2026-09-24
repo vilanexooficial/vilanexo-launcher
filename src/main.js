@@ -67,13 +67,41 @@ ipcMain.handle('launcher:discord-login', async () => {
   await shell.openExternal(data.loginUrl);
   return { nonce: data.nonce };
 });
+ipcMain.handle('launcher:microsoft-login', async () => {
+  const code = await new Promise((resolve, reject) => {
+    const redirect = launcher.microsoftConfig().redirectUri;
+    const win = new BrowserWindow({
+      parent: mainWindow, modal: true, width: 500, height: 680, resizable: false, minimizable: false,
+      title: 'Entrar com a conta Microsoft', backgroundColor: '#ffffff', autoHideMenuBar: true,
+      webPreferences: { partition: `msa-${Date.now()}`, contextIsolation: true, nodeIntegration: false, sandbox: true }
+    });
+    let done = false;
+    const finish = (url) => {
+      if (done || !String(url).startsWith(redirect)) return false;
+      done = true;
+      const u = new URL(url);
+      const c = u.searchParams.get('code');
+      const err = u.searchParams.get('error_description') || u.searchParams.get('error');
+      setImmediate(() => { if (!win.isDestroyed()) win.close(); });
+      if (c) resolve(c); else reject(new Error(err ? `Login Microsoft recusado: ${err}` : 'Login Microsoft cancelado.'));
+      return true;
+    };
+    win.webContents.on('will-redirect', (e, url) => { if (finish(url)) e.preventDefault(); });
+    win.webContents.on('will-navigate', (e, url) => { if (finish(url)) e.preventDefault(); });
+    win.webContents.on('did-navigate', (_, url) => finish(url));
+    win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:\/\//.test(url)) shell.openExternal(url); return { action: 'deny' }; });
+    win.on('closed', () => { if (!done) { done = true; reject(new Error('Login Microsoft cancelado.')); } });
+    win.loadURL(launcher.microsoftAuthorizeUrl());
+  });
+  return launcher.loginMicrosoft(code);
+});
 ipcMain.handle('launcher:discord-poll', (_, nonce) => launcher.pollDiscordLogin(nonce));
 ipcMain.handle('launcher:logout', () => launcher.logout());
 ipcMain.handle('launcher:play', (_, profileId) => launcher.play(profileId));
 ipcMain.handle('launcher:sync', () => launcher.syncDistribution());
 ipcMain.handle('launcher:open-game', () => shell.openPath(launcher.paths.gameDir));
 ipcMain.handle('launcher:open-logs', () => shell.openPath(path.join(launcher.paths.gameDir, 'logs')));
-ipcMain.handle('launcher:open-url', (_, url) => shell.openExternal(url));
+ipcMain.handle('launcher:open-url', (_, url) => (/^https:\/\//i.test(String(url)) ? shell.openExternal(url) : null));
 
 ipcMain.handle('launcher:choose-skin', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {

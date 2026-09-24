@@ -14,25 +14,54 @@ let discordPollTimer = null;
 let homeSkinViewer = null;
 let selectedProfile = 'cobblemon';
 let modsCatalog = [];
+const DEFAULT_SKIN = '../assets/default-skin.png';
+let currentAccount = null;
+
+function drawHead(dataUrl, el, size = 42) {
+  if (!el || !dataUrl) return;
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    const g = c.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(img, 8, 8, 8, 8, 0, 0, size, size);
+    if (img.height >= 64) g.drawImage(img, 40, 8, 8, 8, 0, 0, size, size);
+    el.textContent = '';
+    el.style.background = 'none';
+    el.appendChild(c);
+  };
+  img.src = dataUrl;
+}
 
 function renderHomeSkin(dataUrl) {
-  const side = document.querySelector('#homeSkinPanel, .dashboard-side');
-  if (!side || !window.skinview3d?.SkinViewer) return;
+  const side = document.getElementById('homeSkinPanel');
+  if (!side) return;
+  if (dataUrl) { drawHead(dataUrl, $('profileHead'), 42); drawHead(dataUrl, $('skinMiniHead'), 46); drawHead(dataUrl, $('accountHead'), 64); }
+  if (!window.skinview3d?.SkinViewer) return;
   let panel = document.getElementById('homeSkin3d');
   if (!panel) {
     panel = document.createElement('div');
     panel.id = 'homeSkin3d';
-     panel.className = 'home-skin-3d';
-    panel.innerHTML = '<canvas id="homeSkinCanvas"></canvas><button type="button" data-page="skins">Editar Skin</button>';
-     side.appendChild(panel);
-    panel.querySelector('button').onclick = () => showPage('skins');
-    homeSkinViewer = new window.skinview3d.SkinViewer({ canvas: $('homeSkinCanvas'), width: 250, height: 210, skin: dataUrl || 'https://minotar.net/skin/Steve' });
+    panel.className = 'home-skin-3d';
+    panel.innerHTML = '<canvas id="homeSkinCanvas"></canvas>';
+    side.insertBefore(panel, $('profileHint'));
+    const r = panel.getBoundingClientRect();
+    homeSkinViewer = new window.skinview3d.SkinViewer({ canvas: $('homeSkinCanvas'), width: Math.max(200, Math.round(r.width)), height: Math.max(220, Math.round(r.height)), skin: dataUrl || DEFAULT_SKIN, model: $('skinVariant')?.value === 'slim' ? 'slim' : 'default' });
     homeSkinViewer.background = null;
-    homeSkinViewer.fov = 38;
-    homeSkinViewer.zoom = .72;
+    homeSkinViewer.fov = 40;
+    homeSkinViewer.camera.position.set(0, .18, 1);
+    homeSkinViewer.zoom = .68;
     homeSkinViewer.autoRotate = true;
+    homeSkinViewer.autoRotateSpeed = .55;
+    if (homeSkinViewer.controls) { homeSkinViewer.controls.enableZoom = false; homeSkinViewer.controls.enablePan = false; }
     if (homeSkinViewer.globalLight) homeSkinViewer.globalLight.intensity = 2.4;
-    if (homeSkinViewer.cameraLight) homeSkinViewer.cameraLight.intensity = .45;
+    if (homeSkinViewer.cameraLight) homeSkinViewer.cameraLight.intensity = .5;
+    try { if (window.skinview3d.IdleAnimation) homeSkinViewer.animation = new window.skinview3d.IdleAnimation(); } catch {}
+    new ResizeObserver(() => {
+      const b = panel.getBoundingClientRect();
+      if (b.width > 10 && b.height > 10) { homeSkinViewer.width = Math.round(b.width); homeSkinViewer.height = Math.round(b.height); }
+    }).observe(panel);
   } else if (dataUrl && homeSkinViewer) {
     homeSkinViewer.loadSkin(dataUrl, { model: $('skinVariant')?.value === 'slim' ? 'slim' : 'default' });
   }
@@ -41,9 +70,30 @@ function renderHomeSkin(dataUrl) {
     card.id = 'creatorCard';
     card.className = 'creator-card';
     card.type = 'button';
-    card.innerHTML = '<span class="youtube-mark">▶</span><span><small>CRIADOR DO LAUNCHER</small><strong>ApenasTyron</strong><em>Visite meu canal no YouTube</em></span><b>›</b>';
+    card.innerHTML = '<span class="youtube-mark">▶</span><span><small>CRIADOR DO LAUNCHER</small><strong>ApenasTyron</strong><em>Visite o canal no YouTube</em></span><b>›</b>';
     card.onclick = () => window.vilaNexoLauncher.openUrl('https://www.youtube.com/@ApenasTyron');
     side.appendChild(card);
+  }
+}
+
+async function refreshServerStatus() {
+  const tag = $('heroStatus');
+  if (!tag) return;
+  const host = config?.minecraft?.serverAddress || 'poke.vilanexo.com';
+  const port = config?.minecraft?.serverPort || 25566;
+  try {
+    const r = await fetch(`https://api.mcsrvstat.us/3/${host}:${port}`, { cache: 'no-store' });
+    const d = await r.json();
+    if (d.online) {
+      const on = d.players?.online ?? 0;
+      tag.innerHTML = `<i class="pulse"></i><b>Online • ${on} ${on === 1 ? 'jogador' : 'jogadores'}</b>`;
+      if ($('heroPlayers')) $('heroPlayers').textContent = on;
+    } else {
+      tag.innerHTML = '<i class="pulse off"></i><b>Servidor reiniciando</b>';
+      if ($('heroPlayers')) $('heroPlayers').textContent = '0';
+    }
+  } catch {
+    tag.innerHTML = '<i class="pulse wait"></i><b>Servidor online</b>';
   }
 }
 
@@ -82,6 +132,9 @@ function renderModsList(filter = '') {
   visible.forEach(mod => {
     const card = document.createElement('article');
     card.className = 'mod-card';
+    card.dataset.initial = (mod.name.match(/[a-z0-9]/i) || ['M'])[0].toUpperCase();
+    let hue = 0; for (const ch of mod.name) hue = (hue * 31 + ch.charCodeAt(0)) % 360;
+    card.style.setProperty('--hue', hue);
     const name = document.createElement('strong');
     name.textContent = mod.name;
     const file = document.createElement('small');
@@ -100,7 +153,8 @@ async function loadModsCatalog() {
       return r.json();
     });
     modsCatalog = (manifest.files || []).filter(f => /^mods\//i.test(f.path || '')).map(f => ({ name: prettyModName(f.path), file: decodeURIComponent(String(f.path).split('/').pop()) }));
-    $('modsSummary').textContent = `${modsCatalog.length} mods • ${manifest.version || 'versão atual'}`;
+    $('modsSummary').textContent = `${modsCatalog.length} mods • pacote ${manifest.version || 'atual'}`;
+    if ($('heroMods')) $('heroMods').textContent = modsCatalog.length;
     renderModsList();
   } catch (e) {
     $('modsSummary').textContent = 'Lista indisponível';
@@ -111,11 +165,21 @@ async function loadModsCatalog() {
 
 function updateState(s) {
   document.querySelectorAll('.server-choice button').forEach(b => { b.disabled = !!s.busy; });
+  document.body.classList.toggle('busy', !!s.busy);
   updateMods(s.mods);
+  const prevId = currentAccount?.id;
+  currentAccount = s.account || null;
+  if ($('accountName')) {
+    $('accountName').textContent = s.account ? s.account.name : 'Nenhuma conta';
+    const badge = $('accountType');
+    badge.className = 'acc-badge' + (s.account ? (s.account.type === 'microsoft' ? ' ms' : ' local') : '');
+    badge.textContent = !s.account ? 'Entre com Microsoft ou escolha um nick abaixo.' : s.account.type === 'microsoft' ? '● Minecraft original (conta Microsoft)' : '● Perfil com nick (não original)';
+  }
+  if (s.account && prevId && prevId !== s.account.id) { skinDataUrl = ''; loadSavedSkin(s.account.name); }
   if (s.account) {
     $('profileName').textContent = s.account.name;
     if ($('dashboardProfileName')) $('dashboardProfileName').textContent = s.account.name;
-    $('profileWelcome').textContent = `Bem-vindo, ${s.account.name}! Boa aventura.`;
+    $('profileWelcome').textContent = s.account.type === 'microsoft' ? 'Minecraft original' : 'Perfil com nick';
     if ($('skinOfflineName') && !$('skinOfflineName').value) $('skinOfflineName').value = s.account.name;
     if ($('offlineName') && !$('offlineName').value) $('offlineName').value = s.account.name;
   } else {
@@ -146,7 +210,8 @@ function applyTheme(hex, persist = true) {
   document.documentElement.style.setProperty('--accent-rgb', `${r},${g},${b}`);
   $('launcherColor').value = normalized;
   $('launcherColorValue').textContent = normalized.toUpperCase();
-  if (persist) localStorage.setItem('vilanexo-theme', normalized);
+  document.querySelectorAll('.theme-presets button').forEach(b => b.classList.toggle('active', (b.dataset.color || '').toLowerCase() === normalized));
+  if (persist) { try { localStorage.setItem('vilanexo-theme', normalized); } catch {} }
 }
 
 function ensureSkinViewer() {
@@ -164,8 +229,9 @@ function ensureSkinViewer() {
       skin: skinDataUrl || undefined
     });
     skinViewer3D.background = null;
-    skinViewer3D.fov = 42;
-    skinViewer3D.zoom = 0.78;
+    skinViewer3D.fov = 40;
+    skinViewer3D.zoom = 0.86;
+    try { if (window.skinview3d.IdleAnimation) skinViewer3D.animation = new window.skinview3d.IdleAnimation(); } catch {}
     skinViewer3D.autoRotate = false;
     if (skinViewer3D.globalLight) skinViewer3D.globalLight.intensity = 2.6;
     if (skinViewer3D.cameraLight) skinViewer3D.cameraLight.intensity = 0.45;
@@ -194,7 +260,6 @@ function renderSkin3D(dataUrl) {
     const viewer = ensureSkinViewer();
     const model = $('skinVariant').value === 'slim' ? 'slim' : 'default';
     viewer.loadSkin(dataUrl, { model });
-    viewer.zoom = 0.78;
     setSkinView('reset');
     $('skinMessage').textContent = 'Preview WebGL 3D real ativo. Arraste para girar e use o scroll para zoom.';
   } catch (e) {
@@ -206,15 +271,31 @@ function renderSkin3D(dataUrl) {
 
 async function loadSavedSkin(name) {
   const savedSkin = await window.vilaNexoLauncher.getSavedSkin(name);
-  if (!savedSkin?.dataUrl) return;
+  if (!savedSkin?.dataUrl) { useDefaultSkin(); return; }
+  if (savedSkin.variant) setVariant(savedSkin.variant === 'slim' ? 'slim' : 'classic');
   document.querySelector('.dashboard-side')?.style.setProperty('--skin-image', `url("${savedSkin.dataUrl}")`);
   $('skinOfflineName').value = savedSkin.name;
   $('skinCurrentName').textContent = savedSkin.name;
-  $('skinFileName').textContent = 'Skin salva carregada automaticamente.';
+  $('skinFileName').textContent = savedSkin.official ? 'Skin oficial da sua conta Microsoft.' : 'Skin salva carregada automaticamente.';
   selectedSkin = { path: null, name: savedSkin.name, dataUrl: savedSkin.dataUrl };
   renderSkin3D(savedSkin.dataUrl);
   renderHomeSkin(savedSkin.dataUrl);
   $('uploadSkin').disabled = true;
+}
+
+function setVariant(variant) {
+  $('skinVariant').value = variant;
+  document.querySelectorAll('.model-choice').forEach(b => b.classList.toggle('active', b.dataset.variant === variant));
+}
+
+function useDefaultSkin() {
+  if (skinDataUrl) return;
+  renderHomeSkin(DEFAULT_SKIN);
+  if ($('skinPlaceholder') && window.skinview3d?.SkinViewer) {
+    renderSkin3D(DEFAULT_SKIN);
+    skinDataUrl = '';
+    $('skinMessage').textContent = 'Skin padrão do VilaNexo. Escolha um PNG para usar a sua.';
+  }
 }
 
 function setupSkinInteraction() {
@@ -223,20 +304,18 @@ function setupSkinInteraction() {
 }
 
 function setSkinView(view) {
-  if (!skinViewer3D) return;
-  const player = skinViewer3D.playerObject;
-  if (player) {
-    const rotations = { front:0, back:Math.PI, left:Math.PI/2, right:-Math.PI/2, reset:-Math.PI/7 };
-    if (view in rotations) player.rotation.y = rotations[view];
-  }
-  const cam = skinViewer3D.camera;
-  if (cam) {
-    if (view === 'top') cam.position.set(0, 45, 24);
-    else if (view === 'bottom') cam.position.set(0, -18, 35);
-    else cam.position.set(0, 0, 42);
-    cam.lookAt(0, 16, 0);
-  }
-  skinViewer3D.zoom = (view === 'top' || view === 'bottom') ? 0.68 : 0.78;
+  const v = skinViewer3D;
+  if (!v) return;
+  const turn = { front: 0, back: Math.PI, left: Math.PI / 2, right: -Math.PI / 2, reset: -Math.PI / 7, top: -Math.PI / 7, bottom: -Math.PI / 7 };
+  if (v.playerWrapper) v.playerWrapper.rotation.set(0, 0, 0);
+  if (v.playerObject) v.playerObject.rotation.set(0, turn[view] ?? 0, 0);
+  const dir = view === 'top' ? [0, 1.25, 1] : view === 'bottom' ? [0, -1, 1] : [0, .12, 1];
+  v.camera.position.set(dir[0], dir[1], dir[2]);
+  v.camera.rotation.set(0, 0, 0);
+  if (v.controls?.target) v.controls.target.set(0, 0, 0);
+  v.zoom = (view === 'top' || view === 'bottom') ? 0.72 : 0.86;
+  v.camera.lookAt(0, 0, 0);
+  v.controls?.update();
   document.querySelectorAll('[data-skin-view]').forEach(b => b.classList.toggle('active', b.dataset.skinView === view || (view === 'reset' && b.dataset.skinView === 'front')));
 }
 
@@ -245,14 +324,15 @@ async function init() {
   const state = await window.vilaNexoLauncher.getState();
   updateState(state);
   renderHomeSkin();
-    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
+    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'neoforge').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
    $('memoryMinMb').value = config.minecraft.memoryMinMb || 2048;
    $('memoryMaxMb').value = config.minecraft.memoryMaxMb || 6144;
    $('memoryMaxSlider').value = config.minecraft.memoryMaxMb || 6144;
    $('ramValue').textContent = `${((config.minecraft.memoryMaxMb || 6144) / 1024).toFixed(1).replace('.0', '')} GB`;
    $('launcherDisplayVersion').textContent = config.launcher?.displayVersion || '1.0';
    $('performanceMode').value = config.minecraft.performance || 'balanced';
-  applyTheme(localStorage.getItem('vilanexo-theme') || '#8d46ff', false);
+  let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme'); } catch {}
+  applyTheme(savedTheme || '#8d46ff', false);
   setupSkinInteraction();
   logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Launcher iniciado.' });
   window.vilaNexoLauncher.onUpdate((update) => {
@@ -270,10 +350,12 @@ async function init() {
     }
   });
   loadModsCatalog();
+  refreshServerStatus();
+  setInterval(refreshServerStatus, 60000);
   if ($('modsSearch')) $('modsSearch').oninput = e => renderModsList(e.target.value);
   if (state.account?.name) {
     await loadSavedSkin(state.account.name);
-  }
+  } else useDefaultSkin();
 }
 
 document.querySelectorAll('nav [data-page]').forEach(b => b.onclick = () => showPage(b.dataset.page));
@@ -287,7 +369,7 @@ $('close').onclick = () => window.vilaNexoLauncher.close();
       try { await window.vilaNexoLauncher.play(selectedProfile); } catch (e) { alert(e.message); }
     });
   });
-$('loginOffline').onclick = async () => { try { const profile = await window.vilaNexoLauncher.loginOffline($('offlineName').value); await loadSavedSkin(profile.name); } catch (e) { alert(e.message); } };
+$('loginOffline').onclick = async () => { try { const profile = await window.vilaNexoLauncher.loginOffline($('offlineName').value); skinDataUrl = ''; await loadSavedSkin(profile.name); } catch (e) { logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: 'ERRO', message: e.message }); alert(String(e.message).replace(/^Error invoking remote method '[^']+': (Error: )?/, '')); } };
 $('loginDiscord').onclick = async () => {
   const btn = $('loginDiscord');
   try {
@@ -323,10 +405,15 @@ $('loginDiscord').onclick = async () => {
     $('discordStatus').textContent = e.message;
   }
 };
-$('logout').onclick = async () => { await window.vilaNexoLauncher.logout(); updateState(await window.vilaNexoLauncher.getState()); };
+$('logout').onclick = async () => { await window.vilaNexoLauncher.logout(); updateState(await window.vilaNexoLauncher.getState()); if ($('microsoftStatus')) $('microsoftStatus').textContent = 'Uma janela segura da Microsoft vai abrir.'; };
 if ($('folderGame')) $('folderGame').onclick = () => window.vilaNexoLauncher.openGame();
 if ($('folderLogs')) $('folderLogs').onclick = () => window.vilaNexoLauncher.openLogs();
-if ($('store')) $('store').onclick = () => window.vilaNexoLauncher.openUrl(config.links.store);
+const openLink = (key, fallback) => () => window.vilaNexoLauncher.openUrl(config?.links?.[key] || fallback);
+if ($('store')) $('store').onclick = openLink('store', 'https://www.vilanexo.com/loja');
+if ($('quickStore')) $('quickStore').onclick = openLink('store', 'https://www.vilanexo.com/loja');
+if ($('linkDiscord')) $('linkDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
+if ($('quickDiscord')) $('quickDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
+if ($('linkSite')) $('linkSite').onclick = openLink('wiki', 'https://www.vilanexo.com/');
 
 $('chooseSkin').onclick = async () => {
   try {
@@ -344,7 +431,7 @@ $('chooseSkin').onclick = async () => {
        document.querySelector('.dashboard-side')?.style.setProperty('--skin-image', `url("${f.dataUrl}")`);
       $('skinFileName').textContent = f.name;
       if ($('skinCurrentName')) $('skinCurrentName').textContent = $('skinOfflineName').value || 'Perfil VilaNexo';
-      if ($('skinMiniHead')) { $('skinMiniHead').style.backgroundImage = `url("${f.dataUrl}")`; $('skinMiniHead').style.backgroundSize = '464px 464px'; $('skinMiniHead').style.backgroundPosition = '-58px -58px'; $('skinMiniHead').querySelector('span').style.display='none'; }
+      drawHead(f.dataUrl, $('skinMiniHead'), 46);
       $('uploadSkin').disabled = false;
       renderSkin3D(f.dataUrl);
     };
@@ -360,10 +447,9 @@ document.querySelectorAll('[data-skin-view]').forEach(btn => {
 
 document.querySelectorAll('.model-choice').forEach(btn => {
   btn.onclick = () => {
-    const variant = btn.dataset.variant;
-    $('skinVariant').value = variant;
-    document.querySelectorAll('.model-choice').forEach(b => b.classList.toggle('active', b === btn));
+    setVariant(btn.dataset.variant);
     if (skinDataUrl) renderSkin3D(skinDataUrl);
+    if (homeSkinViewer && skinDataUrl) homeSkinViewer.loadSkin(skinDataUrl, { model: btn.dataset.variant === 'slim' ? 'slim' : 'default' });
   };
 });
 
@@ -382,8 +468,25 @@ $('uploadSkin').onclick = async () => {
 
 if ($('skinOfflineName')) $('skinOfflineName').addEventListener('input', () => { if ($('skinCurrentName')) $('skinCurrentName').textContent = $('skinOfflineName').value || 'Perfil VilaNexo'; });
 $('launcherColor').oninput = e => applyTheme(e.target.value);
-document.querySelectorAll('.theme-presets button').forEach(b => b.onclick = () => applyTheme(b.dataset.color));
+document.querySelectorAll('.theme-presets button').forEach(b => { b.style.background = b.dataset.color; b.onclick = () => applyTheme(b.dataset.color); });
+$('themeToggle').onclick = (e) => { e.stopPropagation(); $('themePop').classList.toggle('hidden'); $('themeToggle').classList.toggle('open', !$('themePop').classList.contains('hidden')); };
+$('themePop').onclick = e => e.stopPropagation();
+document.addEventListener('click', () => { $('themePop').classList.add('hidden'); $('themeToggle').classList.remove('open'); });
+document.querySelectorAll('[data-open-settings]').forEach(b => b.onclick = () => { $('themePop').classList.add('hidden'); showPage('settings'); });
 $('resetTheme').onclick = () => applyTheme('#8d46ff');
+$('loginMicrosoft').onclick = async () => {
+  const btn = $('loginMicrosoft');
+  try {
+    btn.disabled = true;
+    $('microsoftStatus').textContent = 'Aguardando você entrar na janela da Microsoft...';
+    const acc = await window.vilaNexoLauncher.loginMicrosoft();
+    $('microsoftStatus').textContent = `Conectado como ${acc.name}.`;
+    skinDataUrl = '';
+    await loadSavedSkin(acc.name);
+  } catch (e) {
+    $('microsoftStatus').textContent = String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
+  } finally { btn.disabled = false; }
+};
 
 $('clearLogs').onclick = () => $('logBox').textContent = '';
 $('saveSettings').onclick = async () => {
@@ -392,7 +495,7 @@ $('saveSettings').onclick = async () => {
     button.disabled = true;
     config = await window.vilaNexoLauncher.updateSettings({ memoryMinMb: $('memoryMinMb').value, memoryMaxMb: $('memoryMaxMb').value, performance: $('performanceMode').value });
     $('settingsMessage').textContent = 'Configurações salvas. Elas serão usadas no próximo jogo.';
-    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'Fabric').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
+    $('configSummary').textContent = `Minecraft: ${config.minecraft.version}\nLoader: ${(config.minecraft.loader || 'neoforge').toUpperCase()} ${config.minecraft.loaderVersion || ''}\nMemória: ${config.minecraft.memoryMinMb}–${config.minecraft.memoryMaxMb} MB\nServidor: VilaNexo Cobblemon\nIP: ${config.minecraft.serverAddress}:${config.minecraft.serverPort}`;
   } catch (e) { $('settingsMessage').textContent = e.message; }
   finally { button.disabled = false; }
 };
@@ -410,6 +513,7 @@ window.vilaNexoLauncher.onMods(updateMods);
 window.vilaNexoLauncher.onProgress(p => {
   if ($('bar')) $('bar').style.width = `${p.progress}%`;
   if ($('phase')) $('phase').textContent = p.phase;
+  if ($('phasePct')) $('phasePct').textContent = `${Math.round(p.progress || 0)}%`;
   if ($('status')) $('status').textContent = `● ${p.phase}`;
   logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: 'INFO', message: `${p.phase} (${Math.round(p.progress)}%)` });
 });

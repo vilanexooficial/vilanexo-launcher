@@ -1,13 +1,13 @@
 {
   "name": "vilanexo-launcher",
-  "version": "2.4.3",
-  "description": "VilaNexo Cobblemon Launcher - Minecraft 1.21.1 Fabric com sincronização de modpack",
+  "version": "2.5.0",
+  "description": "VilaNexo Cobblemon Launcher - Minecraft 1.21.1 NeoForge com sincronização de modpack",
   "main": "src/main.js",
   "author": "VilaNexo",
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js && node --check src/launcher-service.js",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js && node --check src/fx.js && node --check src/launcher-service.js",
     "dist": "electron-builder --win nsis --x64",
     "dist:publish": "electron-builder --win nsis --x64 --publish always",
     "dist:portable": "electron-builder --win portable --x64"

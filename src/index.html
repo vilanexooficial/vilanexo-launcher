@@ -1,153 +1,346 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VilaNexo Launcher</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refresh.css"><link rel="stylesheet" href="wallpaper.css"><link rel="stylesheet" href="pokemon.css"><link rel="stylesheet" href="professional.css"><link rel="stylesheet" href="dashboard.css"><link rel="stylesheet" href="mockup.css"><link rel="stylesheet" href="stability.css"><link rel="stylesheet" href="skinfix.css"><link rel="stylesheet" href="home-skin.css"><link rel="stylesheet" href="reference-final.css"><link rel="stylesheet" href="final-fix.css"><link rel="stylesheet" href="creator-card.css"><link rel="stylesheet" href="dual-server.css"><link rel="stylesheet" href="skin-dual.css"><link rel="stylesheet" href="status-fix.css"><link rel="stylesheet" href="mods-list.css"><link rel="stylesheet" href="settings-performance.css"></head>
-<body>
-  <div class="bg"></div><div class="shade"></div>
-  <header class="topbar"><div class="brand"><span class="brand-kicker">VILANEXO</span><span class="brand-title">COBBLEMON</span></div><div class="drag"></div><button id="min">—</button><button id="max">□</button><button id="close">×</button></header>
-  <aside class="sidebar">
-   <div class="logo-mark"><img src="../assets/logocobblevilanexo.png" alt="VilaNexo"></div><h1>VilaNexo<br><span>Launcher</span></h1>
-    <nav>
-       <button class="active" data-page="home">⌂ <span>Início</span></button>
-       <button data-page="skins">◉ <span>Skin</span></button>
-       <button data-page="accounts">● <span>Perfil</span></button>
-        <button id="store">▦ <span>Loja</span></button>
-        <button data-page="mods">✚ <span>Mods</span></button>
-        <button data-page="settings">⚙ <span>Configurações</span></button>
-     </nav>
-    <div class="profile"><small>PERFIL ATIVO</small><strong id="profileName">VilaNexo</strong><span id="profileWelcome">Bem-vindo ao VilaNexo!</span></div>
-  </aside>
-  <main>
-     <section id="home" class="page active-page dual-home">
-        <div class="dual-hero"><span class="dual-kicker">VILANEXO LAUNCHER</span><h2>DOIS MUNDOS.<br><em>UMA SÓ AVENTURA.</em></h2><p>Escolha seu modpack, prepare sua jornada e entre no universo VilaNexo.</p><div id="updateNotice" class="update-notice hidden"><span id="updateText"></span><button id="updateLauncher">Atualização disponível</button></div><div class="dual-profile"><span class="dual-profile-dot"></span><span>PERFIL ATIVO</span><strong id="dashboardProfileName">VilaNexo</strong></div></div>
-        <aside id="homeSkinPanel" class="home-skin-card">
-          <div class="home-skin-heading"><span>SEU PERSONAGEM</span><strong>PREVIEW 3D DA SKIN</strong></div>
-        </aside>
-        <div class="server-grid">
-         <article class="server-choice cobblemon-choice selected" data-profile="cobblemon">
-            <div class="server-art"><img src="../assets/server-cobblemon.png" alt="VilaNexo Cobblemon"></div>
-           <div class="server-card-content"><span class="server-type">MINECRAFT 1.21.1 • FABRIC</span><h3>VILANEXO <b>COBBLEMON</b></h3><h4>CAPTURE • TREINE • EVOLUA</h4><p>Explore, capture e treine seus Pokémon!<br>Economia, eventos, aventuras e muito mais.</p><div class="server-meta"><span><i></i> SERVIDOR ONLINE</span><small>34 mods • poke.vilanexo.com</small></div><button class="server-play"><span>▶</span> JOGAR NO COBBLEMON</button></div>
-         </article>
-           <article class="server-choice rpg-choice" data-profile="rpg">
-            <div class="server-art rpg-art"><img src="../assets/server-rpg.png" alt="VilaNexo RPG"></div>
-              <div class="server-card-content"><span class="server-type">MINECRAFT 1.20.1 • FORGE</span><h3>VILANEXO <b>RPG</b></h3><h4>CRIE SUA HISTÓRIA</h4><p>Crie seu personagem e viva sua própria aventura!<br>Missões, classes, economia, PvP e muito mais.</p><div class="server-meta rpg-status"><span><i></i> EM MANUTENÇÃO</span><small>101 mods • jogar.vilanexo.com</small></div><div class="server-maintenance" role="status"><span>⚒</span> VILANEXO RPG EM MANUTENÇÃO</div></div>
-         </article>
-       </div>
-       <div class="dual-footer"><span>● Servidores online</span><strong>VILANEXO</strong><small>Escolha seu mundo para começar</small><div class="dual-social">◉　◈　◎　◌　⚙</div></div>
-        <section class="dual-log"><div class="dual-log-heading"><strong>ATIVIDADE DO LAUNCHER</strong><span id="status" class="status">● Launcher pronto</span><button id="clearLogs">Limpar</button></div><pre id="logBox"></pre></section>
-     </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VilaNexo Launcher</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body class="booting">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1z"/></symbol>
+      <symbol id="i-skin" viewBox="0 0 24 24"><path d="M8 3h8l5 4-2.5 3.5L17 9.6V21H7V9.6l-1.5.9L3 7z"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M3.8 21c.9-4.3 4.2-6.6 8.2-6.6s7.3 2.3 8.2 6.6z"/></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6zM8.5 8V6.5a3.5 3.5 0 0 1 7 0V8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 8h14l-1 13H6z"/></symbol>
+      <symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7zm0 2.3L5.3 8 12 11.7 18.7 8zM4.5 9.4v6.7l6.7 3.7v-6.7zm8.3 10.4 6.7-3.7V9.4l-6.7 3.7z"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><path d="m13.6 2 .5 2.6a8 8 0 0 1 2 1.2l2.5-.9 1.6 2.8-2 1.7a8 8 0 0 1 0 2.3l2 1.8-1.6 2.7-2.5-.8a8 8 0 0 1-2 1.1l-.5 2.6h-3.2l-.5-2.6a8 8 0 0 1-2-1.1l-2.5.8-1.6-2.7 2-1.8a8 8 0 0 1 0-2.3l-2-1.7 1.6-2.8 2.5.9a8 8 0 0 1 2-1.2l.5-2.6zM12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4.5l2 2.5H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m7.5 1.8V8h4.2zM8 12v1.8h8V12zm0 4v1.8h6V16z"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M19.3 5.3A16 16 0 0 0 15.3 4l-.5 1a15 15 0 0 0-5.6 0l-.5-1a16 16 0 0 0-4 1.3C2.2 9.1 1.5 12.8 1.9 16.4a16 16 0 0 0 4.9 2.5l1-1.6a10 10 0 0 1-1.6-.8l.4-.3a11.5 11.5 0 0 0 10.8 0l.4.3a10 10 0 0 1-1.6.8l1 1.6a16 16 0 0 0 4.9-2.5c.5-4.2-.8-7.9-2.8-11.1M8.7 14.2c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2m6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m6.9 6h-3a15 15 0 0 0-1.3-3.9A8 8 0 0 1 18.9 8M12 4c.8 1.1 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.9 1.9-4M4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4zm.8 2h3a15 15 0 0 0 1.3 3.9A8 8 0 0 1 5.1 16m3-8h-3a8 8 0 0 1 4.3-3.9C8.8 5.3 8.4 6.6 8.1 8M12 20c-.8-1.1-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.9-1.9 4m2.3-6H9.7a14 14 0 0 1 0-4h4.6a14 14 0 0 1 0 4m.3 5.9c.6-1.2 1-2.5 1.3-3.9h3a8 8 0 0 1-4.3 3.9m1.7-5.9a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4z"/></symbol>
+      <symbol id="i-yt" viewBox="0 0 24 24"><path d="M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12a31 31 0 0 0 .4 3.8 3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-3.8 31 31 0 0 0-.4-3.8M10 15.2V8.8l5.2 3.2z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 0 1 6 12l4.3 4.3-1.5 1.5-4.3-4.3A7.5 7.5 0 1 1 10.5 3m0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11"/></symbol>
+      <symbol id="i-ram" viewBox="0 0 24 24"><path d="M2 7h20v9h-2v2h-3v-2h-2v2h-2v-2h-2v2H9v-2H7v2H4v-2H2zm4 3v3h2v-3zm5 0v3h2v-3zm5 0v3h2v-3z"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5zm-1.2 13.6-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4z"/></symbol>
+      <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M21.7 6.3 18 10l-3.9-.1L14 6l3.7-3.7a6 6 0 0 0-7.6 7.6l-7.5 7.5a2 2 0 0 0 2.9 2.9l7.5-7.5a6 6 0 0 0 7.6-7.6"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 3 6.5 8.5l1.4 1.4L11 6.8V16h2V6.8l3.1 3.1 1.4-1.4zM4 18v2h16v-2z"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m9.5 16.2-4.2-4.2-1.4 1.4 5.6 5.6 11-11-1.4-1.4z"/></symbol>
+      <symbol id="i-ms" viewBox="0 0 24 24"><path d="M3 3h8.5v8.5H3zm9.5 0H21v8.5h-8.5zM3 12.5h8.5V21H3zm9.5 0H21V21h-8.5z"/></symbol>
+      <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.2 2 11.5 2 16 5.6 20 10.2 20c1.3 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.3-.3-.3-.5-.7-.5-1.2 0-1 .8-1.7 1.8-1.7H15c3.9 0 7-2.9 7-6.6C22 5.5 17.5 2 12 2M6.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.3L21 10l-6.8 2.2L12 19l-2.2-6.8L3 10l6.8-1.7z"/></symbol>
+    </defs>
+  </svg>
 
-    <section id="accounts" class="page content-page">
-      <h2>Perfil</h2>
-      <p>Escolha o nick que será usado para entrar no VilaNexo.</p>
-      <div class="account-grid single-account">
-        <div class="config-card account-card local-profile-card">
-          <div class="profile-orb">VN</div>
-          <div>
-            <h3>Perfil VilaNexo</h3>
-            <p class="muted">Use de 3 a 16 caracteres: letras, números ou _.</p>
-            <input id="offlineName" maxlength="16" placeholder="Seu nick">
-            <button id="loginOffline" class="primary">Salvar perfil</button>
-          </div>
+  <!-- Fundo vivo -->
+  <div class="scene" aria-hidden="true">
+    <div class="scene-art"></div>
+    <div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
+    <canvas id="fxCanvas"></canvas>
+    <div class="scene-vignette"></div>
+    <div class="scene-grain"></div>
+  </div>
+
+  <!-- Abertura -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro-ring"></div>
+    <img src="../assets/logo-cobblemon.png" alt="">
+    <div class="intro-word">VILANEXO</div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-title"><span class="dot-live"></span>VilaNexo Launcher</div>
+    <div class="topbar-drag"></div>
+    <div class="theme-quick">
+      <button id="themeToggle" class="theme-toggle" title="Cor do launcher"><svg><use href="#i-palette"/></svg><span>Cor</span></button>
+      <div id="themePop" class="theme-pop hidden">
+        <strong>Cor do launcher</strong>
+        <div class="theme-presets big">
+          <button data-color="#8d46ff" title="Roxo"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
+          <button data-color="#f5b400" title="Dourado"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#d63031" title="Vermelho"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#a55eea" title="Lilás"></button><button data-color="#7f8c8d" title="Grafite"></button>
         </div>
-        <div class="config-card account-card local-profile-card">
-          <div class="profile-orb">DC</div>
-          <div>
-            <h3>Login Discord</h3>
-            <p class="muted">Necessário para entrar nos servidores; a whitelist é exigida apenas no RPG.</p>
-            <button id="loginDiscord" class="primary">Entrar com Discord</button>
-            <p id="discordStatus" class="muted">Discord não conectado.</p>
-          </div>
-        </div>
+        <button class="link-btn" data-open-settings>Mais opções de aparência</button>
       </div>
-      <button id="logout" class="secondary">Remover perfil salvo</button>
+    </div>
+    <div class="window-controls">
+      <button id="min" title="Minimizar"><svg viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor" stroke-width="1.4"/></svg></button>
+      <button id="max" title="Maximizar"><svg viewBox="0 0 12 12"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
+      <button id="close" class="wc-close" title="Fechar"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.4"/></svg></button>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo"><img src="../assets/logo-cobblemon.png" alt="VilaNexo"></div>
+      <div class="brand-text"><strong>VilaNexo</strong><span>LAUNCHER</span></div>
+    </div>
+
+    <nav>
+      <span class="nav-label">MENU</span>
+      <button class="active" data-page="home"><svg><use href="#i-home"/></svg><span>Início</span></button>
+      <button data-page="skins"><svg><use href="#i-skin"/></svg><span>Skin</span></button>
+      <button data-page="accounts"><svg><use href="#i-user"/></svg><span>Perfil</span></button>
+      <button data-page="mods"><svg><use href="#i-cube"/></svg><span>Mods</span></button>
+      <button data-page="settings"><svg><use href="#i-gear"/></svg><span>Configurações</span></button>
+      <span class="nav-label">VILANEXO</span>
+      <button id="store" class="nav-store"><svg><use href="#i-bag"/></svg><span>Loja</span><em>VIP</em></button>
+      <button id="linkDiscord" class="nav-ext"><svg><use href="#i-chat"/></svg><span>Discord</span></button>
+      <button id="linkSite" class="nav-ext"><svg><use href="#i-globe"/></svg><span>Site</span></button>
+    </nav>
+
+    <div class="profile">
+      <div class="profile-head" id="profileHead"><span>VN</span></div>
+      <div class="profile-info">
+        <small>PERFIL ATIVO</small>
+        <strong id="profileName">VilaNexo</strong>
+        <span id="profileWelcome">Bem-vindo ao VilaNexo!</span>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ============ INÍCIO ============ -->
+    <section id="home" class="page active-page">
+      <div id="updateNotice" class="update-notice hidden">
+        <svg><use href="#i-spark"/></svg>
+        <span id="updateText"></span>
+        <button id="updateLauncher">Atualização disponível</button>
+      </div>
+
+      <div class="home-grid">
+        <article class="server-choice hero selected" data-profile="cobblemon">
+          <div class="hero-bg"><div class="hero-rays"></div><div class="hero-grid"></div></div>
+          <div class="hero-logo"><div class="hero-logo-glow"></div><img src="../assets/logo-cobblemon.png" alt="VilaNexo Cobblemon"></div>
+          <div class="hero-body">
+            <div class="hero-top">
+              <span class="tag tag-glow"><svg><use href="#i-spark"/></svg>SERVIDOR PRINCIPAL</span>
+              <span class="tag" id="heroStatus"><i class="pulse"></i><b>Verificando…</b></span>
+            </div>
+            <h1 class="hero-title"><span>Sua aventura</span><em>começa aqui</em></h1>
+            <p class="hero-sub">Capture, treine e evolua. Economia, eventos, cidades e aventura sem fim num mundo de 2 milhões de blocos.</p>
+            <div class="hero-chips">
+              <span><b>1.21.1</b>Minecraft</span>
+              <span><b>NeoForge</b>Loader</span>
+              <span><b id="heroMods">56</b>Mods</span>
+              <span><b id="heroPlayers">–</b>Online</span>
+            </div>
+            <div class="hero-actions">
+              <button class="server-play play-btn">
+                <span class="play-shine"></span>
+                <svg><use href="#i-play"/></svg>
+                <span class="play-text"><strong>JOGAR</strong><small>poke.vilanexo.com</small></span>
+              </button>
+              <div class="launch-progress">
+                <div class="lp-head"><span id="phase">Pronto para jogar</span><b id="phasePct">0%</b></div>
+                <div class="lp-track"><div id="bar" class="lp-bar"></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <aside id="homeSkinPanel" class="player-card">
+          <div class="card-head"><span>SEU PERSONAGEM</span><strong id="dashboardProfileName">VilaNexo</strong></div>
+          <div class="player-stage"><div class="stage-floor"></div></div>
+          <p class="profile-hint" id="profileHint">Arraste para girar</p>
+        </aside>
+
+        <article class="server-choice rpg-card" data-profile="rpg">
+          <div class="rpg-art"><img src="../assets/server-rpg.png" alt=""></div>
+          <div class="rpg-body">
+            <span class="tag tag-warn"><svg><use href="#i-wrench"/></svg>EM MANUTENÇÃO</span>
+            <h3>VilaNexo <em>RPG</em></h3>
+            <p>Classes, missões e PvP. Minecraft 1.20.1 • Forge</p>
+            <div class="server-maintenance">Voltamos em breve</div>
+          </div>
+        </article>
+
+        <div class="quick-card">
+          <div class="card-head"><span>ATALHOS</span><strong>Acesso rápido</strong></div>
+          <div class="quick-grid">
+            <button id="quickStore"><svg><use href="#i-bag"/></svg><span>Loja VIP</span></button>
+            <button id="quickDiscord"><svg><use href="#i-chat"/></svg><span>Discord</span></button>
+            <button id="folderGame"><svg><use href="#i-folder"/></svg><span>Pasta do jogo</span></button>
+            <button id="folderLogs"><svg><use href="#i-doc"/></svg><span>Logs</span></button>
+          </div>
+        </div>
+
+        <section class="log-card">
+          <div class="card-head row">
+            <div><span>ATIVIDADE</span><strong id="status" class="status">● Launcher pronto</strong></div>
+            <button id="clearLogs" class="ghost-btn">Limpar</button>
+          </div>
+          <pre id="logBox"></pre>
+        </section>
+      </div>
     </section>
 
-     <section id="skins" class="page content-page skins-page">
-      <div class="skins-header">
-        <div><span class="skins-kicker">PERSONALIZAÇÃO DO JOGADOR</span><h2>Skins</h2><p>Visualize seu personagem como um modelo Minecraft de verdade, com profundidade e rotação completa.</p></div>
-        <div class="skins-header-badge"><span></span> PREVIEW 3D REAL</div>
-      </div>
+    <!-- ============ SKIN ============ -->
+    <section id="skins" class="page">
+      <header class="page-head">
+        <div><span class="kicker">PERSONALIZAÇÃO</span><h2>Estúdio de Skin</h2><p>Veja seu personagem em 3D real, escolha o modelo e aplique direto no servidor.</p></div>
+        <span class="tag tag-glow"><i class="pulse"></i>PREVIEW 3D</span>
+      </header>
 
-      <div class="skin-studio-layout">
-        <div class="skin-preview-panel">
-          <div class="skin-panel-heading">
-            <div class="skin-heading-icon">◇</div>
-            <div><strong>PREVIEW 3D DA SKIN</strong><span>Arraste para girar • Scroll para zoom • Veja todos os lados</span></div>
+      <div class="skin-layout">
+        <div class="glass skin-stage-card">
+          <div id="skin3d" class="skin3d-stage">
+            <div class="stage-glow"></div>
+            <div class="stage-floor big"></div>
+            <canvas id="skinCanvas" aria-label="Preview 3D da skin"></canvas>
+            <div id="skinPlaceholder" class="skin-placeholder"><div><b>Seu personagem aparece aqui</b><span>Escolha uma skin PNG para abrir o modelo 3D.</span></div></div>
           </div>
-
-          <div class="skin-preview-wrap modern-preview">
-            <div class="preview-scene-light light-a"></div><div class="preview-scene-light light-b"></div>
-            <div class="preview-back-wall"><span>VILA</span><b>NEXO</b></div>
-            <div class="preview-aura"></div>
-            <div id="skin3d" class="skin3d-stage">
-              <div class="skin-grid-floor"></div>
-              <div class="skin-depth-ring ring-one"></div><div class="skin-depth-ring ring-two"></div>
-              <canvas id="skinCanvas" class="skin-webgl-canvas" aria-label="Preview 3D real da skin"></canvas>
-              <div id="skinPlaceholder" class="skin-placeholder"><div><b>Seu personagem aparece aqui</b><span>Selecione uma skin PNG para abrir o modelo 3D.</span></div></div>
-            </div>
-            <div class="skin-pedestal"><span></span></div>
-            <div class="preview-hint"><span>🖱 Arraste para rotacionar</span><span>↕ Scroll para zoom</span><span>◈ Modelo com profundidade real</span></div>
-          </div>
-
           <div class="skin-view-controls" aria-label="Ângulos da skin">
-            <button type="button" data-skin-view="front" class="active"><b>♟</b><span>Frente</span></button>
-            <button type="button" data-skin-view="back"><b>♟</b><span>Costas</span></button>
-            <button type="button" data-skin-view="left"><b>‹</b><span>Esquerda</span></button>
-            <button type="button" data-skin-view="right"><b>›</b><span>Direita</span></button>
-            <button type="button" data-skin-view="top"><b>⌃</b><span>Topo</span></button>
-            <button type="button" data-skin-view="bottom"><b>⌄</b><span>Base</span></button>
-            <button id="resetView" type="button" data-skin-view="reset"><b>◎</b><span>Centralizar</span></button>
+            <button type="button" data-skin-view="front" class="active">Frente</button>
+            <button type="button" data-skin-view="back">Costas</button>
+            <button type="button" data-skin-view="left">Esquerda</button>
+            <button type="button" data-skin-view="right">Direita</button>
+            <button type="button" data-skin-view="top">Topo</button>
+            <button type="button" data-skin-view="bottom">Base</button>
+            <button id="resetView" type="button" data-skin-view="reset">Centralizar</button>
           </div>
         </div>
 
-        <aside class="skin-manager-panel">
-          <div class="skin-panel-heading compact"><div class="skin-heading-icon">♕</div><div><strong>SUA SKIN</strong><span>Gerencie e visualize localmente.</span></div></div>
-          <div class="current-skin-card">
+        <aside class="glass skin-side">
+          <div class="current-skin">
             <div class="skin-mini-head" id="skinMiniHead"><span>VN</span></div>
-            <div class="current-skin-info"><strong>Skin atual</strong><span id="skinCurrentName">Perfil VilaNexo</span></div>
-            <span class="skin-active-pill">ATIVA</span>
+            <div><small>SKIN ATUAL</small><strong id="skinCurrentName">Perfil VilaNexo</strong></div>
+            <span class="pill-ok">ATIVA</span>
           </div>
 
-          <div class="skin-controls skin-modern-controls">
-            <label>Nick da skin</label>
-            <input id="skinOfflineName" maxlength="16" placeholder="Ex.: SeuNick">
-            <label>Modelo do jogador</label>
-            <div class="skin-model-options">
-              <button type="button" class="model-choice active" data-variant="classic"><span>♟</span><b>Steve</b><small>Padrão</small></button>
-              <button type="button" class="model-choice" data-variant="slim"><span>♙</span><b>Alex</b><small>Slim</small></button>
-            </div>
-            <select id="skinVariant" class="hidden"><option value="classic">Clássico / Steve</option><option value="slim">Slim / Alex</option></select>
-            <button id="chooseSkin" class="primary skin-main-action">⇧ Alterar Skin</button>
-            <button id="uploadSkin" class="secondary skin-apply-action" disabled>✓ Aplicar skin</button>
-            <div id="skinFileName" class="muted skin-file-name">Selecione uma imagem PNG.</div>
-            <div id="skinMessage" class="skin-message"></div>
-          </div>
+          <label class="field-label" for="skinOfflineName">Nick da skin</label>
+          <input id="skinOfflineName" maxlength="16" placeholder="Ex.: SeuNick">
 
-          <div class="skin-info-note"><b>Visualização 3D aprimorada</b><span>O modelo agora possui cabeça, tronco, braços e pernas como cubos completos, incluindo laterais, costas, topo e base.</span></div>
+          <span class="field-label">Modelo do jogador</span>
+          <div class="segmented">
+            <button type="button" class="model-choice active" data-variant="classic"><b>Clássico</b><small>Braços largos</small></button>
+            <button type="button" class="model-choice" data-variant="slim"><b>Slim</b><small>Braços finos</small></button>
+          </div>
+          <select id="skinVariant" class="hidden"><option value="classic">Clássico</option><option value="slim">Slim</option></select>
+
+          <button id="chooseSkin" class="btn-primary"><svg><use href="#i-upload"/></svg>Escolher skin (PNG)</button>
+          <button id="uploadSkin" class="btn-secondary" disabled><svg><use href="#i-check"/></svg>Aplicar no servidor</button>
+          <div id="skinFileName" class="muted small">Nenhum arquivo selecionado.</div>
+          <div id="skinMessage" class="skin-message"></div>
+
+          <div class="skin-tip"><b>Dica</b><span>Skins 64×64 funcionam melhor. Use o modelo <em>Slim</em> se a sua skin tem braços finos.</span></div>
         </aside>
       </div>
+    </section>
 
-      <div class="theme-card skin-theme-card">
-        <div><h3>Cor do launcher</h3><p class="muted">Personalize o destaque visual do VilaNexo.</p></div>
-        <div class="theme-picker-row"><input id="launcherColor" type="color" value="#8d46ff"><span id="launcherColorValue">#8D46FF</span></div>
-        <div class="theme-presets"><button data-color="#8d46ff" title="Roxo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00b894" title="Verde"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#d63031" title="Vermelho"></button></div>
-        <button id="resetTheme" class="secondary">Restaurar roxo VilaNexo</button>
+    <!-- ============ PERFIL ============ -->
+    <section id="accounts" class="page">
+      <header class="page-head">
+        <div><span class="kicker">CONTA</span><h2>Perfil</h2><p>Entre com a conta Microsoft (Minecraft original) ou escolha um nick. O Discord é obrigatório.</p></div>
+      </header>
+      <div class="account-current glass">
+        <div class="profile-head big" id="accountHead"><span>VN</span></div>
+        <div><small>CONTA ATIVA</small><strong id="accountName">Nenhuma conta</strong><span id="accountType" class="acc-badge">Escolha uma opção abaixo</span></div>
+        <button id="logout" class="btn-danger">Sair da conta</button>
       </div>
-      <p class="muted skin-storage-note">A skin é salva localmente em <b>CustomSkinLoader/LocalSkin/skins/&lt;NICK&gt;.png</b>.</p>
-     </section>
+      <div class="account-grid">
+        <div class="glass account-card microsoft">
+          <div class="acc-icon"><svg><use href="#i-ms"/></svg></div>
+          <h3>Minecraft original</h3>
+          <p class="muted">Entre com a conta Microsoft que tem o Minecraft: Java Edition. Seu nick e skin oficiais são usados.</p>
+          <button id="loginMicrosoft" class="btn-ms"><svg><use href="#i-ms"/></svg>Entrar com Microsoft</button>
+          <p id="microsoftStatus" class="muted small">Uma janela segura da Microsoft vai abrir.</p>
+        </div>
+        <div class="glass account-card">
+          <div class="acc-icon"><svg><use href="#i-user"/></svg></div>
+          <h3>Jogar com nick</h3>
+          <p class="muted">Não tem Minecraft original? Escolha um nick de 3 a 16 caracteres (letras, números ou _).</p>
+          <input id="offlineName" maxlength="16" placeholder="Seu nick">
+          <button id="loginOffline" class="btn-primary"><svg><use href="#i-check"/></svg>Salvar nick</button>
+        </div>
+        <div class="glass account-card discord">
+          <div class="acc-icon"><svg><use href="#i-chat"/></svg></div>
+          <h3>Discord</h3>
+          <p class="muted">Obrigatório para entrar nos servidores. A whitelist só é exigida no RPG.</p>
+          <button id="loginDiscord" class="btn-discord"><svg><use href="#i-chat"/></svg>Entrar com Discord</button>
+          <p id="discordStatus" class="muted small">Discord não conectado.</p>
+        </div>
+      </div>
+    </section>
 
-     <section id="mods" class="page content-page mods-page">
-       <div class="mods-page-header"><div><span class="mods-kicker">VILANEXO COBBLEMON</span><h2>Mods do modpack</h2><p>Veja os mods instalados no servidor e sincronizados pelo launcher.</p></div><div id="modsSummary" class="mods-summary">Carregando lista...</div></div>
-       <div class="mods-toolbar"><input id="modsSearch" type="search" placeholder="Pesquisar mod..." autocomplete="off"><span>Lista atualizada pelo manifesto oficial</span></div>
-       <div id="modsList" class="mods-list"><div class="mods-loading">Carregando mods do VilaNexo...</div></div>
-     </section>
+    <!-- ============ MODS ============ -->
+    <section id="mods" class="page">
+      <header class="page-head">
+        <div><span class="kicker">MODPACK</span><h2>Mods do VilaNexo</h2><p>Tudo é baixado e atualizado sozinho pelo launcher. Você não precisa instalar nada.</p></div>
+        <div id="modsSummary" class="tag tag-glow">Carregando…</div>
+      </header>
+      <div class="search-box"><svg><use href="#i-search"/></svg><input id="modsSearch" type="search" placeholder="Pesquisar mod…" autocomplete="off"></div>
+      <div id="modsList" class="mods-list"><div class="mods-empty">Carregando mods do VilaNexo…</div></div>
+    </section>
 
-     <section id="settings" class="page content-page settings-page">
-         <div class="settings-title-row"><div><span class="settings-kicker">VILANEXO LAUNCHER</span><h2>Configurações</h2><p class="muted">Ajuste o launcher para aproveitar melhor o desempenho do seu computador.</p></div><span class="launcher-display-version">Versão do launcher <b id="launcherDisplayVersion">1.0</b></span></div>
-       <div id="configSummary" class="config-card"></div>
-        <div class="config-card performance-card"><div><h3>Memória RAM e desempenho</h3><p class="muted">Escolha quanta memória RAM o Minecraft poderá usar. Mais RAM ajuda modpacks pesados, mas não ultrapasse a memória disponível no computador.</p></div><div class="ram-highlight"><div><strong id="ramValue">6 GB</strong><span>RAM máxima para o Minecraft</span></div><input id="memoryMaxSlider" type="range" min="2048" max="32768" step="256"><div class="ram-range"><span>2 GB</span><span>32 GB</span></div></div><div class="performance-grid"><label>Memória inicial (MB)<input id="memoryMinMb" type="number" min="1024" max="16384" step="256"></label><label>Memória máxima (MB)<input id="memoryMaxMb" type="number" min="2048" max="32768" step="256"></label><label>Perfil de desempenho<select id="performanceMode"><option value="balanced">Equilibrado</option><option value="performance">Mais desempenho</option><option value="quality">Estabilidade</option></select></label></div><button id="saveSettings" class="primary">Salvar configurações</button><span id="settingsMessage" class="muted"></span></div>
-       <div class="config-card server-card"><div class="server-icon">VN</div><div><h3>Servidor oficial</h3><strong>VilaNexo Cobblemon</strong><p>poke.vilanexo.com:25566</p><span class="server-ready">● Fabric 1.21.1 • conexão automática</span></div></div>
+    <!-- ============ CONFIGURAÇÕES ============ -->
+    <section id="settings" class="page">
+      <header class="page-head">
+        <div><span class="kicker">LAUNCHER</span><h2>Configurações</h2><p>Ajuste o desempenho do jogo para o seu computador.</p></div>
+        <span class="tag">Versão <b id="launcherDisplayVersion">1.0</b></span>
+      </header>
+
+      <div class="settings-grid">
+        <div class="glass ram-card">
+          <div class="ram-top">
+            <div class="acc-icon"><svg><use href="#i-ram"/></svg></div>
+            <div><h3>Memória RAM</h3><p class="muted">Quanto o Minecraft pode usar. Recomendado: 6 a 8 GB.</p></div>
+            <strong id="ramValue" class="ram-value">6 GB</strong>
+          </div>
+          <input id="memoryMaxSlider" type="range" min="2048" max="32768" step="256">
+          <div class="ram-scale"><span>2 GB</span><span>8 GB</span><span>16 GB</span><span>32 GB</span></div>
+          <div class="settings-fields">
+            <label>Memória inicial (MB)<input id="memoryMinMb" type="number" min="1024" max="16384" step="256"></label>
+            <label>Memória máxima (MB)<input id="memoryMaxMb" type="number" min="2048" max="32768" step="256"></label>
+            <label>Perfil de desempenho<select id="performanceMode"><option value="balanced">Equilibrado</option><option value="performance">Mais desempenho</option><option value="quality">Estabilidade</option></select></label>
+          </div>
+          <div class="save-row"><button id="saveSettings" class="btn-primary"><svg><use href="#i-check"/></svg>Salvar configurações</button><span id="settingsMessage" class="muted small"></span></div>
+        </div>
+
+        <div class="glass info-card">
+          <div class="card-head"><span>INSTALAÇÃO</span><strong>Resumo</strong></div>
+          <pre id="configSummary"></pre>
+          <div class="server-line"><div class="srv-logo"><img src="../assets/logo-cobblemon.png" alt=""></div><div><strong>VilaNexo Cobblemon</strong><span>poke.vilanexo.com • NeoForge 1.21.1</span></div></div>
+        </div>
+        <div class="glass appearance-card">
+          <div class="ram-top">
+            <div class="acc-icon"><svg><use href="#i-palette"/></svg></div>
+            <div><h3>Aparência</h3><p class="muted">Escolha a cor do launcher. Muda na hora e fica salva.</p></div>
+          </div>
+          <div class="theme-presets big">
+            <button data-color="#8d46ff" title="Roxo"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
+            <button data-color="#f5b400" title="Dourado"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#d63031" title="Vermelho"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#a55eea" title="Lilás"></button><button data-color="#7f8c8d" title="Grafite"></button>
+          </div>
+          <div class="appearance-row">
+            <label class="color-pick"><input id="launcherColor" type="color" value="#8d46ff"><span>Cor personalizada <b id="launcherColorValue">#8D46FF</b></span></label>
+            <button id="resetTheme" class="link-btn">Restaurar roxo padrão</button>
+          </div>
+        </div>
+
+        <div class="glass tips-card">
+          <div class="card-head"><span>OTIMIZAÇÃO</span><strong>Já vem no modpack</strong><p class="muted small" style="margin-top:6px">Mods que deixam o jogo mais leve e com mais FPS, instalados automaticamente.</p></div>
+          <div class="tips-list">
+            <span><svg><use href="#i-check"/></svg>Embeddium — renderização rápida</span>
+            <span><svg><use href="#i-check"/></svg>FerriteCore — menos RAM</span>
+            <span><svg><use href="#i-check"/></svg>ModernFix — abre mais rápido</span>
+            <span><svg><use href="#i-check"/></svg>ImmediatelyFast — interface leve</span>
+            <span><svg><use href="#i-check"/></svg>EntityCulling — esconde o que não aparece</span>
+            <span><svg><use href="#i-check"/></svg>Dynamic FPS — economiza em segundo plano</span>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
-<script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.2/bundles/skinview3d.bundle.js"></script>
-<script src="renderer.js"></script></body></html>
+
+  <script src="vendor/skinview3d.bundle.js"></script>
+  <script>
+    if (!window.skinview3d) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/skinview3d@3.4.2/bundles/skinview3d.bundle.js';
+      document.write(s.outerHTML);
+    }
+  </script>
+  <script src="fx.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

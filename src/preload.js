@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('vilaNexoLauncher', {
   checkUpdate: () => ipcRenderer.invoke('launcher:check-update'),
   installUpdate: () => ipcRenderer.invoke('app:install-update'),
   loginOffline: (username) => ipcRenderer.invoke('launcher:login-offline', username),
+  loginMicrosoft: () => ipcRenderer.invoke('launcher:microsoft-login'),
   loginDiscord: () => ipcRenderer.invoke('launcher:discord-login'),
   pollDiscord: (nonce) => ipcRenderer.invoke('launcher:discord-poll', nonce),
   logout: () => ipcRenderer.invoke('launcher:logout'),

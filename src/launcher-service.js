@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const fsp = fs.promises;
 const path = require('path');
 const crypto = require('crypto');
@@ -24,7 +24,7 @@ class LauncherService {
     this.profile = {};
     this.downloadConfig = { concurrency: 12, assetConcurrency: 16, timeoutMs: 45000, retries: 3, forgeInstallTimeoutMs: 900000, ...(this.config.downloads || {}) };
     const root = path.join(app.getPath('appData'), 'VilaNexo');
-    // Usa o diretÃ³rio padrÃ£o para o Minecraft persistir servers.dat normalmente.
+    // Usa o diretório padrão para o Minecraft persistir servers.dat normalmente.
     const gameDir = path.join(app.getPath('appData'), '.minecraft');
     this.paths = {
       root,
@@ -42,10 +42,10 @@ class LauncherService {
     fs.mkdirSync(path.join(this.paths.gameDir, 'mods'), { recursive: true });
     fs.mkdirSync(path.join(this.paths.gameDir, 'logs'), { recursive: true });
     fs.mkdirSync(this.getModsDir(), { recursive: true });
-    const savedAuth = this.loadAuth();
-    if (savedAuth && !savedAuth.offline) { try { fs.unlinkSync(this.paths.authFile); } catch {} }
+    let savedAuth = this.loadAuth();
+    if (savedAuth && !savedAuth.offline && !savedAuth.microsoft) { try { fs.unlinkSync(this.paths.authFile); } catch {} savedAuth = null; }
     const savedDiscord = this.loadDiscordAuth();
-    this.state = { busy: false, phase: 'Pronto', progress: 0, account: savedAuth?.offline ? savedAuth.profile : null, discord: savedDiscord?.profile || null, mods: { count: 0, names: [] } };
+    this.state = { busy: false, phase: 'Pronto', progress: 0, account: this.publicAccount(savedAuth), discord: savedDiscord?.profile || null, mods: { count: 0, names: [] } };
     this.modWatcher = null;
     this.scanLocalMods({ silent: true });
     this.watchLocalMods();
@@ -120,7 +120,7 @@ class LauncherService {
   }
 
   getModsDir() {
-    // Os mods administrados ficam ao lado do executÃ¡vel do launcher.
+    // Os mods administrados ficam ao lado do executável do launcher.
     // Assim o dono do servidor pode abrir a pasta e trocar os .jar sem recompilar o app.
     const base = this.app.isPackaged ? path.dirname(this.app.getPath('exe')) : path.join(__dirname, '..');
     return path.resolve(base, this.profile.localModsDir || 'mods');
@@ -138,8 +138,8 @@ class LauncherService {
     const files = fs.readdirSync(modsDir).filter(name => name.toLowerCase().endsWith('.jar'));
     const moved = [];
 
-    // VersÃµes Universal/bootstrap do CustomSkinLoader usadas por builds anteriores
-    // podem entrar no ModuleLayer do Forge como um mÃ³dulo separado e exportar pacotes
+    // Versões Universal/bootstrap do CustomSkinLoader usadas por builds anteriores
+    // podem entrar no ModuleLayer do Forge como um módulo separado e exportar pacotes
     // net.minecraft.*, causando ResolutionException. Para 1.20.1 usamos somente ForgeV2.
     for (const name of files) {
       if (/customskinloader/i.test(name) && !(/forgev2|forgev3/i.test(name))) {
@@ -153,12 +153,12 @@ class LauncherService {
         }
         fs.renameSync(src, dst);
         moved.push(name);
-        this.log(`CustomSkinLoader antigo/incompatÃ­vel desativado: ${name}`, 'AVISO');
+        this.log(`CustomSkinLoader antigo/incompatível desativado: ${name}`, 'AVISO');
       }
     }
 
-    // Fabric API nÃ£o pode ser carregada diretamente em um perfil Forge 1.20.1.
-    // Ela injeta mÃ³dulos Fabric (ex.: fabric_lifecycle_events_v1) e causa
+    // Fabric API não pode ser carregada diretamente em um perfil Forge 1.20.1.
+    // Ela injeta módulos Fabric (ex.: fabric_lifecycle_events_v1) e causa
     // java.lang.module.ResolutionException antes da tela principal do jogo.
     for (const name of files) {
       if ((this.config.minecraft.loader || 'forge').toLowerCase() !== 'fabric' && (/^fabric-api(?:-|_)/i.test(name) || /fabric-api-.*1\.20\.1/i.test(name))) {
@@ -171,12 +171,12 @@ class LauncherService {
         }
         fs.renameSync(src, dst);
         moved.push(name);
-        this.log(`Mod incompatÃ­vel com Forge desativado automaticamente: ${name}`, 'AVISO');
+        this.log(`Mod incompatível com Forge desativado automaticamente: ${name}`, 'AVISO');
       }
     }
 
-    // Remove cÃ³pias do Windows do tipo "arquivo (1).jar" quando o original
-    // com o mesmo nome tambÃ©m estÃ¡ presente. Isso evita IDs duplicados de mods.
+    // Remove cópias do Windows do tipo "arquivo (1).jar" quando o original
+    // com o mesmo nome também está presente. Isso evita IDs duplicados de mods.
     const remaining = new Set(fs.readdirSync(modsDir).filter(n => n.toLowerCase().endsWith('.jar')));
     for (const name of [...remaining]) {
       const m = name.match(/^(.*) \((\d+)\)(\.jar)$/i);
@@ -188,18 +188,18 @@ class LauncherService {
       if (fs.existsSync(dst)) dst = path.join(disabledDir, `${m[1]} (${m[2]})-${Date.now()}${m[3]}`);
       fs.renameSync(src, dst);
       moved.push(name);
-      this.log(`CÃ³pia duplicada desativada automaticamente: ${name}`, 'AVISO');
+      this.log(`Cópia duplicada desativada automaticamente: ${name}`, 'AVISO');
     }
 
     if (moved.length) {
-      this.log(`${moved.length} mod(s) problemÃ¡tico(s) movido(s) para: ${disabledDir}`, 'INFO');
+      this.log(`${moved.length} mod(s) problemático(s) movido(s) para: ${disabledDir}`, 'INFO');
     }
     return moved;
   }
 
   getOfficialMinecraftDir() {
     // No Windows o launcher oficial usa %APPDATA%\\.minecraft.
-    // Em outros sistemas usamos os caminhos padrÃ£o mais comuns.
+    // Em outros sistemas usamos os caminhos padrão mais comuns.
     if (process.platform === 'win32') return path.join(this.app.getPath('appData'), '.minecraft');
     if (process.platform === 'darwin') return path.join(os.homedir(), 'Library', 'Application Support', 'minecraft');
     return path.join(os.homedir(), '.minecraft');
@@ -209,7 +209,7 @@ class LauncherService {
     if (fs.existsSync(dst)) return false;
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     try {
-      // Hardlink: praticamente instantÃ¢neo e nÃ£o duplica espaÃ§o em disco.
+      // Hardlink: praticamente instantâneo e não duplica espaço em disco.
       fs.linkSync(src, dst);
     } catch {
       fs.copyFileSync(src, dst);
@@ -242,7 +242,7 @@ class LauncherService {
   async importExistingMinecraft() {
     const source = this.getOfficialMinecraftDir();
     if (!fs.existsSync(source) || path.resolve(source) === path.resolve(this.paths.gameDir)) {
-      this.log('Minecraft oficial nÃ£o encontrado. O launcher baixarÃ¡ somente os arquivos necessÃ¡rios.', 'INFO');
+      this.log('Minecraft oficial não encontrado. O launcher baixará somente os arquivos necessários.', 'INFO');
       return false;
     }
 
@@ -251,7 +251,7 @@ class LauncherService {
 
     this.progress('Reaproveitando Minecraft instalado', 7);
     this.log(`Minecraft existente encontrado em: ${source}`, 'SUCESSO');
-    this.log('Reaproveitando assets, libraries e versÃµes jÃ¡ instaladas. Seus mods pessoais NÃƒO serÃ£o alterados.', 'INFO');
+    this.log('Reaproveitando assets, libraries e versões já instaladas. Seus mods pessoais NÃO serão alterados.', 'INFO');
 
     let totalImported = 0;
     const importPart = (name, src, dst) => {
@@ -269,7 +269,7 @@ class LauncherService {
 
     const mc = this.config.minecraft.version;
     const forgeId = this.forgeVersionId();
-    importPart(`versÃ£o ${mc}`, path.join(source, 'versions', mc), path.join(this.paths.gameDir, 'versions', mc));
+    importPart(`versão ${mc}`, path.join(source, 'versions', mc), path.join(this.paths.gameDir, 'versions', mc));
     importPart(`Forge ${this.config.minecraft.forgeVersion}`, path.join(source, 'versions', forgeId), path.join(this.paths.gameDir, 'versions', forgeId));
 
     const profilesSrc = path.join(source, 'launcher_profiles.json');
@@ -277,7 +277,7 @@ class LauncherService {
     if (fs.existsSync(profilesSrc) && !fs.existsSync(profilesDst)) this.linkOrCopyFile(profilesSrc, profilesDst);
 
     fs.writeFileSync(marker, JSON.stringify({ source, importedAt: new Date().toISOString(), files: totalImported }, null, 2), 'utf8');
-    this.log(`ImportaÃ§Ã£o rÃ¡pida concluÃ­da: ${totalImported} arquivo(s) reaproveitado(s).`, 'SUCESSO');
+    this.log(`Importação rápida concluída: ${totalImported} arquivo(s) reaproveitado(s).`, 'SUCESSO');
     return true;
   }
 
@@ -291,7 +291,7 @@ class LauncherService {
     const wanted = new Set(fs.readdirSync(source)
       .filter(name => name.toLowerCase().endsWith('.jar')));
 
-    // Remove do jogo os .jar que jÃ¡ nÃ£o existem na pasta administrada do launcher.
+    // Remove do jogo os .jar que já não existem na pasta administrada do launcher.
     for (const name of fs.readdirSync(target)) {
       if (name.toLowerCase().endsWith('.jar') && !wanted.has(name)) {
         fs.rmSync(path.join(target, name), { force: true });
@@ -342,11 +342,11 @@ class LauncherService {
           const before = this.state.mods?.count ?? 0;
           const current = this.scanLocalMods({ silent: true });
           if (current.count !== before) this.log(`Pasta de mods atualizada: ${current.count} mod(s) reconhecido(s).`, 'SUCESSO');
-          else this.log('AlteraÃ§Ã£o detectada na pasta de mods.', 'INFO');
+          else this.log('Alteração detectada na pasta de mods.', 'INFO');
         }, 250);
       });
     } catch (e) {
-      this.log(`NÃ£o foi possÃ­vel monitorar a pasta de mods: ${e.message}`, 'AVISO');
+      this.log(`Não foi possível monitorar a pasta de mods: ${e.message}`, 'AVISO');
     }
   }
 
@@ -366,11 +366,11 @@ class LauncherService {
 
   loginOffline(username) {
     const name = String(username || '').trim();
-    if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) throw new Error('Use um nome de 3 a 16 caracteres: letras, nÃºmeros ou _.');
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) throw new Error('Use um nome de 3 a 16 caracteres: letras, números ou _.');
     const profile = { name, id: this.offlineUuid(name) };
     const auth = { profile, access_token: '0', offline: true, expires_at: Date.now() + 315360000000 };
     this.saveAuth(auth);
-    this.state.account = profile;
+    this.state.account = this.publicAccount(auth);
     this.emit('launcher:state', this.state);
     this.log(`Conta local ativa: ${name}.`, 'SUCESSO');
     return profile;
@@ -383,22 +383,138 @@ class LauncherService {
   }
   async refreshAuthIfNeeded() {
     const auth = this.loadAuth();
-    if (!auth || !auth.offline) throw new Error('Escolha seu nick em Perfil antes de jogar.');
+    if (auth?.microsoft) {
+      if (auth.access_token && auth.expires_at && auth.expires_at - Date.now() > 5 * 60 * 1000) return auth;
+      this.progress('Renovando login Microsoft', 2);
+      return this.refreshMicrosoft(auth);
+    }
+    if (!auth || !auth.offline) throw new Error('Escolha seu nick ou entre com a conta Microsoft em Perfil antes de jogar.');
     return auth;
+  }
+
+  // ------------------------------------------------------------------
+  // Conta Microsoft (Minecraft original)
+  // Fluxo: Microsoft OAuth -> Xbox Live -> XSTS -> Minecraft Services.
+  // ------------------------------------------------------------------
+  publicAccount(auth) {
+    if (!auth?.profile?.name) return null;
+    return { name: auth.profile.name, id: auth.profile.id, type: auth.microsoft ? 'microsoft' : 'local' };
+  }
+  microsoftConfig() {
+    return {
+      clientId: this.config.auth?.microsoftClientId || '00000000402b5328',
+      redirectUri: this.config.auth?.microsoftRedirectUri || 'https://login.live.com/oauth20_desktop.srf',
+      scope: this.config.auth?.microsoftScope || 'service::user.auth.xboxlive.com::MBI_SSL'
+    };
+  }
+  microsoftAuthorizeUrl() {
+    const c = this.microsoftConfig();
+    const q = new URLSearchParams({ client_id: c.clientId, response_type: 'code', redirect_uri: c.redirectUri, scope: c.scope, prompt: 'select_account' });
+    return `https://login.live.com/oauth20_authorize.srf?${q}`;
+  }
+  sealSecret(text) {
+    try { const { safeStorage } = require('electron'); if (safeStorage?.isEncryptionAvailable()) return { enc: safeStorage.encryptString(String(text)).toString('base64') }; } catch {}
+    return { plain: String(text) };
+  }
+  openSecret(box) {
+    if (!box) return '';
+    if (box.plain) return box.plain;
+    try { const { safeStorage } = require('electron'); return safeStorage.decryptString(Buffer.from(box.enc, 'base64')); } catch { return ''; }
+  }
+  async msPost(url, body, form = false) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: form ? { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' } : { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: form ? new URLSearchParams(body).toString() : JSON.stringify(body)
+    });
+    const text = await res.text();
+    let data = {}; try { data = text ? JSON.parse(text) : {}; } catch {}
+    if (!res.ok) { const err = new Error(data.error_description || data.errorMessage || data.Message || `HTTP ${res.status}`); err.status = res.status; err.data = data; throw err; }
+    return data;
+  }
+  async microsoftChain(msToken) {
+    const xbl = await this.msPost('https://user.auth.xboxlive.com/user/authenticate', {
+      Properties: { AuthMethod: 'RPS', SiteName: 'user.auth.xboxlive.com', RpsTicket: msToken },
+      RelyingParty: 'http://auth.xboxlive.com', TokenType: 'JWT'
+    });
+    const uhs = xbl.DisplayClaims?.xui?.[0]?.uhs;
+    let xsts;
+    try {
+      xsts = await this.msPost('https://xsts.auth.xboxlive.com/xsts/authorize', {
+        Properties: { SandboxId: 'RETAIL', UserTokens: [xbl.Token] },
+        RelyingParty: 'rp://api.minecraftservices.com/', TokenType: 'JWT'
+      });
+    } catch (e) {
+      const code = String(e.data?.XErr || '');
+      if (code === '2148916233') throw new Error('Essa conta Microsoft não tem perfil Xbox. Entre uma vez em minecraft.net para criar e tente de novo.');
+      if (code === '2148916235') throw new Error('O Xbox Live não está disponível no país dessa conta.');
+      if (code === '2148916236' || code === '2148916237') throw new Error('Essa conta precisa de verificação de idade no site da Xbox.');
+      if (code === '2148916238') throw new Error('Conta de menor de idade: um adulto precisa adicioná-la a uma Família Microsoft.');
+      throw new Error(`Falha no Xbox Live: ${e.message}`);
+    }
+    const xuid = xsts.DisplayClaims?.xui?.[0]?.xid || '';
+    const mc = await this.msPost('https://api.minecraftservices.com/authentication/login_with_xbox', { identityToken: `XBL3.0 x=${uhs};${xsts.Token}` });
+    const profRes = await fetch('https://api.minecraftservices.com/minecraft/profile', { headers: { Authorization: `Bearer ${mc.access_token}` } });
+    if (profRes.status === 404) throw new Error('Essa conta Microsoft não tem o Minecraft: Java Edition. Use outra conta ou jogue com nick.');
+    if (!profRes.ok) throw new Error(`Não foi possível ler o perfil do Minecraft (HTTP ${profRes.status}).`);
+    const prof = await profRes.json();
+    const raw = String(prof.id || '').replace(/-/g, '');
+    const id = raw.length === 32 ? `${raw.slice(0,8)}-${raw.slice(8,12)}-${raw.slice(12,16)}-${raw.slice(16,20)}-${raw.slice(20)}` : prof.id;
+    const skin = (prof.skins || []).find(x => x.state === 'ACTIVE') || prof.skins?.[0];
+    return { profile: { name: prof.name, id, skinUrl: skin?.url || '', skinVariant: skin?.variant === 'SLIM' ? 'slim' : 'classic' }, access_token: mc.access_token, expires_at: Date.now() + (Number(mc.expires_in) || 86400) * 1000, xuid };
+  }
+  async loginMicrosoft(code) {
+    if (!code) throw new Error('Login Microsoft cancelado.');
+    const c = this.microsoftConfig();
+    this.log('Conectando à conta Microsoft...', 'INFO');
+    const tok = await this.msPost('https://login.live.com/oauth20_token.srf', { client_id: c.clientId, code, grant_type: 'authorization_code', redirect_uri: c.redirectUri, scope: c.scope }, true);
+    const mc = await this.microsoftChain(tok.access_token);
+    const auth = { ...mc, microsoft: true, offline: false, refresh: this.sealSecret(tok.refresh_token) };
+    this.saveAuth(auth);
+    this.state.account = this.publicAccount(auth);
+    this.emit('launcher:state', this.state);
+    this.log(`Conta Microsoft conectada: ${auth.profile.name} (Minecraft original).`, 'SUCESSO');
+    return this.state.account;
+  }
+  async refreshMicrosoft(auth) {
+    const c = this.microsoftConfig();
+    const refreshToken = this.openSecret(auth.refresh);
+    if (!refreshToken) throw new Error('Sua sessão Microsoft expirou. Entre de novo em Perfil.');
+    let tok;
+    try {
+      tok = await this.msPost('https://login.live.com/oauth20_token.srf', { client_id: c.clientId, refresh_token: refreshToken, grant_type: 'refresh_token', redirect_uri: c.redirectUri, scope: c.scope }, true);
+    } catch (e) { throw new Error('Sua sessão Microsoft expirou. Entre de novo em Perfil.'); }
+    const mc = await this.microsoftChain(tok.access_token);
+    const next = { ...mc, microsoft: true, offline: false, refresh: this.sealSecret(tok.refresh_token || refreshToken) };
+    this.saveAuth(next);
+    this.state.account = this.publicAccount(next);
+    this.emit('launcher:state', this.state);
+    this.log('Login Microsoft renovado.', 'SUCESSO');
+    return next;
+  }
+  async getMicrosoftSkin() {
+    const auth = this.loadAuth();
+    if (!auth?.microsoft || !auth.profile?.skinUrl) return null;
+    const url = String(auth.profile.skinUrl).replace(/^http:/, 'https:');
+    if (!/^https:\/\/textures\.minecraft\.net\//.test(url)) return null;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    return { name: auth.profile.name, variant: auth.profile.skinVariant || 'classic', dataUrl: `data:image/png;base64,${buf.toString('base64')}`, official: true };
   }
 
   async startDiscordLogin() {
     const url = this.config.auth?.launcherStartUrl;
-    if (!url) throw new Error('Login Discord nÃ£o configurado.');
+    if (!url) throw new Error('Login Discord não configurado.');
     const data = await this.fetchJson(url, { headers: { 'User-Agent': 'VilaNexoLauncher/1.9.1' } });
-    if (!data?.nonce || !data?.loginUrl) throw new Error('Resposta invÃ¡lida do login Discord.');
+    if (!data?.nonce || !data?.loginUrl) throw new Error('Resposta inválida do login Discord.');
     return data;
   }
 
   async pollDiscordLogin(nonce) {
-    if (!nonce) throw new Error('SessÃ£o Discord invÃ¡lida.');
+    if (!nonce) throw new Error('Sessão Discord inválida.');
     const base = this.config.auth?.launcherStatusUrl;
-    if (!base) throw new Error('Status Discord nÃ£o configurado.');
+    if (!base) throw new Error('Status Discord não configurado.');
     const sep = base.includes('?') ? '&' : '?';
     const data = await this.fetchJson(`${base}${sep}nonce=${encodeURIComponent(nonce)}`, { headers: { 'User-Agent': 'VilaNexoLauncher/1.9.1' } });
     if (!data?.ok) return data;
@@ -412,15 +528,15 @@ class LauncherService {
 
   async verifyDiscordAccess() {
     const auth = this.loadDiscordAuth();
-    if (!auth?.token) throw new Error('FaÃ§a login com Discord e tenha a whitelist aprovada antes de jogar.');
+    if (!auth?.token) throw new Error('Faça login com Discord e tenha a whitelist aprovada antes de jogar.');
     const url = this.config.auth?.verifyUrl;
-    if (!url) throw new Error('VerificaÃ§Ã£o Discord nÃ£o configurada.');
+    if (!url) throw new Error('Verificação Discord não configurada.');
     const data = await this.fetchJson(url, { headers: { 'User-Agent': 'VilaNexoLauncher/1.9.1', 'Authorization': `Bearer ${auth.token}` } });
     if (!data?.ok) {
       try { fs.unlinkSync(this.paths.discordAuthFile); } catch {}
       this.state.discord = null;
       this.emit('launcher:state', this.state);
-      throw new Error('Sua whitelist do Discord nÃ£o estÃ¡ aprovada ou expirou. FaÃ§a login novamente.');
+      throw new Error('Sua whitelist do Discord não está aprovada ou expirou. Faça login novamente.');
     }
     this.state.discord = { id: data.userId, username: data.username };
     this.emit('launcher:state', this.state);
@@ -556,11 +672,11 @@ class LauncherService {
     return true;
   }
 
-  getSavedSkin(username) {
+  async getSavedSkin(username) {
     const name = String(username || '').trim();
     if (!name) return null;
     const file = path.join(this.paths.root, 'skins', `${name}.png`);
-    if (!fs.existsSync(file)) return null;
+    if (!fs.existsSync(file)) { try { return await this.getMicrosoftSkin(); } catch { return null; } }
     const metaPath = path.join(this.paths.gameDir, 'VilaNexo', 'skin.json');
     let variant = 'classic';
     try { variant = JSON.parse(fs.readFileSync(metaPath, 'utf8')).variant || variant; } catch {}
@@ -570,10 +686,10 @@ class LauncherService {
   async applyLocalSkin(filePath, username, variant = 'classic') {
     const name = String(username || '').trim();
     if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) throw new Error('Informe um nick de 3 a 16 caracteres antes de aplicar a skin.');
-    if (!filePath || !fs.existsSync(filePath)) throw new Error('Selecione uma skin PNG vÃ¡lida.');
+    if (!filePath || !fs.existsSync(filePath)) throw new Error('Selecione uma skin PNG válida.');
     const bytes = await fsp.readFile(filePath);
-    if (bytes.length < 8 || bytes[0] !== 0x89 || bytes[1] !== 0x50 || bytes[2] !== 0x4E || bytes[3] !== 0x47) throw new Error('O arquivo selecionado nÃ£o Ã© um PNG vÃ¡lido.');
-    if (bytes.length > 2 * 1024 * 1024) throw new Error('A skin Ã© muito grande. Use um PNG de atÃ© 2 MB.');
+    if (bytes.length < 8 || bytes[0] !== 0x89 || bytes[1] !== 0x50 || bytes[2] !== 0x4E || bytes[3] !== 0x47) throw new Error('O arquivo selecionado não é um PNG válido.');
+    if (bytes.length > 2 * 1024 * 1024) throw new Error('A skin é muito grande. Use um PNG de até 2 MB.');
 
     const isFabric = (this.config.minecraft.loader || '').toLowerCase() === 'fabric';
     const skinDir = path.join(this.paths.gameDir, 'CustomSkinLoader', 'LocalSkin', 'skins');
@@ -591,12 +707,13 @@ class LauncherService {
     const savedDir = path.join(this.paths.root, 'skins');
     fs.mkdirSync(savedDir, { recursive: true });
     await fsp.copyFile(filePath, path.join(savedDir, `${name}.png`));
-     const ownerUuid = this.loadAuth()?.profile?.id || this.offlineUuid(name);
+     // O servidor é offline-mode: dentro do jogo o UUID é sempre o offline do nick.
+     const ownerUuid = this.offlineUuid(name);
      try { await this.publishSkin(filePath, name, ownerUuid); }
-    catch (e) { this.log(`Skin salva localmente; sincronizaÃ§Ã£o online falhou: ${e.message}`, 'AVISO'); }
+    catch (e) { this.log(`Skin salva localmente; sincronização online falhou: ${e.message}`, 'AVISO'); }
 
-    // MantÃ©m uma cÃ³pia simples das preferÃªncias do VilaNexo. O CustomSkinLoader
-    // lÃª a imagem pelo nome do jogador ao iniciar/reentrar no jogo.
+    // Mantém uma cópia simples das preferências do VilaNexo. O CustomSkinLoader
+    // lê a imagem pelo nome do jogador ao iniciar/reentrar no jogo.
     const metaDir = path.join(this.paths.gameDir, 'VilaNexo');
     fs.mkdirSync(metaDir, { recursive: true });
     fs.writeFileSync(path.join(metaDir, 'skin.json'), JSON.stringify({ username: name, variant, file: dest, updatedAt: Date.now() }, null, 2));
@@ -616,7 +733,7 @@ class LauncherService {
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(uuid))) form.append('uuid', String(uuid).toLowerCase());
     form.append('skin', new Blob([bytes], { type: 'image/png' }), `${name}.png`);
     const res = await fetch(url, { method: 'POST', body: form });
-    if (!res.ok) throw new Error(`NÃ£o foi possÃ­vel sincronizar a skin (HTTP ${res.status}).`);
+    if (!res.ok) throw new Error(`Não foi possível sincronizar a skin (HTTP ${res.status}).`);
     this.log(`Skin sincronizada no servidor para ${name}.`, 'SUCESSO');
   }
 
@@ -641,9 +758,9 @@ class LauncherService {
   }
 
   async uploadSkin(filePath, variant = 'classic', offlineName = '') {
-    if (!filePath || !fs.existsSync(filePath)) throw new Error('Selecione uma skin PNG vÃ¡lida.');
+    if (!filePath || !fs.existsSync(filePath)) throw new Error('Selecione uma skin PNG válida.');
     variant = String(variant || '').toLowerCase();
-    if (!['classic', 'slim'].includes(variant)) throw new Error('Modelo de skin invÃ¡lido.');
+    if (!['classic', 'slim'].includes(variant)) throw new Error('Modelo de skin inválido.');
     if (path.extname(filePath).toLowerCase() !== '.png') throw new Error('A skin precisa estar no formato PNG.');
     const auth = this.loadAuth();
     // The active account is authoritative. Never let a stale nick field
@@ -693,8 +810,8 @@ class LauncherService {
           meter.on('error', reject);
         });
         clearTimeout(timer);
-        if (expectedSha1 && await this.hashFile(tmp, 'sha1') !== expectedSha1) throw new Error(`SHA1 invÃ¡lido: ${path.basename(destination)}`);
-        if (expectedSha256 && await this.hashFile(tmp, 'sha256') !== expectedSha256) throw new Error(`SHA256 invÃ¡lido: ${path.basename(destination)}`);
+        if (expectedSha1 && await this.hashFile(tmp, 'sha1') !== expectedSha1) throw new Error(`SHA1 inválido: ${path.basename(destination)}`);
+        if (expectedSha256 && await this.hashFile(tmp, 'sha256') !== expectedSha256) throw new Error(`SHA256 inválido: ${path.basename(destination)}`);
         fs.renameSync(tmp, destination);
         if (onProgress) onProgress({ received, total: total || received, speed: 0, label, done: true });
         return { cached: false, bytes: received };
@@ -709,7 +826,7 @@ class LauncherService {
         }
       }
     }
-    throw new Error(`Falha ao baixar ${label} apÃ³s ${retries} tentativas: ${lastError?.message || lastError}`);
+    throw new Error(`Falha ao baixar ${label} após ${retries} tentativas: ${lastError?.message || lastError}`);
   }
 
   async runPool(items, worker, concurrency = this.downloadConfig.concurrency) {
@@ -763,13 +880,13 @@ class LauncherService {
         const r = spawnSync(candidate, ['-version'], { encoding: 'utf8', windowsHide: true, timeout: 5000 });
         const txt = `${r.stdout || ''} ${r.stderr || ''}`;
         if (/version\s+"21(?:\.|")/.test(txt) || /openjdk version "21/.test(txt)) {
-          if (candidate.startsWith(officialRuntime)) this.log('Java 21 reaproveitado da instalaÃ§Ã£o oficial do Minecraft.', 'SUCESSO');
+          if (candidate.startsWith(officialRuntime)) this.log('Java 21 reaproveitado da instalação oficial do Minecraft.', 'SUCESSO');
           return candidate;
         }
       } catch {}
     }
 
-    this.progress('Baixando Java 21', 5); this.log('Java 21 nÃ£o encontrado. Baixando runtime...');
+    this.progress('Baixando Java 21', 5); this.log('Java 21 não encontrado. Baixando runtime...');
     const { arch } = this.platformInfo();
     const osName = process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux';
     const ext = process.platform === 'win32' ? 'zip' : 'tar.gz';
@@ -779,7 +896,7 @@ class LauncherService {
     fs.rmSync(this.paths.runtimeDir, { recursive: true, force: true }); fs.mkdirSync(this.paths.runtimeDir, { recursive: true });
     await this.extractArchive(archive, this.paths.runtimeDir);
     candidates.length = 0; walk(this.paths.runtimeDir);
-    if (!candidates[0]) throw new Error('Java 21 foi baixado, mas o executÃ¡vel java nÃ£o foi encontrado.');
+    if (!candidates[0]) throw new Error('Java 21 foi baixado, mas o executável java não foi encontrado.');
     this.log('Java 21 instalado com sucesso.', 'SUCESSO');
     return candidates[0];
   }
@@ -789,7 +906,7 @@ class LauncherService {
     this.progress('Preparando Minecraft', 15); this.log(`Verificando Minecraft ${mc}...`);
     const manifest = await this.fetchJson('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json');
     const entry = manifest.versions.find(v => v.id === mc);
-    if (!entry) throw new Error(`VersÃ£o Minecraft ${mc} nÃ£o encontrada.`);
+    if (!entry) throw new Error(`Versão Minecraft ${mc} não encontrada.`);
     const vjsonPath = path.join(this.paths.gameDir, 'versions', mc, `${mc}.json`);
     await this.download(entry.url, vjsonPath, entry.sha1);
     const vjson = JSON.parse(fs.readFileSync(vjsonPath, 'utf8'));
@@ -807,8 +924,8 @@ class LauncherService {
       let matches = true;
       if (r.os?.name && r.os.name !== platform) matches = false;
       if (r.os?.arch && !arch.includes(r.os.arch.replace('x86','32'))) matches = false;
-      // Recursos opcionais do launcher oficial (demo, resoluÃ§Ã£o customizada,
-      // quick-play etc.) nÃ£o sÃ£o ativados pelo VilaNexo.
+      // Recursos opcionais do launcher oficial (demo, resolução customizada,
+      // quick-play etc.) não são ativados pelo VilaNexo.
       if (r.features && Object.keys(r.features).length) matches = false;
       if (matches) allowed = r.action === 'allow';
     }
@@ -861,31 +978,31 @@ class LauncherService {
     const mc = this.config.minecraft.version, forge = this.config.minecraft.forgeVersion;
     const id = this.forgeVersionId();
     const vjsonPath = path.join(this.paths.gameDir, 'versions', id, `${id}.json`);
-    if (fs.existsSync(vjsonPath)) { this.log(`Forge ${forge} jÃ¡ instalado. Pulando reinstalaÃ§Ã£o.`, 'SUCESSO'); return id; }
+    if (fs.existsSync(vjsonPath)) { this.log(`Forge ${forge} já instalado. Pulando reinstalação.`, 'SUCESSO'); return id; }
     this.progress('Baixando instalador do Forge', 40); this.log(`Baixando Forge ${forge}...`);
     fs.mkdirSync(this.paths.cacheDir, { recursive: true });
     const installer = path.join(this.paths.cacheDir, `forge-${mc}-${forge}-installer.jar`);
     const url = `https://maven.minecraftforge.net/net/minecraftforge/forge/${mc}-${forge}/forge-${mc}-${forge}-installer.jar`;
     await this.download(url, installer, null, null, { label: `Forge ${forge}`, onProgress: ({received,total,speed}) => {
       const pct = total ? Math.min(100, Math.round(received*100/total)) : 0;
-      const speedText = speed ? ` â€¢ ${(speed/1024/1024).toFixed(1)} MB/s` : '';
+      const speedText = speed ? ` • ${(speed/1024/1024).toFixed(1)} MB/s` : '';
       this.progress(`Forge: ${this.formatBytes(received)}${total ? ` / ${this.formatBytes(total)} (${pct}%)` : ''}${speedText}`, 40 + Math.round(5*(total ? received/total : 0)));
     }});
     fs.mkdirSync(this.paths.gameDir, { recursive: true });
     const profiles = path.join(this.paths.gameDir, 'launcher_profiles.json');
     if (!fs.existsSync(profiles)) fs.writeFileSync(profiles, JSON.stringify({profiles:{},settings:{},version:3}, null, 2));
     this.progress('Instalando Forge (pode levar alguns minutos)', 46);
-    this.log('Executando o instalador do Forge. Ele pode baixar bibliotecas adicionais; o launcher continuarÃ¡ mostrando atividade.', 'INFO');
+    this.log('Executando o instalador do Forge. Ele pode baixar bibliotecas adicionais; o launcher continuará mostrando atividade.', 'INFO');
     await this.exec(javaPath, ['-jar', installer, '--installClient', this.paths.gameDir], this.paths.gameDir, {
       timeoutMs: this.downloadConfig.forgeInstallTimeoutMs,
       heartbeatMs: 10000,
       heartbeat: elapsed => this.progress(`Instalando Forge... ${Math.floor(elapsed/1000)}s`, Math.min(58, 46 + Math.floor(elapsed/30000)))
     });
     if (!fs.existsSync(vjsonPath)) {
-      this.log('Tentando instalaÃ§Ã£o Forge em modo compatibilidade...', 'AVISO');
+      this.log('Tentando instalação Forge em modo compatibilidade...', 'AVISO');
       await this.exec(javaPath, ['-jar', installer, '--installClient'], this.paths.gameDir, { timeoutMs: this.downloadConfig.forgeInstallTimeoutMs, heartbeatMs: 10000 });
     }
-    if (!fs.existsSync(vjsonPath)) throw new Error('O instalador do Forge terminou, mas o perfil Forge nÃ£o foi encontrado. Verifique a versÃ£o Forge configurada.');
+    if (!fs.existsSync(vjsonPath)) throw new Error('O instalador do Forge terminou, mas o perfil Forge não foi encontrado. Verifique a versão Forge configurada.');
     this.log('Forge instalado.', 'SUCESSO');
     return id;
   }
@@ -896,7 +1013,7 @@ class LauncherService {
     const candidates = [this.neoforgeVersionId(), `${mc}-neoforge-${neo}`];
     const findInstalled = () => candidates.find(id => fs.existsSync(path.join(versionsDir, id, `${id}.json`)));
     const installed = findInstalled();
-    if (installed) { this.log(`NeoForge ${neo} jÃ¡ instalado. Pulando reinstalaÃ§Ã£o.`, 'SUCESSO'); return installed; }
+    if (installed) { this.log(`NeoForge ${neo} já instalado. Pulando reinstalação.`, 'SUCESSO'); return installed; }
     this.progress('Baixando instalador do NeoForge', 40);
     fs.mkdirSync(this.paths.cacheDir, { recursive: true });
     const installer = path.join(this.paths.cacheDir, `neoforge-${neo}-installer.jar`);
@@ -911,7 +1028,7 @@ class LauncherService {
       heartbeat: elapsed => this.progress(`Instalando NeoForge... ${Math.floor(elapsed/1000)}s`, Math.min(58, 46 + Math.floor(elapsed/30000)))
     });
     const resolved = findInstalled();
-    if (!resolved) throw new Error('O instalador do NeoForge terminou, mas o perfil NeoForge nÃ£o foi encontrado.');
+    if (!resolved) throw new Error('O instalador do NeoForge terminou, mas o perfil NeoForge não foi encontrado.');
     this.log(`NeoForge ${neo} instalado.`, 'SUCESSO');
     return resolved;
   }
@@ -978,7 +1095,7 @@ class LauncherService {
         settled = true;
         if (heartbeat) clearInterval(heartbeat);
         try { p.kill(); } catch {}
-        reject(new Error(`${path.basename(command)} excedeu o limite de ${Math.round(timeoutMs/60000)} minuto(s). Tente novamente; arquivos jÃ¡ baixados serÃ£o reaproveitados.`));
+        reject(new Error(`${path.basename(command)} excedeu o limite de ${Math.round(timeoutMs/60000)} minuto(s). Tente novamente; arquivos já baixados serão reaproveitados.`));
       }, timeoutMs) : null;
       heartbeat = heartbeatMs ? setInterval(() => {
         const elapsed = Date.now() - started;
@@ -995,13 +1112,13 @@ class LauncherService {
       p.stdout.on('data', d => { const t=String(d).trim(); if (t) this.log(t, 'JAVA'); });
       p.stderr.on('data', d => { const t=String(d).trim(); if (t) this.log(t, 'JAVA'); });
       p.on('error', done(reject));
-      p.on('exit', code => done(code === 0 ? resolve : reject)(code === 0 ? undefined : new Error(`${path.basename(command)} encerrou com cÃ³digo ${code}`)));
+      p.on('exit', code => done(code === 0 ? resolve : reject)(code === 0 ? undefined : new Error(`${path.basename(command)} encerrou com código ${code}`)));
     });
   }
 
   async syncDistribution() {
-    // O modpack remoto Ã© baixado para %APPDATA%/.minecraft; nÃ£o tente reorganizar
-    // a pasta mods ao lado do executÃ¡vel, que pode estar em Program Files.
+    // O modpack remoto é baixado para %APPDATA%/.minecraft; não tente reorganizar
+    // a pasta mods ao lado do executável, que pode estar em Program Files.
     const remoteManifest = this.config.distribution?.manifestUrl || '';
     if (!remoteManifest || remoteManifest.includes('SEU-DOMINIO')) this.sanitizeLocalMods();
     const local = this.scanLocalMods();
@@ -1034,7 +1151,7 @@ class LauncherService {
     for (const file of (manifest.files || [])) {
       const safe = file.path.replace(/\\/g,'/').replace(/^\/+/, '');
       const abs = path.resolve(this.paths.gameDir, safe);
-      if (!abs.startsWith(path.resolve(this.paths.gameDir) + path.sep)) throw new Error(`Caminho invÃ¡lido no manifesto: ${file.path}`);
+      if (!abs.startsWith(path.resolve(this.paths.gameDir) + path.sep)) throw new Error(`Caminho inválido no manifesto: ${file.path}`);
       await this.download(file.url, abs, null, file.sha256 || null);
       i++; this.progress(`Sincronizando arquivos (${i}/${manifest.files.length})`, 65 + Math.round(15*i/Math.max(1,manifest.files.length)));
     }
@@ -1053,7 +1170,7 @@ class LauncherService {
     const parent = JSON.parse(fs.readFileSync(parentPath, 'utf8'));
 
     // IMPORTANTE PARA FORGE MODERNO (1.17+):
-    // O JSON filho do Forge define seu PRÃ“PRIO module-path (-p), ignoreList,
+    // O JSON filho do Forge define seu PRÓPRIO module-path (-p), ignoreList,
     // add-modules e add-opens. Herdar os argumentos JVM do Minecraft vanilla
     // injeta um segundo "-cp ${classpath}" e cria pacotes duplicados no
     // ModuleLayer (erros "Modules client/minecraft export package ...").
@@ -1085,8 +1202,8 @@ class LauncherService {
     if (!lib) return '';
     if (lib.name) {
       const parts = String(lib.name).split(':');
-      // group:artifact[:classifier] identifica a posiÃ§Ã£o lÃ³gica. A versÃ£o do
-      // filho deve substituir a do pai quando o Forge fixa outra versÃ£o.
+      // group:artifact[:classifier] identifica a posição lógica. A versão do
+      // filho deve substituir a do pai quando o Forge fixa outra versão.
       return `${parts[0] || ''}:${parts[1] || ''}:${parts[3] || ''}`;
     }
     return lib.downloads?.artifact?.path || JSON.stringify(lib);
@@ -1164,13 +1281,13 @@ class LauncherService {
       }
     }
 
-    // Para versÃµes herdadas (Forge), o "version jar" continua sendo o JAR do
-    // Minecraft pai. NÃƒO adicione manualmente client-*-srg.jar: o Forge jÃ¡
+    // Para versões herdadas (Forge), o "version jar" continua sendo o JAR do
+    // Minecraft pai. NÃO adicione manualmente client-*-srg.jar: o Forge já
     // declara suas bibliotecas e seu module-path no version.json. Adicionar o
-    // SRG manualmente foi a causa dos mÃ³dulos "client" + "minecraft" duplicados.
+    // SRG manualmente foi a causa dos módulos "client" + "minecraft" duplicados.
     const baseVersion = v._parentVersionId || this.config.minecraft.version;
     const versionJar = path.join(this.paths.gameDir, 'versions', baseVersion, `${baseVersion}.jar`);
-    if (!fs.existsSync(versionJar)) throw new Error(`JAR base do Minecraft nÃ£o encontrado: ${versionJar}`);
+    if (!fs.existsSync(versionJar)) throw new Error(`JAR base do Minecraft não encontrado: ${versionJar}`);
     cp.unshift(versionJar);
 
     const seen = new Set();
@@ -1184,10 +1301,10 @@ class LauncherService {
     const sep = process.platform === 'win32' ? ';' : ':';
     const classpath = dedupedCp.join(sep);
     // Minecraft usa ${version_name} com significados diferentes em contextos diferentes.
-    // Nos argumentos JVM do Forge, ${version_name} PRECISA ser a versÃ£o base do Minecraft
+    // Nos argumentos JVM do Forge, ${version_name} PRECISA ser a versão base do Minecraft
     // (ex.: 1.20.1), pois o -DignoreList inclui ${version_name}.jar. Se usarmos o id
     // do perfil Forge aqui, 1.20.1.jar deixa de ser ignorado pelo BootstrapLauncher e
-    // vira um mÃ³dulo automÃ¡tico (_1._20._1), duplicando o mÃ³dulo 'minecraft'.
+    // vira um módulo automático (_1._20._1), duplicando o módulo 'minecraft'.
     // Nos argumentos de jogo, --version pode continuar usando o id completo do perfil Forge.
     const commonVars = {
       '${auth_player_name}': auth.profile.name,
@@ -1247,20 +1364,20 @@ class LauncherService {
     if (!hasNativePath) jvmArgs.push(`-Djava.library.path=${natives}`);
     if (!hasCp) jvmArgs.push('-cp', classpath);
 
-    // Sanidade: Forge moderno precisa ter sÃ³ UM classpath e o module-path
-    // fornecido pelo JSON filho. Se o pai vazar para cÃ¡, abortamos com um erro
+    // Sanidade: Forge moderno precisa ter só UM classpath e o module-path
+    // fornecido pelo JSON filho. Se o pai vazar para cá, abortamos com um erro
     // claro em vez de abrir um Minecraft condenado a ResolutionException.
     const cpCount = jvmArgs.filter(a => a === '-cp' || a === '-classpath').length;
-    if (cpCount !== 1) throw new Error(`Launch Forge invÃ¡lido: foram encontrados ${cpCount} argumentos de classpath. Esperado: 1.`);
+    if (cpCount !== 1) throw new Error(`Launch Forge inválido: foram encontrados ${cpCount} argumentos de classpath. Esperado: 1.`);
     if (v._modernForge) {
       const hasModulePath = jvmArgs.some(a => a === '-p' || a === '--module-path' || a.startsWith('--module-path='));
-      if (!hasModulePath) throw new Error('Launch Forge invÃ¡lido: o version.json instalado nÃ£o contÃ©m module-path (-p). Reinstale o Forge pelo launcher.');
+      if (!hasModulePath) throw new Error('Launch Forge inválido: o version.json instalado não contém module-path (-p). Reinstale o Forge pelo launcher.');
       const ignoreArg = jvmArgs.find(a => a.startsWith('-DignoreList=')) || '';
       const expectedVanilla = `${baseVersion}.jar`;
       if (!ignoreArg.toLowerCase().includes(expectedVanilla.toLowerCase())) {
-        throw new Error(`Launch Forge invÃ¡lido: ignoreList nÃ£o contÃ©m ${expectedVanilla}. O Minecraft vanilla seria carregado como mÃ³dulo duplicado.`);
+        throw new Error(`Launch Forge inválido: ignoreList não contém ${expectedVanilla}. O Minecraft vanilla seria carregado como módulo duplicado.`);
       }
-      this.log(`Forge bootstrap validado: ${expectedVanilla} estÃ¡ no ignoreList; mÃ³dulo vanilla duplicado bloqueado.`, 'SUCESSO');
+      this.log(`Forge bootstrap validado: ${expectedVanilla} está no ignoreList; módulo vanilla duplicado bloqueado.`, 'SUCESSO');
     }
 
     const memory = [`-Xms${this.config.minecraft.memoryMinMb}M`, `-Xmx${this.config.minecraft.memoryMaxMb}M`];
@@ -1269,7 +1386,7 @@ class LauncherService {
       performance: ['-XX:+UseG1GC', '-XX:+UseStringDeduplication', '-XX:MaxGCPauseMillis=100'],
       quality: ['-XX:+UseG1GC', '-XX:MaxGCPauseMillis=300']
     }[this.config.minecraft.performance || 'balanced'];
-    // MantÃ©m o servidor salvo no Multiplayer e conecta diretamente ao clicar em Jogar.
+    // Mantém o servidor salvo no Multiplayer e conecta diretamente ao clicar em Jogar.
     if (this.config.minecraft.serverAddress && !this.config.minecraft.serverAddress.includes('SEU-IP')) {
       gameArgs.push('--server', this.config.minecraft.serverAddress, '--port', String(this.config.minecraft.serverPort || 25565));
     }
@@ -1388,7 +1505,7 @@ ClientEvents.tick(event => {
        const p = spawn(launch.command, launch.args, { cwd: this.paths.gameDir, detached: false, windowsHide: false, env: gameEnv });
        p.stdout.on('data', d=>this.log(String(d).trim(),'JOGO'));
        p.stderr.on('data', d=>this.log(String(d).trim(),'JOGO'));
-       p.on('exit', code=>this.log(`Minecraft encerrado com cÃ³digo ${code}.`, code===0?'INFO':'ERRO'));
+       p.on('exit', code=>this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'));
       this.progress('Jogo iniciado', 100);
       return true;
     } catch (e) {
