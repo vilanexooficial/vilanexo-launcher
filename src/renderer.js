@@ -414,6 +414,7 @@ if ($('quickStore')) $('quickStore').onclick = openLink('store', 'https://www.vi
 if ($('linkDiscord')) $('linkDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
 if ($('quickDiscord')) $('quickDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
 if ($('linkSite')) $('linkSite').onclick = openLink('wiki', 'https://www.vilanexo.com/');
+if ($('quickSite')) $('quickSite').onclick = openLink('wiki', 'https://www.vilanexo.com/');
 
 $('chooseSkin').onclick = async () => {
   try {

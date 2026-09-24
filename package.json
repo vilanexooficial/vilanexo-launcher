@@ -1,6 +1,6 @@
 {
   "name": "vilanexo-launcher",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "VilaNexo Cobblemon Launcher - Minecraft 1.21.1 NeoForge com sincronização de modpack",
   "main": "src/main.js",
   "author": "VilaNexo",
