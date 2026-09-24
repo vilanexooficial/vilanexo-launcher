@@ -403,6 +403,23 @@ class LauncherService {
   // Conta Microsoft (Minecraft original)
   // Fluxo: Microsoft OAuth -> Xbox Live -> XSTS -> Minecraft Services.
   // ------------------------------------------------------------------
+  // Avisa o site que esta conta e original, para o servidor pular o /login do AuthMe.
+  // Usa IPv4 para o IP visto pelo site ser o mesmo que o servidor Minecraft vai ver.
+  registerPremium(auth) {
+    const url = this.config.auth?.premiumUrl || 'https://www.vilanexo.com/auth/premium.ashx';
+    return new Promise((resolve) => {
+      try {
+        const https = require('https');
+        const req = https.request(url, { method: 'POST', family: 4, timeout: 12000, headers: { Authorization: `Bearer ${auth.access_token}`, 'Content-Length': 0, 'User-Agent': `VilaNexoLauncher/${this.getLauncherVersion()}` } }, (res) => {
+          res.resume();
+          res.on('end', () => { this.log(res.statusCode === 200 ? 'Conta original confirmada: login automático no servidor.' : `Login automático indisponível (HTTP ${res.statusCode}).`, res.statusCode === 200 ? 'INFO' : 'AVISO'); resolve(); });
+        });
+        req.on('timeout', () => req.destroy(new Error('tempo esgotado')));
+        req.on('error', (e) => { this.log(`Login automático indisponível: ${e.message}`, 'AVISO'); resolve(); });
+        req.end();
+      } catch (e) { this.log(`Login automático indisponível: ${e.message}`, 'AVISO'); resolve(); }
+    });
+  }
   publicAccount(auth) {
     if (!auth?.profile?.name) return null;
     return { name: auth.profile.name, id: auth.profile.id, type: auth.microsoft ? 'microsoft' : 'local' };
@@ -1497,6 +1514,7 @@ ClientEvents.tick(event => {
        catch (e) { this.log(`Sincronização de skins indisponível: ${e.message}`, 'AVISO'); }
        finally { this.restoreSavedSkin(auth.profile.name); }
         this.ensureVilaNexoServerEntry();
+       if (auth.microsoft) await this.registerPremium(auth);
       this.progress('Iniciando jogo', 95);
        const launch = await this.buildLaunch(java, auth, profileId);
       this.log('Iniciando Minecraft...', 'SUCESSO');
