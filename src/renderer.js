@@ -334,7 +334,19 @@ async function init() {
   let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme'); } catch {}
   applyTheme(savedTheme || '#8d46ff', false);
   setupSkinInteraction();
-  logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Launcher iniciado.' });
+  if ($('closeOnPlay')) {
+    $('closeOnPlay').checked = config.closeOnPlay !== false;
+    $('closeOnPlay').onchange = async (e) => { try { await window.vilaNexoLauncher.setCloseOnPlay(e.target.checked); } catch {} };
+  }
+  const back = new URLSearchParams(location.search);
+  if (back.get('back')) {
+    const code = back.get('code');
+    const ok = code === '0' || code === null;
+    logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: ok ? 'INFO' : 'ERRO', message: ok ? 'Minecraft fechado. Bem-vindo de volta!' : `O Minecraft fechou com erro (código ${code}). Se continuar, abra a pasta Logs e mande no Discord.` });
+    if ($('status')) $('status').textContent = ok ? '● Bem-vindo de volta' : '● O jogo fechou com erro';
+  } else {
+    logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Launcher iniciado.' });
+  }
   window.vilaNexoLauncher.onUpdate((update) => {
     if (update.event === 'available') {
       $('updateText').textContent = `Baixando a versão ${update.version} automaticamente...`;

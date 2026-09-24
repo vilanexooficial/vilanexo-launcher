@@ -11,7 +11,8 @@ const { migrateMapConfig } = require('./map-config');
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 class LauncherService {
-  constructor({ app, emit }) {
+  constructor({ app, emit, hooks }) {
+    this.hooks = hooks || {};
     this.app = app;
     this.emit = emit;
     this.config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'launcher.config.json'), 'utf8'));
@@ -61,7 +62,13 @@ class LauncherService {
     this.emit('launcher:progress', { phase, progress });
   }
   setBusy(busy) { this.state.busy = busy; this.emit('launcher:state', this.state); }
-  getPublicConfig() { return { ...this.config }; }
+  getPublicConfig() { return { ...this.config, closeOnPlay: this.preferences.closeOnPlay !== false }; }
+  setCloseOnPlay(value) {
+    this.preferences = { ...this.preferences, closeOnPlay: !!value };
+    this.savePreferences();
+    this.log(value ? 'O launcher vai fechar enquanto você joga e voltar quando o jogo fechar.' : 'O launcher vai continuar aberto durante o jogo.', 'INFO');
+    return !!value;
+  }
   getState() { return this.state; }
   getLauncherVersion() { return require('../package.json').version; }
 
@@ -103,7 +110,7 @@ class LauncherService {
     if (!Number.isFinite(max) || max < 2048 || max > 32768) throw new Error('A memória máxima deve ficar entre 2048 e 32768 MB.');
     if (min > max) throw new Error('A memória inicial não pode ser maior que a memória máxima.');
     if (!['balanced', 'performance', 'quality'].includes(performance)) throw new Error('Modo de desempenho inválido.');
-    this.preferences = { memoryMinMb: min, memoryMaxMb: max, performance };
+    this.preferences = { ...this.preferences, memoryMinMb: min, memoryMaxMb: max, performance };
     this.savePreferences();
     this.applyPreferences();
     this.log(`Configurações salvas: ${min}-${max} MB, modo ${performance}.`, 'SUCESSO');
@@ -1503,9 +1510,13 @@ ClientEvents.tick(event => {
        delete gameEnv.JAVA_TOOL_OPTIONS;
        delete gameEnv.JDK_JAVA_OPTIONS;
        const p = spawn(launch.command, launch.args, { cwd: this.paths.gameDir, detached: false, windowsHide: false, env: gameEnv });
-       p.stdout.on('data', d=>this.log(String(d).trim(),'JOGO'));
-       p.stderr.on('data', d=>this.log(String(d).trim(),'JOGO'));
-       p.on('exit', code=>this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'));
+       let gameShown = false;
+       const watchVisible = (t) => { if (!gameShown && /LWJGL|Backend library|EARLYDISPLAY|early window|Loading Minecraft|Setting user/i.test(t)) { gameShown = true; try { this.hooks.gameVisible?.(); } catch {} } };
+       p.stdout.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
+       p.stderr.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
+       p.on('error', err => { this.log(`Não foi possível abrir o Minecraft: ${err.message}`, 'ERRO'); try { this.hooks.gameExited?.(-1); } catch {} });
+       p.on('exit', code => { this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'); try { this.hooks.gameExited?.(code); } catch {} });
+       try { this.hooks.gameStarted?.(p, this.preferences.closeOnPlay !== false); } catch {}
       this.progress('Jogo iniciado', 100);
       return true;
     } catch (e) {

@@ -25,6 +25,19 @@ function setupAutoUpdates() {
   autoUpdater.checkForUpdates().catch((error) => sendUpdate('error', { message: error.message }));
 }
 
+let launcherSleeping = false;
+let sleepTimer = null;
+let sleepEnabled = false;
+let gameChild = null;
+
+function sleepLauncher() {
+  if (!mainWindow || mainWindow.isDestroyed() || launcherSleeping) return;
+  if (!gameChild || gameChild.exitCode !== null) return;
+  launcherSleeping = true;
+  mainWindow.hide();
+  mainWindow.webContents.loadURL('about:blank');
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1536,
@@ -42,7 +55,34 @@ function createWindow() {
 
   launcher = new LauncherService({
     app,
-    emit: (event, payload) => mainWindow?.webContents.send(event, payload)
+    emit: (event, payload) => { if (mainWindow && !mainWindow.isDestroyed() && !launcherSleeping) mainWindow.webContents.send(event, payload); },
+    hooks: {
+      // Enquanto o Minecraft roda, a interface é descarregada e a janela some,
+      // ficando só o processo principal (bem leve). Quando o jogo fecha, volta.
+      gameStarted: (child, closeOnPlay) => {
+        gameChild = child;
+        sleepEnabled = !!closeOnPlay;
+        if (!sleepEnabled) return;
+        clearTimeout(sleepTimer);
+        sleepTimer = setTimeout(sleepLauncher, 30000); // se não detectar a janela do jogo
+      },
+      gameVisible: () => {
+        if (!sleepEnabled) return;
+        clearTimeout(sleepTimer);
+        sleepTimer = setTimeout(sleepLauncher, 2500);
+      },
+      gameExited: (code) => {
+        clearTimeout(sleepTimer);
+        if (!mainWindow || mainWindow.isDestroyed()) return;
+        if (launcherSleeping) {
+          launcherSleeping = false;
+          mainWindow.loadFile(path.join(__dirname, 'index.html'), { query: { back: '1', code: String(code) } });
+        }
+        if (!mainWindow.isVisible()) mainWindow.show();
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+      }
+    }
   });
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
@@ -57,6 +97,7 @@ ipcMain.handle('window:maximize', () => mainWindow.isMaximized() ? mainWindow.un
 ipcMain.handle('window:close', () => mainWindow.close());
 
 ipcMain.handle('launcher:get-config', () => launcher.getPublicConfig());
+ipcMain.handle('launcher:set-close-on-play', (_, value) => launcher.setCloseOnPlay(value));
 ipcMain.handle('launcher:update-settings', (_, settings) => launcher.updateSettings(settings));
 ipcMain.handle('launcher:get-state', () => launcher.getState());
 ipcMain.handle('launcher:check-update', () => launcher.checkForUpdate());

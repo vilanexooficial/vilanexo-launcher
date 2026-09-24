@@ -10,6 +10,8 @@
     if (root) root.remove();
   };
   if (!root) { done(); return; }
+  // Voltando do jogo: sem abertura.
+  if (new URLSearchParams(location.search).get('back')) { done(); return; }
   const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   if (reduce) { done(); return; }
 

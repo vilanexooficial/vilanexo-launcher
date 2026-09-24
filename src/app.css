@@ -557,6 +557,16 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.12); }
 .skin-tip b { display: block; color: var(--text); margin-bottom: 2px; }
 .skin-tip em { font-style: normal; color: var(--p2); }
 
+/* interruptor */
+.switch-row { display: flex; align-items: center; gap: 14px; margin-top: 22px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--line); cursor: pointer; }
+.switch-row input { position: absolute; opacity: 0; pointer-events: none; }
+.switch { position: relative; flex: none; width: 46px; height: 26px; border-radius: 99px; background: rgba(255,255,255,.14); transition: background .25s; }
+.switch::after { content: ''; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.4); transition: transform .25s var(--ease); }
+.switch-row input:checked + .switch { background: var(--p); box-shadow: 0 0 14px rgba(var(--accent-rgb), .5); }
+.switch-row input:checked + .switch::after { transform: translateX(20px); }
+.switch-row b { display: block; font-size: 13.5px; }
+.switch-row small { display: block; font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
 /* dicas */
 .tips-card { grid-column: 2 / 3; grid-template-columns: 1fr !important; padding: 22px 24px; display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: center; }
 .tips-list { display: flex; flex-wrap: wrap; gap: 8px; }
