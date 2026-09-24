@@ -58,5 +58,5 @@
   window.addEventListener('resize', init);
   init();
   requestAnimationFrame(frame);
-  setTimeout(() => document.body.classList.remove('booting'), 2200);
+  setTimeout(() => { document.body.classList.add('ready'); document.body.classList.remove('booting'); document.getElementById('intro')?.remove(); }, 10000);
 })();

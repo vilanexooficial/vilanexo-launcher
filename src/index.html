@@ -43,10 +43,20 @@
   </div>
 
   <!-- Abertura -->
-  <div class="intro" aria-hidden="true">
-    <div class="intro-ring"></div>
-    <img src="../assets/logo-cobblemon.png" alt="">
-    <div class="intro-word">VILANEXO</div>
+  <div id="intro" class="intro" aria-hidden="true">
+    <div class="intro-bg"></div>
+    <div class="intro-rays"></div>
+    <canvas id="introFx"></canvas>
+    <div class="intro-line"></div>
+    <div class="intro-kicker">VILANEXO</div>
+    <div class="intro-stage">
+      <div class="intro-shadow"></div>
+      <div class="intro-cube"><img src="../assets/intro-cube.png" alt=""><span class="intro-btn-glow"></span></div>
+      <div class="intro-flash"></div>
+      <div class="intro-logo"><img src="../assets/logo-cobblemon.png" alt=""></div>
+    </div>
+    <div class="intro-caption"><b>Carregando sua aventura</b><i><em></em></i></div>
+    <span class="intro-skip">Clique para pular</span>
   </div>
 
   <header class="topbar">
@@ -339,6 +349,7 @@
       document.write(s.outerHTML);
     }
   </script>
+  <script src="intro.js"></script>
   <script src="fx.js"></script>
   <script src="renderer.js"></script>
 </body>
