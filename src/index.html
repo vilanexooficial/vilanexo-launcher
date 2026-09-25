@@ -353,5 +353,16 @@
   <script src="intro.js"></script>
   <script src="fx.js"></script>
   <script src="renderer.js"></script>
+  <script>
+    // Plano B: se algo travar a abertura, libera a tela mesmo assim.
+    setTimeout(function () {
+      if (!document.body.classList.contains('ready')) {
+        document.body.classList.add('ready'); document.body.classList.remove('booting');
+        var i = document.getElementById('intro'); if (i) i.remove();
+      }
+    }, 12000);
+    // Avisa que a interface abriu (o launcher usa isso para se consertar sozinho se não abrir).
+    setTimeout(function () { try { window.vilaNexoLauncher && window.vilaNexoLauncher.uiReady && window.vilaNexoLauncher.uiReady(); } catch (e) {} }, 1500);
+  </script>
 </body>
 </html>

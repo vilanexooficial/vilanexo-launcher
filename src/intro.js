@@ -10,6 +10,9 @@
     if (root) root.remove();
   };
   if (!root) { done(); return; }
+  // Rede de segurança: aconteça o que acontecer, a tela libera em 10 s.
+  const safety = setTimeout(done, 10000);
+  try {
   // Voltando do jogo: sem abertura.
   if (new URLSearchParams(location.search).get('back')) { done(); return; }
   const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -28,6 +31,7 @@
   const stage = $('.intro-stage');
   const canvas = $('#introFx');
   const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('canvas 2d indisponível');
 
   // ---------------------------------------------------------- partículas
   let W = 0, H = 0, dpr = 1, parts = [], rings = [], alive = true;
@@ -185,13 +189,21 @@
     if (finishing) return;
     finishing = true;
     document.body.classList.add('ready');
-    await anim(root, [{ opacity: 1, transform: 'scale(1)', filter: 'blur(0)' }, { opacity: 0, transform: 'scale(1.06)', filter: 'blur(6px)' }], { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)' });
+    await Promise.race([
+      anim(root, [{ opacity: 1, transform: 'scale(1)', filter: 'blur(0)' }, { opacity: 0, transform: 'scale(1.06)', filter: 'blur(6px)' }], { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)' }),
+      wait(1000)
+    ]);
     alive = false;
     done();
   }
 
   root.addEventListener('click', () => { skipped = true; finish(); });
   run().catch(() => finish());
-  // Rede de segurança: nunca deixa a abertura presa.
   setTimeout(() => finish(), 9000);
+  } catch (e) {
+    // PC sem suporte a alguma parte da animação (ex.: placa de vídeo): pula direto.
+    console.error('abertura falhou', e);
+    clearTimeout(safety);
+    done();
+  }
 })();

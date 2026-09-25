@@ -7,6 +7,29 @@ const { LauncherService } = require('./launcher-service');
 let mainWindow;
 let launcher;
 
+// --- Autoconserto: se a última abertura não chegou a mostrar a tela (placa de vídeo/driver
+// problemático), esta abertura roda sem aceleração de hardware.
+const bootFlag = path.join(app.getPath('userData'), 'boot-pendente.flag');
+const noGpuFlag = path.join(app.getPath('userData'), 'sem-gpu.flag');
+let safeMode = false;
+try {
+  if (fs.existsSync(noGpuFlag) || fs.existsSync(bootFlag) || process.argv.includes('--sem-gpu')) {
+    safeMode = true;
+    app.disableHardwareAcceleration();
+    fs.writeFileSync(noGpuFlag, new Date().toISOString());
+  }
+  fs.mkdirSync(path.dirname(bootFlag), { recursive: true });
+  fs.writeFileSync(bootFlag, new Date().toISOString());
+} catch {}
+ipcMain.on('app:ui-ready', () => { try { fs.unlinkSync(bootFlag); } catch {} });
+app.on('child-process-gone', (_, details) => {
+  if (details.type === 'GPU' && !safeMode) {
+    try { fs.writeFileSync(noGpuFlag, new Date().toISOString()); } catch {}
+    app.relaunch({ args: process.argv.slice(1).concat(['--sem-gpu']) });
+    app.exit(0);
+  }
+});
+
 function sendUpdate(event, data = {}) {
   mainWindow?.webContents.send('app:update', { event, ...data });
 }
@@ -53,7 +76,7 @@ function createWindow() {
     }
   });
 
-  launcher = new LauncherService({
+  const makeService = () => new LauncherService({
     app,
     emit: (event, payload) => { if (mainWindow && !mainWindow.isDestroyed() && !launcherSleeping) mainWindow.webContents.send(event, payload); },
     hooks: {
@@ -85,6 +108,21 @@ function createWindow() {
     }
   });
 
+  try {
+    launcher = makeService();
+  } catch (error) {
+    // Arquivos de configuração corrompidos: guarda uma cópia e tenta de novo limpo.
+    const root = path.join(app.getPath('appData'), 'VilaNexo');
+    for (const f of ['launcher-preferences.json', 'managed-files.json']) {
+      try { fs.renameSync(path.join(root, f), path.join(root, f + '.corrompido-' + Date.now())); } catch {}
+    }
+    try { launcher = makeService(); }
+    catch (again) { dialog.showErrorBox('VilaNexo Launcher', 'Não foi possível iniciar o launcher:\n' + (again && again.message || again) + '\n\nMande um print disso para a equipe VilaNexo.'); }
+  }
+
+  mainWindow.webContents.on('render-process-gone', () => {
+    if (!mainWindow.isDestroyed() && !launcherSleeping) setTimeout(() => mainWindow.loadFile(path.join(__dirname, 'index.html')), 800);
+  });
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
 
