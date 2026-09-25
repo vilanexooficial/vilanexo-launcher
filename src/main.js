@@ -113,7 +113,7 @@ function createWindow() {
   } catch (error) {
     // Arquivos de configuração corrompidos: guarda uma cópia e tenta de novo limpo.
     const root = path.join(app.getPath('appData'), 'VilaNexo');
-    for (const f of ['launcher-preferences.json', 'managed-files.json']) {
+    for (const f of ['launcher-preferences.json', 'managed-files.json', 'managed-files-cobblemon.json', 'managed-files-rpg.json']) {
       try { fs.renameSync(path.join(root, f), path.join(root, f + '.corrompido-' + Date.now())); } catch {}
     }
     try { launcher = makeService(); }
@@ -126,29 +126,48 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
 
-app.whenReady().then(() => { createWindow(); setupAutoUpdates(); });
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    if (launcherSleeping) {
+      launcherSleeping = false;
+      mainWindow.loadFile(path.join(__dirname, 'index.html'), { query: { back: '1' } });
+    }
+    if (!mainWindow.isVisible()) mainWindow.show();
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  });
+  app.whenReady().then(() => { createWindow(); setupAutoUpdates(); });
+}
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 
+// Todo acesso ao serviço passa por aqui: mensagem clara se ele não iniciou.
+const svc = () => {
+  if (!launcher) throw new Error('O launcher não conseguiu iniciar. Reinstale pelo site (vilanexo.com), de preferência fora de "Arquivos de Programas".');
+  return launcher;
+};
 ipcMain.handle('window:minimize', () => mainWindow.minimize());
 ipcMain.handle('window:maximize', () => mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize());
 ipcMain.handle('window:close', () => mainWindow.close());
 
-ipcMain.handle('launcher:get-config', () => launcher.getPublicConfig());
-ipcMain.handle('launcher:set-close-on-play', (_, value) => launcher.setCloseOnPlay(value));
-ipcMain.handle('launcher:update-settings', (_, settings) => launcher.updateSettings(settings));
-ipcMain.handle('launcher:get-state', () => launcher.getState());
-ipcMain.handle('launcher:check-update', () => launcher.checkForUpdate());
+ipcMain.handle('launcher:get-config', () => svc().getPublicConfig());
+ipcMain.handle('launcher:set-close-on-play', (_, value) => svc().setCloseOnPlay(value));
+ipcMain.handle('launcher:update-settings', (_, settings) => svc().updateSettings(settings));
+ipcMain.handle('launcher:get-state', () => svc().getState());
+ipcMain.handle('launcher:check-update', () => svc().checkForUpdate());
 ipcMain.handle('app:install-update', () => autoUpdater.quitAndInstall());
-ipcMain.handle('launcher:login-offline', (_, username) => launcher.loginOffline(username));
+ipcMain.handle('launcher:login-offline', (_, username) => svc().loginOffline(username));
 ipcMain.handle('launcher:discord-login', async () => {
-  const data = await launcher.startDiscordLogin();
+  const data = await svc().startDiscordLogin();
   await shell.openExternal(data.loginUrl);
   return { nonce: data.nonce };
 });
 ipcMain.handle('launcher:microsoft-login', async () => {
   const code = await new Promise((resolve, reject) => {
-    const redirect = launcher.microsoftConfig().redirectUri;
+    const redirect = svc().microsoftConfig().redirectUri;
     const win = new BrowserWindow({
       parent: mainWindow, modal: true, width: 500, height: 680, resizable: false, minimizable: false,
       title: 'Entrar com a conta Microsoft', backgroundColor: '#ffffff', autoHideMenuBar: true,
@@ -170,16 +189,16 @@ ipcMain.handle('launcher:microsoft-login', async () => {
     win.webContents.on('did-navigate', (_, url) => finish(url));
     win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:\/\//.test(url)) shell.openExternal(url); return { action: 'deny' }; });
     win.on('closed', () => { if (!done) { done = true; reject(new Error('Login Microsoft cancelado.')); } });
-    win.loadURL(launcher.microsoftAuthorizeUrl());
+    win.loadURL(svc().microsoftAuthorizeUrl());
   });
-  return launcher.loginMicrosoft(code);
+  return svc().loginMicrosoft(code);
 });
-ipcMain.handle('launcher:discord-poll', (_, nonce) => launcher.pollDiscordLogin(nonce));
-ipcMain.handle('launcher:logout', () => launcher.logout());
-ipcMain.handle('launcher:play', (_, profileId) => launcher.play(profileId));
-ipcMain.handle('launcher:sync', () => launcher.syncDistribution());
-ipcMain.handle('launcher:open-game', () => shell.openPath(launcher.paths.gameDir));
-ipcMain.handle('launcher:open-logs', () => shell.openPath(path.join(launcher.paths.gameDir, 'logs')));
+ipcMain.handle('launcher:discord-poll', (_, nonce) => svc().pollDiscordLogin(nonce));
+ipcMain.handle('launcher:logout', () => svc().logout());
+ipcMain.handle('launcher:play', (_, profileId) => svc().play(profileId));
+ipcMain.handle('launcher:sync', () => svc().syncDistribution());
+ipcMain.handle('launcher:open-game', () => shell.openPath(svc().paths.gameDir));
+ipcMain.handle('launcher:open-logs', () => shell.openPath(path.join(svc().paths.gameDir, 'logs')));
 ipcMain.handle('launcher:open-url', (_, url) => (/^https:\/\//i.test(String(url)) ? shell.openExternal(url) : null));
 
 ipcMain.handle('launcher:choose-skin', async () => {
@@ -196,5 +215,5 @@ ipcMain.handle('launcher:choose-skin', async () => {
   if (bytes.length < 8 || bytes[0] !== 0x89 || bytes[1] !== 0x50 || bytes[2] !== 0x4E || bytes[3] !== 0x47) throw new Error('O arquivo selecionado não é um PNG válido.');
   return { path: filePath, name: path.basename(filePath), dataUrl: `data:image/png;base64,${bytes.toString('base64')}` };
 });
-ipcMain.handle('launcher:upload-skin', (_, data) => launcher.uploadSkin(data?.filePath, data?.variant, data?.offlineName));
-ipcMain.handle('launcher:get-saved-skin', (_, username) => launcher.getSavedSkin(username));
+ipcMain.handle('launcher:upload-skin', (_, data) => svc().uploadSkin(data?.filePath, data?.variant, data?.offlineName));
+ipcMain.handle('launcher:get-saved-skin', (_, username) => svc().getSavedSkin(username));

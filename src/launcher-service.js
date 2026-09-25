@@ -122,7 +122,8 @@ class LauncherService {
     const current = this.getLauncherVersion();
     const newer = String(remote.version || '').split('.').map(Number);
     const local = current.split('.').map(Number);
-    const hasUpdate = newer.length === 3 && newer.some((part, i) => part > (local[i] || 0)) && !newer.every((part, i) => part === (local[i] || 0));
+    const cmp = newer.map((part, i) => (part || 0) - (local[i] || 0)).find(d => d !== 0) || 0;
+    const hasUpdate = newer.length === 3 && cmp > 0;
     return { current, ...remote, hasUpdate };
   }
 
@@ -130,7 +131,18 @@ class LauncherService {
     // Os mods administrados ficam ao lado do executável do launcher.
     // Assim o dono do servidor pode abrir a pasta e trocar os .jar sem recompilar o app.
     const base = this.app.isPackaged ? path.dirname(this.app.getPath('exe')) : path.join(__dirname, '..');
-    return path.resolve(base, this.profile.localModsDir || 'mods');
+    const preferred = path.resolve(base, this.profile.localModsDir || 'mods');
+    if (this._modsDirOk === preferred) return preferred;
+    try {
+      fs.mkdirSync(preferred, { recursive: true });
+      const probe = path.join(preferred, '.vilanexo-teste');
+      fs.writeFileSync(probe, '1'); fs.rmSync(probe, { force: true });
+      this._modsDirOk = preferred;
+      return preferred;
+    } catch {
+      // Instalado em "Arquivos de Programas" (sem permissão): usa a pasta do usuário.
+      return path.join(this.paths?.root || path.join(this.app.getPath('appData'), 'VilaNexo'), 'managed-mods', this.profileId || 'cobblemon');
+    }
   }
 
   getGameModsDir() { return path.join(this.paths.gameDir, 'mods'); }
@@ -281,7 +293,7 @@ class LauncherService {
 
     const profilesSrc = path.join(source, 'launcher_profiles.json');
     const profilesDst = path.join(this.paths.gameDir, 'launcher_profiles.json');
-    if (fs.existsSync(profilesSrc) && !fs.existsSync(profilesDst)) this.linkOrCopyFile(profilesSrc, profilesDst);
+    if (fs.existsSync(profilesSrc) && !fs.existsSync(profilesDst)) fs.copyFileSync(profilesSrc, profilesDst);
 
     fs.writeFileSync(marker, JSON.stringify({ source, importedAt: new Date().toISOString(), files: totalImported }, null, 2), 'utf8');
     this.log(`Importação rápida concluída: ${totalImported} arquivo(s) reaproveitado(s).`, 'SUCESSO');
@@ -662,7 +674,11 @@ class LauncherService {
       loadlist: [
         // Legacy reads `skin`, not `root`. USERNAME selects our local PNG;
         // it does not perform a Mojang lookup (unlike UUID placeholders).
-        { name: 'VilaNexo LocalSkin', type: 'Legacy', skin: 'LocalSkin/skins/{USERNAME}.png', checkPNG: true }
+        { name: 'VilaNexo LocalSkin', type: 'Legacy', skin: 'LocalSkin/skins/{USERNAME}.png', model: 'auto', checkPNG: true },
+        // Ao vivo pelo site: quem trocar a skin depois que você abriu o jogo também aparece.
+        ...(this.config.skins?.baseUrl ? [{ name: 'VilaNexo', type: 'Legacy', skin: `${this.config.skins.baseUrl}{USERNAME}`, model: 'auto', checkPNG: true }] : []),
+        // Contas originais que nunca enviaram skin pelo launcher.
+        { name: 'Mojang', type: 'MojangAPI' }
       ],
       enableDynamicSkull: true,
       enableTransparentSkin: true,
@@ -670,12 +686,6 @@ class LauncherService {
       enableLogStdOut: true
     };
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
-    const officialDir = path.join(this.getOfficialMinecraftDir(), 'CustomSkinLoader');
-    const officialConfig = path.join(officialDir, 'CustomSkinLoader.json');
-    if (path.resolve(officialConfig).toLowerCase() !== path.resolve(configPath).toLowerCase()) {
-      fs.mkdirSync(path.join(officialDir, 'LocalSkin', 'skins'), { recursive: true });
-      fs.writeFileSync(officialConfig, JSON.stringify(config, null, 2), 'utf8');
-    }
     return configPath;
   }
 
@@ -688,11 +698,6 @@ class LauncherService {
     const target = path.join(this.paths.gameDir, 'CustomSkinLoader', 'LocalSkin', 'skins', `${name}.png`);
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(saved, target);
-    const officialTarget = path.join(this.getOfficialMinecraftDir(), 'CustomSkinLoader', 'LocalSkin', 'skins', `${name}.png`);
-    if (path.resolve(officialTarget).toLowerCase() !== path.resolve(target).toLowerCase()) {
-      fs.mkdirSync(path.dirname(officialTarget), { recursive: true });
-      fs.copyFileSync(saved, officialTarget);
-    }
     return true;
   }
 
@@ -717,24 +722,19 @@ class LauncherService {
 
     const isFabric = (this.config.minecraft.loader || '').toLowerCase() === 'fabric';
     const skinDir = path.join(this.paths.gameDir, 'CustomSkinLoader', 'LocalSkin', 'skins');
-    await this.ensureCustomSkinLoader();
-    this.ensureCustomSkinLoaderConfig();
     fs.mkdirSync(skinDir, { recursive: true });
     const dest = path.join(skinDir, `${name}.png`);
     await fsp.copyFile(filePath, dest);
-    const officialSkinDir = path.join(this.getOfficialMinecraftDir(), 'CustomSkinLoader', 'LocalSkin', 'skins');
-    const officialDest = path.join(officialSkinDir, `${name}.png`);
-    if (path.resolve(officialDest).toLowerCase() !== path.resolve(dest).toLowerCase()) {
-      fs.mkdirSync(officialSkinDir, { recursive: true });
-      await fsp.copyFile(filePath, officialDest);
-    }
     const savedDir = path.join(this.paths.root, 'skins');
     fs.mkdirSync(savedDir, { recursive: true });
     await fsp.copyFile(filePath, path.join(savedDir, `${name}.png`));
      // O servidor é offline-mode: dentro do jogo o UUID é sempre o offline do nick.
      const ownerUuid = this.offlineUuid(name);
+    let synced = true, syncError = '';
      try { await this.publishSkin(filePath, name, ownerUuid); }
-    catch (e) { this.log(`Skin salva localmente; sincronização online falhou: ${e.message}`, 'AVISO'); }
+    catch (e) { synced = false; syncError = e.message; this.log(`Skin salva só neste PC; os outros jogadores ainda não vão ver (${e.message}).`, 'AVISO'); }
+    try { await this.ensureCustomSkinLoader(); this.ensureCustomSkinLoaderConfig(); }
+    catch (e) { this.log(`Suporte a skins será instalado ao jogar (${e.message}).`, 'AVISO'); }
 
     // Mantém uma cópia simples das preferências do VilaNexo. O CustomSkinLoader
     // lê a imagem pelo nome do jogador ao iniciar/reentrar no jogo.
@@ -745,7 +745,7 @@ class LauncherService {
     const current = this.loadAuth();
     if (!current || current.offline) this.loginOffline(name);
     this.log(`Skin local salva para ${name}.`, 'SUCESSO');
-    return { name, local: true, path: dest };
+    return { name, local: true, path: dest, synced, syncError };
   }
 
   async publishSkin(filePath, name, uuid = '') {
@@ -769,16 +769,24 @@ class LauncherService {
      if (!Array.isArray(entries)) return;
     const dir = path.join(this.paths.gameDir, 'CustomSkinLoader', 'LocalSkin', 'skins');
     fs.mkdirSync(dir, { recursive: true });
-      for (const entry of entries) {
+    let ok = 0;
+    await this.runPool(entries, async (entry) => {
        const name = typeof entry === 'string' ? entry : String(entry?.name || '');
        const uuid = typeof entry === 'object' ? String(entry.uuid || '') : '';
-       if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) continue;
+       if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) return;
        const target = path.join(dir, `${name}.png`);
-       try { fs.rmSync(target, { force: true }); } catch {}
+       const tmp = target + '.novo';
        const skinUrl = uuid ? `${baseUrl.replace(/name=$/, '')}uuid=${encodeURIComponent(uuid)}&name=${encodeURIComponent(name)}&v=${Date.now()}` : `${baseUrl}${encodeURIComponent(name)}&v=${Date.now()}`;
-        await this.download(skinUrl, target, null, null, { label: `Skin ${name}` });
-      }
-      this.log(`Skins sincronizadas por UUID: ${entries.length}.`, 'SUCESSO');
+       try {
+         try { fs.rmSync(tmp, { force: true }); } catch {}
+         await this.download(skinUrl, tmp, null, null, { label: `Skin ${name}` });
+         fs.renameSync(tmp, target); ok++;
+       } catch (e) {
+         try { fs.rmSync(tmp, { force: true }); } catch {}
+         this.log(`Skin de ${name} indisponível agora (${e.message}).`, 'AVISO');
+       }
+    }, 8);
+      this.log(`Skins dos jogadores sincronizadas: ${ok}/${entries.length}.`, 'SUCESSO');
   }
 
   async uploadSkin(filePath, variant = 'classic', offlineName = '') {
@@ -796,8 +804,8 @@ class LauncherService {
   async download(url, destination, expectedSha1 = null, expectedSha256 = null, options = {}) {
     const { onProgress = null, label = path.basename(destination) } = options;
     if (fs.existsSync(destination)) {
-      if (expectedSha1 && await this.hashFile(destination, 'sha1') === expectedSha1) return { cached: true, bytes: fs.statSync(destination).size };
-      if (expectedSha256 && await this.hashFile(destination, 'sha256') === expectedSha256) return { cached: true, bytes: fs.statSync(destination).size };
+      if (expectedSha1 && await this.hashFile(destination, 'sha1') === String(expectedSha1).toLowerCase()) return { cached: true, bytes: fs.statSync(destination).size };
+      if (expectedSha256 && await this.hashFile(destination, 'sha256') === String(expectedSha256).toLowerCase()) return { cached: true, bytes: fs.statSync(destination).size };
       if (!expectedSha1 && !expectedSha256) return { cached: true, bytes: fs.statSync(destination).size };
     }
     fs.mkdirSync(path.dirname(destination), { recursive: true });
@@ -807,19 +815,24 @@ class LauncherService {
     for (let attempt = 1; attempt <= retries; attempt++) {
       const controller = new AbortController();
       const timeoutMs = Number(this.downloadConfig.timeoutMs) || 45000;
-      const timer = setTimeout(() => controller.abort(new Error('timeout')), timeoutMs);
+      // Tempo limite por INATIVIDADE (sem receber dados), não do download inteiro:
+      // conexões lentas conseguem baixar arquivos grandes sem serem cortadas.
+      let timer = null;
+      const kick = () => { clearTimeout(timer); timer = setTimeout(() => controller.abort(new Error('sem resposta do servidor')), timeoutMs); };
+      kick();
       try {
         try { fs.rmSync(tmp, { force: true }); } catch {}
         const res = await fetch(url, { redirect: 'follow', signal: controller.signal, headers: { 'User-Agent': 'VilaNexoLauncher/1.2.0' } });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const total = Number(res.headers.get('content-length') || 0);
-        const file = fs.createWriteStream(tmp);
         let received = 0;
         let lastTick = Date.now();
         let lastBytes = 0;
-        await new Promise((resolve, reject) => {
+        {
           const { Readable, Transform } = require('stream');
+          const { pipeline } = require('stream/promises');
           const meter = new Transform({ transform(chunk, enc, cb) {
+            kick();
             received += chunk.length;
             const now = Date.now();
             if (onProgress && now - lastTick >= 500) {
@@ -830,12 +843,11 @@ class LauncherService {
             }
             cb(null, chunk);
           }});
-          Readable.fromWeb(res.body).pipe(meter).pipe(file).on('finish', resolve).on('error', reject);
-          meter.on('error', reject);
-        });
+          await pipeline(Readable.fromWeb(res.body), meter, fs.createWriteStream(tmp));
+        }
         clearTimeout(timer);
-        if (expectedSha1 && await this.hashFile(tmp, 'sha1') !== expectedSha1) throw new Error(`SHA1 inválido: ${path.basename(destination)}`);
-        if (expectedSha256 && await this.hashFile(tmp, 'sha256') !== expectedSha256) throw new Error(`SHA256 inválido: ${path.basename(destination)}`);
+        if (expectedSha1 && await this.hashFile(tmp, 'sha1') !== String(expectedSha1).toLowerCase()) throw new Error(`SHA1 inválido: ${path.basename(destination)}`);
+        if (expectedSha256 && await this.hashFile(tmp, 'sha256') !== String(expectedSha256).toLowerCase()) throw new Error(`SHA256 inválido: ${path.basename(destination)}`);
         fs.renameSync(tmp, destination);
         if (onProgress) onProgress({ received, total: total || received, speed: 0, label, done: true });
         return { cached: false, bytes: received };
@@ -1154,9 +1166,11 @@ class LauncherService {
       this.log('Mods sincronizados da pasta do VilaNexo Launcher para o Minecraft.', 'SUCESSO');
       return refreshed;
     }
+    if (this.gameProcess && this.gameProcess.exitCode === null) throw new Error('Feche o Minecraft antes de sincronizar os arquivos.');
     this.progress('Sincronizando modpack', 65); this.log('Verificando mods, configs e recursos do servidor...');
     const manifest = await this.fetchJson(url);
-    const previous = fs.existsSync(this.paths.managedFile) ? JSON.parse(fs.readFileSync(this.paths.managedFile,'utf8')) : { files: [] };
+    let previous = { files: [] };
+    try { if (fs.existsSync(this.paths.managedFile)) previous = JSON.parse(fs.readFileSync(this.paths.managedFile,'utf8')) || previous; } catch { this.log('Lista de arquivos antiga corrompida; refazendo.', 'AVISO'); }
     const wanted = new Set((manifest.files || []).map(f => f.path.replace(/\\/g,'/')));
     const gameModsDir = this.getGameModsDir();
     fs.mkdirSync(gameModsDir, { recursive: true });
@@ -1172,14 +1186,20 @@ class LauncherService {
       if (!wanted.has(rel)) { const abs = path.join(this.paths.gameDir, rel); if (abs.startsWith(this.paths.gameDir)) fs.rmSync(abs, { force: true }); }
     }
     let i=0;
-    for (const file of (manifest.files || [])) {
+    const files = manifest.files || [];
+    for (const file of files) {
       const safe = file.path.replace(/\\/g,'/').replace(/^\/+/, '');
       const abs = path.resolve(this.paths.gameDir, safe);
       if (!abs.startsWith(path.resolve(this.paths.gameDir) + path.sep)) throw new Error(`Caminho inválido no manifesto: ${file.path}`);
-      await this.download(file.url, abs, null, file.sha256 || null);
-      i++; this.progress(`Sincronizando arquivos (${i}/${manifest.files.length})`, 65 + Math.round(15*i/Math.max(1,manifest.files.length)));
+      file._abs = abs;
     }
-    fs.writeFileSync(this.paths.managedFile, JSON.stringify(manifest, null, 2));
+    await this.runPool(files, async (file) => {
+      await this.download(file.url, file._abs, null, file.sha256 || null, { label: path.basename(file._abs) });
+      i++; this.progress(`Sincronizando arquivos (${i}/${files.length})`, 65 + Math.round(15*i/Math.max(1,files.length)));
+    }, 6);
+    for (const file of files) delete file._abs;
+    fs.writeFileSync(this.paths.managedFile + '.tmp', JSON.stringify(manifest, null, 2));
+    fs.renameSync(this.paths.managedFile + '.tmp', this.paths.managedFile);
     this.log(`Modpack sincronizado (${manifest.files?.length || 0} arquivos).`, 'SUCESSO');
     this.scanLocalMods({ silent: true });
     return this.state.mods;
@@ -1404,7 +1424,11 @@ class LauncherService {
       this.log(`Forge bootstrap validado: ${expectedVanilla} está no ignoreList; módulo vanilla duplicado bloqueado.`, 'SUCESSO');
     }
 
-    const memory = [`-Xms${this.config.minecraft.memoryMinMb}M`, `-Xmx${this.config.minecraft.memoryMaxMb}M`];
+    const totalMb = Math.floor(os.totalmem() / 1048576);
+    const maxMb = Math.max(2048, Math.min(Number(this.config.minecraft.memoryMaxMb) || 4096, totalMb - 2048));
+    const minMb = Math.min(Number(this.config.minecraft.memoryMinMb) || 1024, maxMb);
+    if (maxMb < Number(this.config.minecraft.memoryMaxMb)) this.log(`Memória ajustada para ${maxMb} MB (o PC tem ${totalMb} MB).`, 'AVISO');
+    const memory = [`-Xms${minMb}M`, `-Xmx${maxMb}M`];
     const performanceArgs = {
       balanced: ['-XX:+UseG1GC', '-XX:MaxGCPauseMillis=200'],
       performance: ['-XX:+UseG1GC', '-XX:+UseStringDeduplication', '-XX:MaxGCPauseMillis=100'],
@@ -1488,7 +1512,8 @@ ClientEvents.tick(event => {
   }
 
   async play(profileId = 'cobblemon') {
-    if (this.state.busy) return;
+    if (this.state.busy) throw new Error('O launcher já está preparando o jogo, aguarde.');
+    if (this.gameProcess && this.gameProcess.exitCode === null) throw new Error('O Minecraft já está aberto.');
     this.activateProfile(profileId);
     this.setBusy(true);
     try {
@@ -1508,8 +1533,8 @@ ClientEvents.tick(event => {
         const profileId = loader === 'fabric' ? await this.ensureFabric() : loader === 'neoforge' ? await this.ensureNeoForge(java) : await this.ensureForge(java);
        await this.syncDistribution();
        if (this.profileId === 'cobblemon') migrateMapConfig(this.paths.gameDir);
-        await this.ensureCustomSkinLoader();
-        this.ensureCustomSkinLoaderConfig();
+        try { await this.ensureCustomSkinLoader(); this.ensureCustomSkinLoaderConfig(); }
+        catch (e) { this.log(`Suporte a skins indisponível agora: ${e.message}`, 'AVISO'); }
        try { await this.syncServerSkins(); }
        catch (e) { this.log(`Sincronização de skins indisponível: ${e.message}`, 'AVISO'); }
        finally { this.restoreSavedSkin(auth.profile.name); }
@@ -1533,7 +1558,10 @@ ClientEvents.tick(event => {
        p.stdout.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
        p.stderr.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
        p.on('error', err => { this.log(`Não foi possível abrir o Minecraft: ${err.message}`, 'ERRO'); try { this.hooks.gameExited?.(-1); } catch {} });
-       p.on('exit', code => { this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'); try { this.hooks.gameExited?.(code); } catch {} });
+       this.gameProcess = p; this.state.gameRunning = true;
+       const gone = () => { this.gameProcess = null; this.state.gameRunning = false; this.emit('launcher:state', this.state); };
+       p.on('error', gone);
+       p.on('exit', code => { gone(); this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'); try { this.hooks.gameExited?.(code); } catch {} });
        try { this.hooks.gameStarted?.(p, this.preferences.closeOnPlay !== false); } catch {}
       this.progress('Jogo iniciado', 100);
       return true;

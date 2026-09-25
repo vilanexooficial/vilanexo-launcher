@@ -99,7 +99,9 @@ async function refreshServerStatus() {
 
 function logLine(e) {
   const box = $('logBox');
-  box.textContent += `[${e.time}] [${e.level}] ${e.message}\n`;
+  if (!box) return;
+  box.append(document.createTextNode(`[${e.time}] [${e.level}] ${e.message}\n`));
+  while (box.childNodes.length > 400) box.firstChild.remove();
   box.scrollTop = box.scrollHeight;
 }
 
@@ -164,7 +166,7 @@ async function loadModsCatalog() {
 }
 
 function updateState(s) {
-  document.querySelectorAll('.server-choice button').forEach(b => { b.disabled = !!s.busy; });
+  document.querySelectorAll('.server-choice button').forEach(b => { b.disabled = !!s.busy || !!s.gameRunning; });
   document.body.classList.toggle('busy', !!s.busy);
   updateMods(s.mods);
   const prevId = currentAccount?.id;
@@ -473,7 +475,9 @@ $('uploadSkin').onclick = async () => {
     btn.disabled = true;
     $('skinMessage').textContent = 'Aplicando skin...';
     const r = await window.vilaNexoLauncher.uploadSkin(selectedSkin.path, $('skinVariant').value, $('skinOfflineName').value);
-    $('skinMessage').textContent = `Skin aplicada para ${r.name}. Reentre no jogo para atualizar.`;
+    $('skinMessage').textContent = r.synced === false
+      ? `Skin salva para ${r.name} só neste PC: não deu para enviar ao site (${r.syncError || 'sem conexão'}). Os outros jogadores ainda não vão ver; tente de novo.`
+      : `Skin aplicada para ${r.name}! Os outros jogadores veem ao reentrar no servidor.`;
   } catch (e) { $('skinMessage').textContent = `Erro: ${e.message}`; }
   finally { btn.disabled = false; }
 };
@@ -532,4 +536,8 @@ window.vilaNexoLauncher.onProgress(p => {
 });
 window.vilaNexoLauncher.onState(updateState);
 
-init();
+init().catch((e) => {
+  console.error(e);
+  logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: 'ERRO', message: e && e.message ? e.message : String(e) });
+  alert((e && e.message) || 'Não foi possível carregar o launcher. Feche e abra de novo.');
+});
