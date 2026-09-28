@@ -1568,6 +1568,8 @@ ClientEvents.tick(event => {
         const profileId = loader === 'fabric' ? await this.ensureFabric() : loader === 'neoforge' ? await this.ensureNeoForge(java) : await this.ensureForge(java);
        await this.syncDistribution();
        if (this.profileId === 'cobblemon') migrateMapConfig(this.paths.gameDir);
+       if (this.profileId === 'cobblemon') this.tuneDistantHorizons();
+       this.preferDedicatedGpu(java);
         try { await this.ensureCustomSkinLoader(); this.ensureCustomSkinLoaderConfig(); }
         catch (e) { this.log(`Suporte a skins indisponível agora: ${e.message}`, 'AVISO'); }
        try { await this.syncServerSkins(); }
@@ -1657,6 +1659,42 @@ LauncherService.prototype.diagnoseCrash = function (tail, started) {
   const m = /Description: (.+)/.exec(detail);
   const cause = [...all.split('\n')].reverse().find(l => /Exception|Error:/.test(l));
   return { message: `O Minecraft fechou com erro${m ? ` (${m[1].trim()})` : cause ? ` (${cause.trim().slice(0, 160)})` : ''}. Clique em Jogar de novo; se repetir, mande o arquivo ultimo-erro.txt no Discord.`, detail, resync: true };
+};
+
+
+// 2.5.9: em notebook com duas placas (Intel/AMD integrada + NVIDIA/AMD dedicada) o Windows
+// costuma abrir o Java na placa integrada. Marca o java do jogo como "Alto desempenho"
+// (mesma opção de Configurações > Sistema > Tela > Gráficos), só para o usuário atual.
+LauncherService.prototype.preferDedicatedGpu = function (javaPath) {
+  if (process.platform !== 'win32' || !javaPath) return;
+  const { spawnSync } = require('child_process');
+  const bin = path.dirname(javaPath);
+  for (const exe of ['java.exe', 'javaw.exe']) {
+    const full = path.join(bin, exe);
+    if (!fs.existsSync(full)) continue;
+    try {
+      const r = spawnSync('reg', ['add', 'HKCU\\Software\\Microsoft\\DirectX\\UserGpuPreferences', '/v', full, '/t', 'REG_SZ', '/d', 'GpuPreference=2;', '/f'], { windowsHide: true, timeout: 8000 });
+      if (r.status === 0 && exe === 'java.exe') this.log('Minecraft configurado para usar a placa de vídeo dedicada (alto desempenho).', 'SUCESSO');
+    } catch {}
+  }
+};
+
+// 2.5.9: o Distant Horizons usava muitos núcleos do processador montando o terreno distante.
+// Aplica uma vez o modo "LOW_IMPACT"; se o jogador mudar depois no jogo, fica o que ele escolheu.
+LauncherService.prototype.tuneDistantHorizons = function () {
+  try {
+    if (this.preferences.dhLowImpact259) return;
+    const f = path.join(this.paths.gameDir, 'config', 'DistantHorizons.toml');
+    let t = fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '';
+    const line = '\tthreadPresetSetting = "LOW_IMPACT"';
+    if (/^\s*threadPresetSetting\s*=.*$/m.test(t)) t = t.replace(/^\s*threadPresetSetting\s*=.*$/m, line);
+    else if (/^\[client\]\s*$/m.test(t)) t = t.replace(/^\[client\]\s*$/m, m => m + '\n' + line);
+    else t = t + (t && !t.endsWith('\n') ? '\n' : '') + '\n[client]\n' + line + '\n';
+    fs.mkdirSync(path.dirname(f), { recursive: true });
+    fs.writeFileSync(f, t, 'utf8');
+    this.preferences.dhLowImpact259 = true; this.savePreferences();
+    this.log('Distant Horizons ajustado para usar menos processador.', 'SUCESSO');
+  } catch (e) { this.log(`Não foi possível ajustar o Distant Horizons: ${e.message}`, 'AVISO'); }
 };
 
 module.exports = { LauncherService };
