@@ -1054,15 +1054,39 @@ class LauncherService {
     fs.mkdirSync(this.paths.cacheDir, { recursive: true });
     const installer = path.join(this.paths.cacheDir, `neoforge-${neo}-installer.jar`);
     const url = `https://maven.neoforged.net/releases/net/neoforged/neoforge/${neo}/neoforge-${neo}-installer.jar`;
-    await this.download(url, installer, null, null, { label: `NeoForge ${neo}` });
+    // 2.5.8: o instalador é conferido pelo SHA-1 oficial. Um .jar baixado pela metade
+    // fazia o java sair com "código 1" e o jogador não conseguia entrar nunca mais.
+    let sha1 = null;
+    try { const r = await fetch(url + '.sha1', { headers: { 'User-Agent': 'VilaNexoLauncher' } }); if (r.ok) { const t = (await r.text()).trim().slice(0, 40); if (/^[0-9a-f]{40}$/i.test(t)) sha1 = t; } } catch {}
+    if (!sha1 && fs.existsSync(installer) && fs.statSync(installer).size < 1000000) fs.rmSync(installer, { force: true });
+    await this.download(url, installer, sha1, null, { label: `NeoForge ${neo}` });
     fs.mkdirSync(this.paths.gameDir, { recursive: true });
     const profiles = path.join(this.paths.gameDir, 'launcher_profiles.json');
-    if (!fs.existsSync(profiles)) fs.writeFileSync(profiles, JSON.stringify({profiles:{},settings:{},version:3}, null, 2));
-    await this.exec(javaPath, ['-jar', installer, '--installClient', this.paths.gameDir], this.paths.gameDir, {
-      timeoutMs: this.downloadConfig.forgeInstallTimeoutMs,
-      heartbeatMs: 10000,
-      heartbeat: elapsed => this.progress(`Instalando NeoForge... ${Math.floor(elapsed/1000)}s`, Math.min(58, 46 + Math.floor(elapsed/30000)))
-    });
+    const okProfiles = () => { try { JSON.parse(fs.readFileSync(profiles, 'utf8')); return true; } catch { return false; } };
+    if (!fs.existsSync(profiles) || !okProfiles()) fs.writeFileSync(profiles, JSON.stringify({profiles:{},settings:{},version:3}, null, 2));
+    let lastErr = null;
+    for (let attempt = 1; attempt <= 3 && !findInstalled(); attempt++) {
+      try {
+        if (attempt > 1) this.log(`Instalando o NeoForge de novo (tentativa ${attempt} de 3)...`, 'AVISO');
+        await this.exec(javaPath, ['-jar', installer, '--installClient', this.paths.gameDir], this.paths.gameDir, {
+          timeoutMs: this.downloadConfig.forgeInstallTimeoutMs,
+          heartbeatMs: 10000,
+          heartbeat: elapsed => this.progress(`Instalando NeoForge... ${Math.floor(elapsed/1000)}s`, Math.min(58, 46 + Math.floor(elapsed/30000)))
+        });
+      } catch (e) {
+        lastErr = e;
+        this.log(`O instalador do NeoForge falhou: ${e.message}`, 'AVISO');
+        // Bibliotecas geradas pela metade são a causa mais comum: apaga só as do NeoForge/cliente e refaz.
+        const lib = path.join(this.paths.gameDir, 'libraries');
+        for (const rel of [['net','neoforged','neoforge',neo], ['net','minecraft','client'], ['net','neoforged','installertools'], ['net','neoforged','fancymodloader']]) {
+          try { fs.rmSync(path.join(lib, ...rel), { recursive: true, force: true }); } catch {}
+        }
+        for (const id of candidates) { try { fs.rmSync(path.join(versionsDir, id), { recursive: true, force: true }); } catch {} }
+        if (attempt === 2) { try { fs.rmSync(installer, { force: true }); } catch {} await this.download(url, installer, sha1, null, { label: `NeoForge ${neo}` }); }
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+    if (!findInstalled() && lastErr) throw new Error(`Não foi possível instalar o NeoForge (${lastErr.message}). Verifique a internet e se o antivírus não está bloqueando a pasta .minecraft, e clique em Jogar de novo.`);
     const resolved = findInstalled();
     if (!resolved) throw new Error('O instalador do NeoForge terminou, mas o perfil NeoForge não foi encontrado.');
     this.log(`NeoForge ${neo} instalado.`, 'SUCESSO');
@@ -1145,10 +1169,18 @@ class LauncherService {
         if (heartbeat) clearInterval(heartbeat);
         fn(value);
       };
-      p.stdout.on('data', d => { const t=String(d).trim(); if (t) this.log(t, 'JAVA'); });
-      p.stderr.on('data', d => { const t=String(d).trim(); if (t) this.log(t, 'JAVA'); });
+      const tail = [];
+      const keep = t => { for (const l of t.split(/\r?\n/)) { if (l.trim()) { tail.push(l.trim()); if (tail.length > 60) tail.shift(); } } };
+      p.stdout.on('data', d => { const t=String(d).trim(); if (t) { keep(t); this.log(t, 'JAVA'); } });
+      p.stderr.on('data', d => { const t=String(d).trim(); if (t) { keep(t); this.log(t, 'JAVA'); } });
       p.on('error', done(reject));
-      p.on('exit', code => done(code === 0 ? resolve : reject)(code === 0 ? undefined : new Error(`${path.basename(command)} encerrou com código ${code}`)));
+      p.on('exit', code => {
+        if (code === 0) return done(resolve)(undefined);
+        const why = [...tail].reverse().find(l => /exception|error|erro|failed|invalid|corrupt|unable|could not|denied/i.test(l)) || tail[tail.length-1] || '';
+        const err = new Error(`${path.basename(command)} encerrou com código ${code}${why ? ` (${why.slice(0, 200)})` : ''}`);
+        err.outputTail = tail.slice(); err.exitCode = code;
+        done(reject)(err);
+      });
     });
   }
 
@@ -1425,8 +1457,11 @@ class LauncherService {
     }
 
     const totalMb = Math.floor(os.totalmem() / 1048576);
-    const maxMb = Math.max(2048, Math.min(Number(this.config.minecraft.memoryMaxMb) || 4096, totalMb - 2048));
-    const minMb = Math.min(Number(this.config.minecraft.memoryMinMb) || 1024, maxMb);
+    // 2.5.8: nunca pede mais que ~60% da RAM do PC (pedir demais fazia o Java fechar com código 1).
+    const safeCap = Math.max(1536, Math.min(totalMb - 2048, Math.floor(totalMb * 0.6)));
+    let maxMb = Math.max(1536, Math.min(Number(this.config.minecraft.memoryMaxMb) || 4096, safeCap));
+    if (this.memoryOverrideMb) maxMb = Math.min(maxMb, this.memoryOverrideMb);
+    const minMb = Math.min(1024, Number(this.config.minecraft.memoryMinMb) || 1024, maxMb);
     if (maxMb < Number(this.config.minecraft.memoryMaxMb)) this.log(`Memória ajustada para ${maxMb} MB (o PC tem ${totalMb} MB).`, 'AVISO');
     const memory = [`-Xms${minMb}M`, `-Xmx${maxMb}M`];
     const performanceArgs = {
@@ -1541,6 +1576,7 @@ ClientEvents.tick(event => {
         this.ensureVilaNexoServerEntry();
        if (auth.microsoft) await this.registerPremium(auth);
       this.progress('Iniciando jogo', 95);
+       this.memoryOverrideMb = 0;
        const launch = await this.buildLaunch(java, auth, profileId);
       this.log('Iniciando Minecraft...', 'SUCESSO');
        // O Windows pode injetar _JAVA_OPTIONS/JAVA_TOOL_OPTIONS no Java. Essas
@@ -1552,17 +1588,7 @@ ClientEvents.tick(event => {
        delete gameEnv._JAVA_OPTIONS;
        delete gameEnv.JAVA_TOOL_OPTIONS;
        delete gameEnv.JDK_JAVA_OPTIONS;
-       const p = spawn(launch.command, launch.args, { cwd: this.paths.gameDir, detached: false, windowsHide: false, env: gameEnv });
-       let gameShown = false;
-       const watchVisible = (t) => { if (!gameShown && /LWJGL|Backend library|EARLYDISPLAY|early window|Loading Minecraft|Setting user/i.test(t)) { gameShown = true; try { this.hooks.gameVisible?.(); } catch {} } };
-       p.stdout.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
-       p.stderr.on('data', d=>{ const t = String(d); watchVisible(t); this.log(t.trim(),'JOGO'); });
-       p.on('error', err => { this.log(`Não foi possível abrir o Minecraft: ${err.message}`, 'ERRO'); try { this.hooks.gameExited?.(-1); } catch {} });
-       this.gameProcess = p; this.state.gameRunning = true;
-       const gone = () => { this.gameProcess = null; this.state.gameRunning = false; this.emit('launcher:state', this.state); };
-       p.on('error', gone);
-       p.on('exit', code => { gone(); this.log(`Minecraft encerrado com código ${code}.`, code===0?'INFO':'ERRO'); try { this.hooks.gameExited?.(code); } catch {} });
-       try { this.hooks.gameStarted?.(p, this.preferences.closeOnPlay !== false); } catch {}
+       this.startGame(launch, gameEnv, java, auth, profileId, 1);
       this.progress('Jogo iniciado', 100);
       return true;
     } catch (e) {
@@ -1570,6 +1596,68 @@ ClientEvents.tick(event => {
     } finally { this.setBusy(false); }
   }
 }
+
+
+// 2.5.8: abre o jogo, e se ele fechar com erro, descobre o motivo e tenta de novo sozinho quando dá.
+LauncherService.prototype.startGame = function (launch, gameEnv, java, auth, profileId, attempt) {
+  const started = Date.now();
+  const tail = [];
+  const keep = t => { for (const l of String(t).split(/\r?\n/)) { if (l.trim()) { tail.push(l.trim()); if (tail.length > 300) tail.shift(); } } };
+  const p = spawn(launch.command, launch.args, { cwd: this.paths.gameDir, detached: false, windowsHide: false, env: gameEnv });
+  let gameShown = false;
+  const watchVisible = (t) => { if (!gameShown && /LWJGL|Backend library|EARLYDISPLAY|early window|Loading Minecraft|Setting user/i.test(t)) { gameShown = true; try { this.hooks.gameVisible?.(); } catch {} } };
+  p.stdout.on('data', d => { const t = String(d); keep(t); watchVisible(t); this.log(t.trim(), 'JOGO'); });
+  p.stderr.on('data', d => { const t = String(d); keep(t); watchVisible(t); this.log(t.trim(), 'JOGO'); });
+  p.on('error', err => { this.log(`Não foi possível abrir o Minecraft: ${err.message}`, 'ERRO'); try { this.hooks.gameExited?.(-1, 'O Java não abriu. Clique em Jogar de novo; se continuar, reinstale o launcher.'); } catch {} });
+  this.gameProcess = p; this.state.gameRunning = true;
+  const gone = () => { this.gameProcess = null; this.state.gameRunning = false; this.emit('launcher:state', this.state); };
+  p.on('error', gone);
+  p.on('exit', async code => {
+    gone();
+    this.log(`Minecraft encerrado com código ${code}.`, code === 0 ? 'INFO' : 'ERRO');
+    if (code === 0 || code === null) { try { this.hooks.gameExited?.(code); } catch {} return; }
+    const diag = this.diagnoseCrash(tail, started);
+    try { fs.writeFileSync(path.join(this.paths.root, 'ultimo-erro.txt'), `${new Date().toISOString()}\ncodigo ${code}\n${diag.message}\n\n${diag.detail || ''}\n\n--- ultimas linhas ---\n${tail.slice(-120).join('\n')}`, 'utf8'); } catch {}
+    this.log(`Motivo: ${diag.message}`, 'ERRO');
+    const quick = Date.now() - started < 120000;
+    if (diag.lowerMemory && attempt < 3) {
+      const cur = Number((launch.args.find(a => /^-Xmx\d+M$/.test(a)) || '-Xmx4096M').slice(4, -1));
+      this.memoryOverrideMb = Math.max(1536, Math.floor(cur * 0.7));
+      this.log(`Abrindo de novo com menos memória (${this.memoryOverrideMb} MB)...`, 'AVISO');
+      try { const l2 = await this.buildLaunch(java, auth, profileId); return this.startGame(l2, gameEnv, java, auth, profileId, attempt + 1); } catch (e) { this.log(e.message, 'ERRO'); }
+    } else if (diag.resync && quick && attempt < 2) {
+      this.log('Conferindo e baixando de novo os arquivos do modpack...', 'AVISO');
+      try {
+        try { fs.rmSync(this.paths.managedFile, { force: true }); } catch {}
+        await this.syncDistribution();
+        const l2 = await this.buildLaunch(java, auth, profileId);
+        return this.startGame(l2, gameEnv, java, auth, profileId, attempt + 1);
+      } catch (e) { this.log(e.message, 'ERRO'); }
+    }
+    try { this.hooks.gameExited?.(code, diag.message); } catch {}
+  });
+  try { this.hooks.gameStarted?.(p, this.preferences.closeOnPlay !== false); } catch {}
+};
+
+LauncherService.prototype.diagnoseCrash = function (tail, started) {
+  const text = tail.join('\n');
+  let detail = '';
+  try {
+    const dir = path.join(this.paths.gameDir, 'crash-reports');
+    const f = fs.readdirSync(dir).map(n => path.join(dir, n)).filter(n => fs.statSync(n).mtimeMs >= started - 5000).sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0];
+    if (f) detail = fs.readFileSync(f, 'utf8').slice(0, 6000);
+  } catch {}
+  const all = text + '\n' + detail;
+  if (/Could not reserve enough space|Error occurred during initialization of VM|Initial heap size|Invalid maximum heap size|Could not create the Java Virtual Machine|There is insufficient memory|Native memory allocation|OutOfMemoryError/i.test(all))
+    return { message: 'Faltou memória RAM para o Minecraft. O launcher vai tentar de novo com menos memória. Feche o navegador e outros programas.', detail, lowerMemory: true };
+  if (/Pixel format not accelerated|GLFW error|OpenGL|WGL_ARB|No OpenGL context|glfwCreateWindow/i.test(all))
+    return { message: 'Problema no driver de vídeo. Atualize o driver da placa de vídeo (Intel/AMD/NVIDIA) e tente de novo.', detail };
+  if (/zip END header not found|ZipException|invalid LOC header|error in opening zip file|Invalid or corrupt jarfile|NoSuchFieldError|NoSuchMethodError|ClassNotFoundException|NoClassDefFoundError|ModLoadingException|Missing or unsupported mandatory dependencies|Duplicate mod|ResolutionException/i.test(all))
+    return { message: 'Algum arquivo do modpack veio corrompido. O launcher vai conferir e baixar de novo.', detail, resync: true };
+  const m = /Description: (.+)/.exec(detail);
+  const cause = [...all.split('\n')].reverse().find(l => /Exception|Error:/.test(l));
+  return { message: `O Minecraft fechou com erro${m ? ` (${m[1].trim()})` : cause ? ` (${cause.trim().slice(0, 160)})` : ''}. Clique em Jogar de novo; se repetir, mande o arquivo ultimo-erro.txt no Discord.`, detail, resync: true };
+};
 
 module.exports = { LauncherService };
 

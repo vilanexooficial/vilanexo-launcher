@@ -344,7 +344,7 @@ async function init() {
   if (back.get('back')) {
     const code = back.get('code');
     const ok = code === '0' || code === null;
-    logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: ok ? 'INFO' : 'ERRO', message: ok ? 'Minecraft fechado. Bem-vindo de volta!' : `O Minecraft fechou com erro (código ${code}). Se continuar, abra a pasta Logs e mande no Discord.` });
+    logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: ok ? 'INFO' : 'ERRO', message: ok ? 'Minecraft fechado. Bem-vindo de volta!' : (back.get('msg') || `O Minecraft fechou com erro (código ${code}). Clique em Jogar de novo; se repetir, mande o arquivo ultimo-erro.txt (pasta do launcher) no Discord.`) });
     if ($('status')) $('status').textContent = ok ? '● Bem-vindo de volta' : '● O jogo fechou com erro';
   } else {
     logLine({ time:new Date().toLocaleTimeString('pt-BR'), level:'INFO', message:'Launcher iniciado.' });

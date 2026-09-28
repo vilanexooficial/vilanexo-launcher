@@ -94,12 +94,12 @@ function createWindow() {
         clearTimeout(sleepTimer);
         sleepTimer = setTimeout(sleepLauncher, 2500);
       },
-      gameExited: (code) => {
+      gameExited: (code, msg) => {
         clearTimeout(sleepTimer);
         if (!mainWindow || mainWindow.isDestroyed()) return;
         if (launcherSleeping) {
           launcherSleeping = false;
-          mainWindow.loadFile(path.join(__dirname, 'index.html'), { query: { back: '1', code: String(code) } });
+          mainWindow.loadFile(path.join(__dirname, 'index.html'), { query: { back: '1', code: String(code), msg: String(msg || '').slice(0, 300) } });
         }
         if (!mainWindow.isVisible()) mainWindow.show();
         if (mainWindow.isMinimized()) mainWindow.restore();
