@@ -519,9 +519,9 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.12); }
   -webkit-mask-image: linear-gradient(0deg, #000 10%, transparent 80%); mask-image: linear-gradient(0deg, #000 10%, transparent 80%); opacity: .55;
   animation: gridMove 6s linear infinite; }
 @keyframes gridMove { to { background-position: 0 48px; } }
-.hero-logo { position: absolute; z-index: 0; right: 3%; top: 50%; width: min(44%, 470px); aspect-ratio: 1 / 1; transform: translateY(-50%); pointer-events: none; }
+.hero-logo { position: absolute; z-index: 0; right: 4%; top: 50%; width: min(46%, 520px); aspect-ratio: 1234 / 1153; transform: translateY(-50%); pointer-events: none; }
 .hero-logo img { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 24px 40px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(var(--accent-rgb), .35)); animation: bob 6s ease-in-out infinite; }
-.hero-logo-glow { position: absolute; inset: 12% 8%; border-radius: 50%; background: radial-gradient(circle, rgba(0,0,0,.78) 28%, rgba(var(--accent-rgb), .22) 52%, transparent 70%); filter: blur(30px); animation: glow 6s ease-in-out infinite; }
+.hero-logo-glow { position: absolute; inset: 12% 8%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 210, 80, .35), rgba(var(--accent-rgb), .25) 45%, transparent 70%); filter: blur(30px); animation: glow 6s ease-in-out infinite; }
 @keyframes bob { 0%, 100% { transform: translateY(-6px) rotate(-.6deg); } 50% { transform: translateY(8px) rotate(.6deg); } }
 @keyframes glow { 0%, 100% { opacity: .75; transform: scale(.95); } 50% { opacity: 1; transform: scale(1.05); } }
 .hero-body { max-width: 52%; }
