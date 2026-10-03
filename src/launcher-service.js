@@ -1553,9 +1553,7 @@ ClientEvents.tick(event => {
     this.setBusy(true);
     try {
       const auth = await this.refreshAuthIfNeeded();
-      if (this.profile.requiresDiscordLogin === true) {
-        this.ensureDiscordLogin();
-      }
+      // 2.6.2: login com Discord nao e mais obrigatorio para jogar.
       // A whitelist is required only for the RPG server. Cobblemon still
       // requires Discord login, but does not require whitelist approval.
       if (this.profile.requiresWhitelist === true) {

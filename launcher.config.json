@@ -14,7 +14,7 @@
     "cobblemon": {
       "name": "VilaNexo Cobblemon",
       "localModsDir": "mods",
-      "requiresDiscordLogin": true,
+      "requiresDiscordLogin": false,
       "requiresWhitelist": false,
       "serverAddress": "poke.vilanexo.com",
       "serverPort": 25566,
@@ -31,8 +31,8 @@
     "rpg": {
       "name": "VilaNexo RPG",
       "localModsDir": "profiles/rpg/mods",
-      "requiresDiscordLogin": true,
-      "requiresWhitelist": true,
+      "requiresDiscordLogin": false,
+      "requiresWhitelist": false,
       "serverAddress": "jogar.vilanexo.com",
       "serverPort": 25565,
       "minecraft": {
