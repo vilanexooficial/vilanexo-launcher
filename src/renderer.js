@@ -205,7 +205,7 @@ function lighten(hex, amount = 0.25) {
 }
 
 function applyTheme(hex, persist = true) {
-  const normalized = /^#[0-9a-f]{6}$/i.test(hex) ? hex.toLowerCase() : '#8d46ff';
+  const normalized = /^#[0-9a-f]{6}$/i.test(hex) ? hex.toLowerCase() : '#e3121d';
   const { r, g, b } = hexToRgb(normalized);
   document.documentElement.style.setProperty('--p', normalized);
   document.documentElement.style.setProperty('--p2', lighten(normalized, 0.33));
@@ -213,7 +213,7 @@ function applyTheme(hex, persist = true) {
   $('launcherColor').value = normalized;
   $('launcherColorValue').textContent = normalized.toUpperCase();
   document.querySelectorAll('.theme-presets button').forEach(b => b.classList.toggle('active', (b.dataset.color || '').toLowerCase() === normalized));
-  if (persist) { try { localStorage.setItem('vilanexo-theme', normalized); } catch {} }
+  if (persist) { try { localStorage.setItem('vilanexo-theme-v2', normalized); } catch {} }
 }
 
 function ensureSkinViewer() {
@@ -333,8 +333,8 @@ async function init() {
    $('ramValue').textContent = `${((config.minecraft.memoryMaxMb || 6144) / 1024).toFixed(1).replace('.0', '')} GB`;
    $('launcherDisplayVersion').textContent = config.launcher?.displayVersion || '1.0';
    $('performanceMode').value = config.minecraft.performance || 'balanced';
-  let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme'); } catch {}
-  applyTheme(savedTheme || '#8d46ff', false);
+  let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme-v2'); } catch {}
+  applyTheme(savedTheme || '#e3121d', false); // 2.6: visual novo preto e vermelho (cor antiga não é reaproveitada)
   setupSkinInteraction();
   if ($('closeOnPlay')) {
     $('closeOnPlay').checked = config.closeOnPlay !== false;
@@ -384,7 +384,7 @@ $('close').onclick = () => window.vilaNexoLauncher.close();
     });
   });
 $('loginOffline').onclick = async () => { try { const profile = await window.vilaNexoLauncher.loginOffline($('offlineName').value); skinDataUrl = ''; await loadSavedSkin(profile.name); } catch (e) { logLine({ time: new Date().toLocaleTimeString('pt-BR'), level: 'ERRO', message: e.message }); alert(String(e.message).replace(/^Error invoking remote method '[^']+': (Error: )?/, '')); } };
-$('loginDiscord').onclick = async () => {
+if ($('loginDiscord')) $('loginDiscord').onclick = async () => {
   const btn = $('loginDiscord');
   try {
     btn.disabled = true;
@@ -490,7 +490,7 @@ $('themeToggle').onclick = (e) => { e.stopPropagation(); $('themePop').classList
 $('themePop').onclick = e => e.stopPropagation();
 document.addEventListener('click', () => { $('themePop').classList.add('hidden'); $('themeToggle').classList.remove('open'); });
 document.querySelectorAll('[data-open-settings]').forEach(b => b.onclick = () => { $('themePop').classList.add('hidden'); showPage('settings'); });
-$('resetTheme').onclick = () => applyTheme('#8d46ff');
+$('resetTheme').onclick = () => applyTheme('#e3121d');
 $('loginMicrosoft').onclick = async () => {
   const btn = $('loginMicrosoft');
   try {
