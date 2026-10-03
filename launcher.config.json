@@ -41,6 +41,9 @@
         "forgeVersion": "47.4.23",
         "memoryMinMb": 2048,
         "memoryMaxMb": 6144
+      },
+      "distribution": {
+        "manifestUrl": "https://www.vilanexo.com/launcher/rpg/manifest.json"
       }
     }
   },

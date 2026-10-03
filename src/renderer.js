@@ -79,8 +79,9 @@ function renderHomeSkin(dataUrl) {
 async function refreshServerStatus() {
   const tag = $('heroStatus');
   if (!tag) return;
-  const host = config?.minecraft?.serverAddress || 'poke.vilanexo.com';
-  const port = config?.minecraft?.serverPort || 25566;
+  const sv = window.vnServidorAtual ? window.vnServidorAtual() : null;
+  const host = sv?.host || config?.minecraft?.serverAddress || 'poke.vilanexo.com';
+  const port = sv?.port || config?.minecraft?.serverPort || 25566;
   try {
     const r = await fetch(`https://api.mcsrvstat.us/3/${host}:${port}`, { cache: 'no-store' });
     const d = await r.json();
@@ -156,7 +157,8 @@ async function loadModsCatalog() {
     });
     modsCatalog = (manifest.files || []).filter(f => /^mods\//i.test(f.path || '')).map(f => ({ name: prettyModName(f.path), file: decodeURIComponent(String(f.path).split('/').pop()) }));
     $('modsSummary').textContent = `${modsCatalog.length} mods • pacote ${manifest.version || 'atual'}`;
-    if ($('heroMods')) $('heroMods').textContent = modsCatalog.length;
+    window.vnModsCount = { ...(window.vnModsCount || {}), cobblemon: modsCatalog.length };
+    if ($('heroMods') && (!window.vnServidorAtual || window.vnServidorAtual().id === 'cobblemon')) $('heroMods').textContent = modsCatalog.length;
     renderModsList();
   } catch (e) {
     $('modsSummary').textContent = 'Lista indisponível';
@@ -334,7 +336,7 @@ async function init() {
    $('launcherDisplayVersion').textContent = config.launcher?.displayVersion || '1.0';
    $('performanceMode').value = config.minecraft.performance || 'balanced';
   let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme-v2'); } catch {}
-  applyTheme(savedTheme || '#e3121d', false); // 2.6: visual novo preto e vermelho (cor antiga não é reaproveitada)
+  applyTheme((window.vnServidorAtual && window.vnServidorAtual().theme) || savedTheme || '#e3121d', false); // 2.6: visual novo preto e vermelho (cor antiga não é reaproveitada)
   setupSkinInteraction();
   if ($('closeOnPlay')) {
     $('closeOnPlay').checked = config.closeOnPlay !== false;

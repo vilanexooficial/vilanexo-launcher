@@ -62,6 +62,19 @@
     <span class="intro-skip">Clique para pular</span>
   </div>
 
+  <!-- Troca de servidor -->
+  <div id="swapFx" class="swap-fx hidden" aria-hidden="true">
+    <div class="swap-bg"></div>
+    <canvas id="swapCanvas"></canvas>
+    <svg class="swap-sigil" viewBox="0 0 200 200">
+      <circle class="s1" cx="100" cy="100" r="92"/><circle class="s2" cx="100" cy="100" r="78"/>
+      <circle class="s3" cx="100" cy="100" r="44"/>
+      <path class="s4" d="M100 22 L167 139 L33 139 Z"/><path class="s4" d="M100 178 L33 61 L167 61 Z"/>
+      <g class="runes"></g>
+    </svg>
+    <div class="swap-name"><small id="swapKicker">ENTRANDO EM</small><strong id="swapTitle">VILANEXO RPG</strong><i></i></div>
+  </div>
+
   <header class="topbar">
     <div class="topbar-title"><span class="dot-live"></span>VilaNexo Launcher</div>
     <div class="topbar-drag"></div>
@@ -121,19 +134,20 @@
       </div>
 
       <div class="home-grid">
-        <article class="server-choice hero selected" data-profile="cobblemon">
+        <article id="heroCard" class="server-choice hero selected" data-profile="cobblemon">
           <div class="hero-bg"><div class="hero-rays"></div><div class="hero-grid"></div></div>
+          <div class="hero-art rpg-only"><img src="../assets/server-rpg.png" alt=""></div><div class="hero-shade rpg-only"></div>
           <div class="hero-logo"><div class="hero-logo-glow"></div><img src="../assets/logo-cobblemon.png" alt="VilaNexo Cobblemon"></div>
           <div class="hero-body">
             <div class="hero-top">
-              <span class="tag tag-glow"><svg><use href="#i-spark"/></svg>SERVIDOR PRINCIPAL</span>
+              <span class="tag tag-glow"><svg><use href="#i-spark"/></svg><span id="heroTag">SERVIDOR PRINCIPAL</span></span>
               <span class="tag" id="heroStatus"><i class="pulse"></i><b>Verificando…</b></span>
             </div>
-            <h1 class="hero-title"><span>Sua aventura</span><em>começa aqui</em></h1>
-            <p class="hero-sub">Capture, treine e evolua. Economia, eventos, cidades e aventura sem fim num mundo de 2 milhões de blocos.</p>
+            <h1 class="hero-title"><span id="heroTitleA">Sua aventura</span><em id="heroTitleB">começa aqui</em></h1>
+            <p class="hero-sub" id="heroSub">Capture, treine e evolua. Economia, eventos, cidades e aventura sem fim num mundo de 2 milhões de blocos.</p>
             <div class="hero-chips">
-              <span><b>1.21.1</b>Minecraft</span>
-              <span><b>NeoForge</b>Loader</span>
+              <span><b id="heroVer">1.21.1</b>Minecraft</span>
+              <span><b id="heroLoader">NeoForge</b>Loader</span>
               <span><b id="heroMods">56</b>Mods</span>
               <span><b id="heroPlayers">–</b>Online</span>
             </div>
@@ -141,7 +155,7 @@
               <button class="server-play play-btn">
                 <span class="play-shine"></span>
                 <svg><use href="#i-play"/></svg>
-                <span class="play-text"><strong>JOGAR</strong><small>poke.vilanexo.com</small></span>
+                <span class="play-text"><strong>JOGAR</strong><small id="heroHost">poke.vilanexo.com</small></span>
               </button>
               <div class="launch-progress">
                 <div class="lp-head"><span id="phase">Pronto para jogar</span><b id="phasePct">0%</b></div>
@@ -157,13 +171,13 @@
           <p class="profile-hint" id="profileHint">Arraste para girar</p>
         </aside>
 
-        <article class="server-choice rpg-card" data-profile="rpg">
-          <div class="rpg-art"><img src="../assets/server-rpg.png" alt=""></div>
+        <article id="switchCard" class="switch-card rpg-card" data-target="rpg">
+          <div class="rpg-art"><img id="switchImg" src="../assets/server-rpg.png" alt=""></div>
           <div class="rpg-body">
-            <span class="tag tag-warn"><svg><use href="#i-wrench"/></svg>EM MANUTENÇÃO</span>
-            <h3>VilaNexo <em>RPG</em></h3>
-            <p>Classes, missões e PvP. Minecraft 1.20.1 • Forge</p>
-            <div class="server-maintenance">Voltamos em breve</div>
+            <span class="tag tag-new" id="switchTag"><svg><use href="#i-spark"/></svg><span>ABERTO • NOVO</span></span>
+            <h3 id="switchName">VilaNexo <em>RPG</em></h3>
+            <p id="switchDesc">Classes, magias, chefes e PvP. Minecraft 1.20.1 • Forge</p>
+            <button id="switchBtn" class="switch-btn" type="button"><span>Trocar de servidor</span><svg><use href="#i-play"/></svg></button>
           </div>
         </article>
 
@@ -349,6 +363,7 @@
   <script src="intro.js"></script>
   <script src="fx.js"></script>
   <script src="renderer.js"></script>
+  <script src="swap.js"></script>
   <script>
     // Plano B: se algo travar a abertura, libera a tela mesmo assim.
     setTimeout(function () {

@@ -599,3 +599,48 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.12); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ------------------------------------------------ 2.7: servidor RPG + troca de servidor */
+.rpg-only { display: none; }
+.hero.is-rpg .rpg-only { display: block; }
+.hero.is-rpg .hero-logo, .hero.is-rpg .hero-grid { display: none; }
+.hero.is-rpg .hero-art { left: 30%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%); mask-image: linear-gradient(90deg, transparent 0%, #000 30%); }
+.hero.is-rpg .hero-art img { object-position: 62% 45%; }
+.hero.is-rpg .hero-bg { background: radial-gradient(ellipse at 20% 80%, rgba(155, 92, 255, .35), transparent 60%), linear-gradient(135deg, #160a2a, #08050f); }
+.hero.is-rpg .hero-title em { background: linear-gradient(100deg, #fff 5%, #ffd37a 45%, #b07cff 85%); -webkit-background-clip: text; background-clip: text; }
+.hero.is-rpg .hero-shade { background: linear-gradient(90deg, rgba(8,4,16,.85) 0%, rgba(8,4,16,.45) 40%, transparent 65%), linear-gradient(0deg, rgba(8,4,16,.85) 0%, transparent 45%); }
+
+.switch-card { cursor: pointer; }
+.switch-card .rpg-art img { filter: grayscale(.15) brightness(.55); }
+.switch-card:hover .rpg-art img { filter: grayscale(0) brightness(.7); }
+.switch-card.to-cobblemon .rpg-body h3 em { color: var(--p2); }
+.tag-new { background: rgba(255, 200, 90, .14); border-color: rgba(255, 200, 90, .45); color: #ffd37a; }
+.switch-btn { align-self: flex-start; margin-top: 8px; display: inline-flex; align-items: center; gap: 10px; height: 38px; padding: 0 16px; border-radius: 12px;
+  font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(135deg, rgba(155, 92, 255, .9), rgba(255, 190, 80, .85)); box-shadow: 0 10px 26px rgba(155, 92, 255, .35); transition: transform .2s var(--ease), box-shadow .2s; }
+.switch-card.to-cobblemon .switch-btn { background: linear-gradient(135deg, #ff4d55, #8c0c14); box-shadow: 0 10px 26px rgba(227, 18, 29, .35); }
+.switch-btn svg { width: 14px; height: 14px; }
+.switch-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(155, 92, 255, .5); }
+
+.swap-fx { position: fixed; inset: 0; z-index: 90; pointer-events: all; }
+.swap-bg { position: absolute; inset: 0; clip-path: circle(0 at 50% 50%);
+  background: radial-gradient(circle at 50% 50%, rgba(227, 18, 29, .35), transparent 55%), radial-gradient(circle at 50% 50%, #1a0507, #040203 70%); }
+.swap-fx.fx-rpg .swap-bg { background: radial-gradient(circle at 50% 50%, rgba(155, 92, 255, .45), transparent 55%), radial-gradient(circle at 50% 50%, #1b0c33, #050208 70%); }
+#swapCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.swap-sigil { position: absolute; left: 50%; top: 50%; width: min(62vh, 520px); height: min(62vh, 520px); transform: translate(-50%, -50%); opacity: 0; overflow: visible;
+  fill: none; stroke: #ff5a61; stroke-width: 1.4; stroke-linecap: round; filter: drop-shadow(0 0 10px rgba(255, 40, 50, .9)); }
+.swap-fx.fx-rpg .swap-sigil { stroke: #d6b4ff; filter: drop-shadow(0 0 10px rgba(170, 110, 255, .95)) drop-shadow(0 0 22px rgba(255, 200, 90, .35)); }
+.swap-sigil circle, .swap-sigil path { stroke-dasharray: 600; stroke-dashoffset: 600; }
+.swap-sigil .s2 { stroke-width: .8; stroke-dasharray: 3 5; }
+.swap-sigil.draw circle, .swap-sigil.draw path { animation: sigilDraw 1.1s cubic-bezier(.4,0,.2,1) forwards; }
+.swap-sigil.draw .s1 { animation: sigilDraw 1.1s cubic-bezier(.4,0,.2,1) forwards, sigilSpin 6s linear infinite; transform-origin: 100px 100px; }
+.swap-sigil.draw .runes { animation: sigilSpin 9s linear infinite reverse; transform-origin: 100px 100px; }
+.swap-sigil.draw .s4 { animation-delay: .25s; }
+@keyframes sigilDraw { to { stroke-dashoffset: 0; } }
+@keyframes sigilSpin { to { transform: rotate(360deg); } }
+.swap-name { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; opacity: 0; white-space: nowrap; }
+.swap-name small { display: block; font-size: 11px; letter-spacing: .5em; color: rgba(255,255,255,.6); margin-bottom: 10px; }
+.swap-name strong { display: block; font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 4.4vw, 56px); color: #fff;
+  text-shadow: 0 0 24px rgba(255, 40, 50, .9), 0 0 60px rgba(255, 40, 50, .5); }
+.swap-fx.fx-rpg .swap-name strong { text-shadow: 0 0 24px rgba(170, 110, 255, .95), 0 0 60px rgba(255, 200, 90, .45); }
+.swap-name i { display: block; height: 2px; margin: 14px auto 0; width: 60%; background: linear-gradient(90deg, transparent, #fff, transparent); opacity: .7; }
