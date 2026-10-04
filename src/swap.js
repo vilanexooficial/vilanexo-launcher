@@ -17,7 +17,7 @@
       tag: 'MUNDO DE FANTASIA', a: 'Crie sua', b: 'lenda',
       sub: 'Raças, magias, classes e chefes lendários. Explore masmorras, domine feitiços e escreva seu nome na história do VilaNexo.',
       ver: '1.21.1', loader: 'NeoForge', title: 'VILANEXO RPG', short: ['VilaNexo ', 'RPG'],
-      desc: 'Renasça em outro mundo: raças, skills e magia. Minecraft 1.21.1 • NeoForge', img: '../assets/server-rpg.png',
+      desc: 'Raças, magia, bardos e muito RP. Minecraft 1.21.1 • NeoForge', img: '../assets/server-rpg.png',
       theme: '#9b5cff', fx: [[170, 110, 255], [255, 200, 90], [240, 225, 255]]
     }
   };
