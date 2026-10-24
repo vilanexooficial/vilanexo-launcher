@@ -1,0 +1,33 @@
+name: Publicar launcher
+# Cria a release do launcher no GitHub a partir dos arquivos que ja estao no site do VilaNexo.
+# Uso: Actions > Publicar launcher > Run workflow > digite a versao (ex.: 2.7.6).
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: "Versao do launcher (ex.: 2.7.6)"
+        required: true
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar os arquivos do site
+        run: |
+          V="${{ inputs.versao }}"
+          B="https://www.vilanexo.com/launcher"
+          UA="Mozilla/5.0 VilaNexoRelease"
+          curl -fSL -A "$UA" -o "VilaNexo-Launcher-Setup-$V.exe" "$B/VilaNexo-Launcher-Setup-$V.exe"
+          curl -fSL -A "$UA" -o "VilaNexo-Launcher-Setup-$V.exe.blockmap" "$B/VilaNexo-Launcher-Setup-$V.exe.blockmap"
+          curl -fSL -A "$UA" -o latest.yml "$B/latest.yml?x=$RANDOM"
+          sed -i "s#$B/##g" latest.yml
+          cat latest.yml
+          grep -q "version: $V" latest.yml
+          ls -l
+      - name: Criar a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="${{ inputs.versao }}"
+          gh release create "v$V" "VilaNexo-Launcher-Setup-$V.exe" "VilaNexo-Launcher-Setup-$V.exe.blockmap" latest.yml --repo "${{ github.repository }}" --target main --title "$V" --notes "VilaNexo Launcher $V" --latest
