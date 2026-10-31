@@ -1,11 +1,11 @@
 name: Publicar launcher
-# Cria a release do launcher no GitHub a partir dos arquivos que ja estao no site do VilaNexo.
-# Uso: Actions > Publicar launcher > Run workflow > digite a versao (ex.: 2.7.6).
+# Cria (ou completa) a release do launcher no GitHub a partir dos arquivos que ja estao no site do VilaNexo.
+# Uso: Actions > Publicar launcher > Run workflow > digite a versao (ex.: 2.7.7).
 on:
   workflow_dispatch:
     inputs:
       versao:
-        description: "Versao do launcher (ex.: 2.7.6)"
+        description: "Versao do launcher (ex.: 2.7.7)"
         required: true
 permissions:
   contents: write
@@ -25,9 +25,16 @@ jobs:
           cat latest.yml
           grep -q "version: $V" latest.yml
           ls -l
-      - name: Criar a release
+      - name: Criar ou completar a release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           V="${{ inputs.versao }}"
-          gh release create "v$V" "VilaNexo-Launcher-Setup-$V.exe" "VilaNexo-Launcher-Setup-$V.exe.blockmap" latest.yml --repo "${{ github.repository }}" --target main --title "$V" --notes "VilaNexo Launcher $V" --latest
+          R="${{ github.repository }}"
+          F="VilaNexo-Launcher-Setup-$V.exe VilaNexo-Launcher-Setup-$V.exe.blockmap latest.yml"
+          if gh release view "v$V" --repo "$R" >/dev/null 2>&1; then
+            gh release upload "v$V" $F --repo "$R" --clobber
+            gh release edit "v$V" --repo "$R" --latest
+          else
+            gh release create "v$V" $F --repo "$R" --target main --title "$V" --notes "VilaNexo Launcher $V" --latest
+          fi
