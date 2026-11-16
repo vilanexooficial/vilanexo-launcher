@@ -1,4 +1,4 @@
-// Partículas do fundo (leve: ~30 fps, pausa quando a janela não está visível).
+// Partículas do fundo (3.0: estrelinhas em pixel) (leve: ~30 fps, pausa quando a janela não está visível).
 (() => {
   const canvas = document.getElementById('fxCanvas');
   if (!canvas) return;
@@ -44,11 +44,11 @@
       if (p.y < -10) Object.assign(p, spawn(false));
       const tw = p.a * (.6 + .4 * Math.sin(p.t * 1.7));
       const color = p.white ? `rgba(255,255,255,${tw * .8})` : `rgba(${rgb},${tw})`;
-      ctx.beginPath();
+      // 3.0: estrelinhas em pixel (quadradinho; as maiores viram cruz de 4 pontas)
       ctx.fillStyle = color;
-      ctx.shadowColor = color; ctx.shadowBlur = p.r * 6;
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
+      const s = p.r > 1.6 ? 2 : (p.r > .9 ? 2 : 1), x = Math.round(p.x), y = Math.round(p.y);
+      ctx.fillRect(x, y, s, s);
+      if (p.r > 1.6 && tw > .45) { ctx.fillRect(x - s, y, s, s); ctx.fillRect(x + s, y, s, s); ctx.fillRect(x, y - s, s, s); ctx.fillRect(x, y + s, s, s); }
     }
   }
   document.addEventListener('visibilitychange', () => {

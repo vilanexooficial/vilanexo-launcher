@@ -42,38 +42,13 @@
     <div class="scene-grain"></div>
   </div>
 
-  <!-- Abertura: o corte vermelho abre a tela e o logo se monta com os estilhaços -->
+  <!-- Abertura 3.0: o logo se monta em pixels sobre o céu roxo do VilaNexo -->
   <div id="intro" class="intro" aria-hidden="true">
-    <div class="intro-bg"></div>
-    <div class="intro-pulse"></div>
     <canvas id="introFx"></canvas>
-    <div class="intro-stage">
-      <div class="intro-logo">
-        <img class="il-main" src="../assets/logo-vilanexo.png" alt="">
-        <img class="il-r" src="../assets/logo-vilanexo.png" alt="">
-        <img class="il-c" src="../assets/logo-vilanexo.png" alt="">
-        <span class="intro-glint"></span>
-        <span class="intro-crown"></span>
-      </div>
-      <div class="intro-flash"></div>
-    </div>
-    <div class="intro-bars"><i></i><i></i></div>
     <div class="intro-caption"><b>Carregando sua aventura</b><i><em></em></i></div>
     <span class="intro-skip">Clique para pular</span>
   </div>
 
-  <!-- Troca de servidor -->
-  <div id="swapFx" class="swap-fx hidden" aria-hidden="true">
-    <div class="swap-bg"></div>
-    <canvas id="swapCanvas"></canvas>
-    <svg class="swap-sigil" viewBox="0 0 200 200">
-      <circle class="s1" cx="100" cy="100" r="92"/><circle class="s2" cx="100" cy="100" r="78"/>
-      <circle class="s3" cx="100" cy="100" r="44"/>
-      <path class="s4" d="M100 22 L167 139 L33 139 Z"/><path class="s4" d="M100 178 L33 61 L167 61 Z"/>
-      <g class="runes"></g>
-    </svg>
-    <div class="swap-name"><small id="swapKicker">ENTRANDO EM</small><strong id="swapTitle">VILANEXO RPG</strong><i></i></div>
-  </div>
 
   <header class="topbar">
     <div class="topbar-title"><span class="dot-live"></span>VilaNexo Launcher</div>
@@ -83,7 +58,7 @@
       <div id="themePop" class="theme-pop hidden">
         <strong>Cor do launcher</strong>
         <div class="theme-presets big">
-          <button data-color="#e3121d" title="VilaNexo (vermelho)"></button><button data-color="#8d46ff" title="Roxo"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
+          <button data-color="#b14cff" title="VilaNexo (roxo)"></button><button data-color="#e3121d" title="Vermelho"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
           <button data-color="#f5b400" title="Dourado"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#ff5a1f" title="Brasa"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#7f8c8d" title="Grafite"></button>
         </div>
         <button class="link-btn" data-open-settings>Mais opções de aparência</button>
@@ -99,7 +74,7 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo"><img src="../assets/logo-vilanexo-mini.png" alt="VilaNexo"></div>
-      <div class="brand-text"><strong>VilaNexo</strong><span>LAUNCHER</span></div>
+      <div class="brand-text"><strong>VILANEXO</strong><span>LAUNCHER</span></div>
     </div>
 
     <nav>
@@ -135,28 +110,29 @@
 
       <div class="home-grid">
         <article id="heroCard" class="server-choice hero selected" data-profile="cobblemon">
-          <div class="hero-bg"><div class="hero-rays"></div><div class="hero-grid"></div></div>
-          <div class="hero-art rpg-only"><img src="../assets/server-rpg.png" alt=""></div><div class="hero-shade rpg-only"></div>
-          <div class="hero-logo"><div class="hero-logo-glow"></div><img src="../assets/logo-cobblemon.png" alt="VilaNexo Cobblemon"></div>
+          <div class="hero-art"><img src="../assets/banner-vilanexo.jpg" alt="VilaNexo — Servidor de Cobblemon"></div>
+          <div class="hero-shade"></div>
           <div class="hero-body">
             <div class="hero-top">
-              <span class="tag tag-glow"><svg><use href="#i-spark"/></svg><span id="heroTag">SERVIDOR PRINCIPAL</span></span>
-              <span class="tag" id="heroStatus"><i class="pulse"></i><b>Verificando…</b></span>
+              <span class="tag tag-glow"><svg><use href="#i-spark"/></svg><span id="heroTag">SERVIDOR DE COBBLEMON</span></span>
+              <span class="tag" id="heroStatus"><i class="pulse wait"></i><b>Verificando…</b></span>
             </div>
-            <h1 class="hero-title"><span id="heroTitleA">Sua aventura</span><em id="heroTitleB">começa aqui</em></h1>
-            <p class="hero-sub" id="heroSub">Capture, treine e evolua. Economia, eventos, cidades e aventura sem fim num mundo de 2 milhões de blocos.</p>
-            <div class="hero-chips">
-              <span><b id="heroVer">1.21.1</b>Minecraft</span>
-              <span><b id="heroLoader">NeoForge</b>Loader</span>
-              <span><b id="heroMods">56</b>Mods</span>
-              <span><b id="heroPlayers">–</b>Online</span>
-            </div>
-            <div class="hero-actions">
-              <button class="server-play play-btn">
-                <span class="play-shine"></span>
-                <svg><use href="#i-play"/></svg>
-                <span class="play-text"><strong>JOGAR</strong><small id="heroHost">poke.vilanexo.com</small></span>
-              </button>
+            <h1 class="sr-only"><span id="heroTitleA">VilaNexo</span> <em id="heroTitleB">Cobblemon</em></h1>
+            <p class="sr-only" id="heroSub">Capture, treine e evolua.</p>
+            <div class="hero-bar">
+              <div class="hero-chips">
+                <span><b id="heroVer">1.21.1</b>Minecraft</span>
+                <span><b id="heroLoader">NeoForge</b>Loader</span>
+                <span><b id="heroMods">–</b>Mods</span>
+                <span><b id="heroPlayers">–</b>Online</span>
+              </div>
+              <div class="hero-actions">
+                <button class="server-play play-btn">
+                  <span class="play-shine"></span>
+                  <svg><use href="#i-play"/></svg>
+                  <span class="play-text"><strong>JOGAR</strong><small id="heroHost">poke.vilanexo.com</small></span>
+                </button>
+              </div>
               <div class="launch-progress">
                 <div class="lp-head"><span id="phase">Pronto para jogar</span><b id="phasePct">0%</b></div>
                 <div class="lp-track"><div id="bar" class="lp-bar"></div></div>
@@ -171,21 +147,26 @@
           <p class="profile-hint" id="profileHint">Arraste para girar</p>
         </aside>
 
-        <article id="switchCard" class="switch-card rpg-card" data-target="rpg">
-          <div class="rpg-art"><img id="switchImg" src="../assets/server-rpg.png" alt=""></div>
-          <div class="rpg-body">
-            <span class="tag tag-new" id="switchTag"><svg><use href="#i-spark"/></svg><span>ABERTO • NOVO</span></span>
-            <h3 id="switchName">VilaNexo <em>RPG</em></h3>
-            <p id="switchDesc">Raças, magia, bardos e muito RP. Minecraft 1.21.1 • NeoForge</p>
-            <button id="switchBtn" class="switch-btn" type="button"><span>Trocar de servidor</span><svg><use href="#i-play"/></svg></button>
+        <article class="community-card">
+          <div class="community-art"></div>
+          <div class="community-body">
+            <div class="community-top">
+              <img src="../assets/logo-vilanexo-mini.png" alt="">
+              <div><span class="kicker">COMUNIDADE</span><strong>Entre no nosso Discord</strong></div>
+            </div>
+            <p class="community-motto"><span>EXPLORE</span><i></i><span>CONQUISTE</span><i></i><span>FAÇA HISTÓRIA</span></p>
+            <p class="community-sub">Eventos, sorteios, novidades e a galera do VilaNexo te esperando.</p>
+            <button id="communityDiscord" class="btn-discord" type="button"><svg><use href="#i-chat"/></svg>Entrar no Discord</button>
           </div>
         </article>
 
         <div class="quick-card">
           <div class="card-head"><span>ATALHOS</span><strong>Acesso rápido</strong></div>
           <div class="quick-grid">
+            <button id="quickStore"><svg><use href="#i-bag"/></svg><span>Loja VIP</span></button>
             <button id="quickSite"><svg><use href="#i-globe"/></svg><span>Site</span></button>
             <button id="quickDiscord"><svg><use href="#i-chat"/></svg><span>Discord</span></button>
+            <button id="quickMods" data-goto="mods"><svg><use href="#i-cube"/></svg><span>Mods</span></button>
             <button id="folderGame"><svg><use href="#i-folder"/></svg><span>Pasta do jogo</span></button>
             <button id="folderLogs"><svg><use href="#i-doc"/></svg><span>Logs</span></button>
           </div>
@@ -328,12 +309,12 @@
             <div><h3>Aparência</h3><p class="muted">Escolha a cor do launcher. Muda na hora e fica salva.</p></div>
           </div>
           <div class="theme-presets big">
-            <button data-color="#e3121d" title="VilaNexo (vermelho)"></button><button data-color="#8d46ff" title="Roxo"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
+            <button data-color="#b14cff" title="VilaNexo (roxo)"></button><button data-color="#e3121d" title="Vermelho"></button><button data-color="#5b5bff" title="Índigo"></button><button data-color="#2f80ed" title="Azul"></button><button data-color="#00a8e8" title="Ciano"></button><button data-color="#00b894" title="Verde"></button><button data-color="#6ab04c" title="Grama"></button>
             <button data-color="#f5b400" title="Dourado"></button><button data-color="#e17055" title="Laranja"></button><button data-color="#ff5a1f" title="Brasa"></button><button data-color="#e84393" title="Rosa"></button><button data-color="#7f8c8d" title="Grafite"></button>
           </div>
           <div class="appearance-row">
-            <label class="color-pick"><input id="launcherColor" type="color" value="#8d46ff"><span>Cor personalizada <b id="launcherColorValue">#8D46FF</b></span></label>
-            <button id="resetTheme" class="link-btn">Restaurar vermelho padrão</button>
+            <label class="color-pick"><input id="launcherColor" type="color" value="#b14cff"><span>Cor personalizada <b id="launcherColorValue">#B14CFF</b></span></label>
+            <button id="resetTheme" class="link-btn">Restaurar roxo padrão</button>
           </div>
         </div>
 
@@ -363,7 +344,6 @@
   <script src="intro.js"></script>
   <script src="fx.js"></script>
   <script src="renderer.js"></script>
-  <script src="swap.js"></script>
   <script>
     // Plano B: se algo travar a abertura, libera a tela mesmo assim.
     setTimeout(function () {

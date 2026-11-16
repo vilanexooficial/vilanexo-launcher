@@ -207,7 +207,7 @@ function lighten(hex, amount = 0.25) {
 }
 
 function applyTheme(hex, persist = true) {
-  const normalized = /^#[0-9a-f]{6}$/i.test(hex) ? hex.toLowerCase() : '#e3121d';
+  const normalized = /^#[0-9a-f]{6}$/i.test(hex) ? hex.toLowerCase() : '#b14cff';
   const { r, g, b } = hexToRgb(normalized);
   document.documentElement.style.setProperty('--p', normalized);
   document.documentElement.style.setProperty('--p2', lighten(normalized, 0.33));
@@ -215,7 +215,7 @@ function applyTheme(hex, persist = true) {
   $('launcherColor').value = normalized;
   $('launcherColorValue').textContent = normalized.toUpperCase();
   document.querySelectorAll('.theme-presets button').forEach(b => b.classList.toggle('active', (b.dataset.color || '').toLowerCase() === normalized));
-  if (persist) { try { localStorage.setItem('vilanexo-theme-v2', normalized); } catch {} }
+  if (persist) { try { localStorage.setItem('vilanexo-theme-v3', normalized); } catch {} }
 }
 
 function ensureSkinViewer() {
@@ -335,8 +335,8 @@ async function init() {
    $('ramValue').textContent = `${((config.minecraft.memoryMaxMb || 6144) / 1024).toFixed(1).replace('.0', '')} GB`;
    $('launcherDisplayVersion').textContent = config.launcher?.displayVersion || '1.0';
    $('performanceMode').value = config.minecraft.performance || 'balanced';
-  let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme-v2'); } catch {}
-  applyTheme((window.vnServidorAtual && window.vnServidorAtual().theme) || savedTheme || '#e3121d', false); // 2.6: visual novo preto e vermelho (cor antiga não é reaproveitada)
+  let savedTheme = null; try { savedTheme = localStorage.getItem('vilanexo-theme-v3'); } catch {}
+  applyTheme(savedTheme || '#b14cff', false); // 3.0: visual novo roxo do VilaNexo (cor antiga não é reaproveitada)
   setupSkinInteraction();
   if ($('closeOnPlay')) {
     $('closeOnPlay').checked = config.closeOnPlay !== false;
@@ -427,8 +427,10 @@ if ($('folderLogs')) $('folderLogs').onclick = () => window.vilaNexoLauncher.ope
 const openLink = (key, fallback) => () => window.vilaNexoLauncher.openUrl(config?.links?.[key] || fallback);
 if ($('store')) $('store').onclick = openLink('store', 'https://www.vilanexo.com/loja');
 if ($('quickStore')) $('quickStore').onclick = openLink('store', 'https://www.vilanexo.com/loja');
-if ($('linkDiscord')) $('linkDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
-if ($('quickDiscord')) $('quickDiscord').onclick = openLink('support', 'https://discord.gg/vilanexo');
+if ($('linkDiscord')) $('linkDiscord').onclick = openLink('support', 'https://discord.gg/9uD2p843M');
+if ($('quickDiscord')) $('quickDiscord').onclick = openLink('support', 'https://discord.gg/9uD2p843M');
+document.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', () => showPage(b.dataset.goto)));
+if ($('communityDiscord')) $('communityDiscord').onclick = openLink('support', 'https://discord.gg/9uD2p843M');
 if ($('linkSite')) $('linkSite').onclick = openLink('wiki', 'https://www.vilanexo.com/');
 if ($('quickSite')) $('quickSite').onclick = openLink('wiki', 'https://www.vilanexo.com/');
 
@@ -492,7 +494,7 @@ $('themeToggle').onclick = (e) => { e.stopPropagation(); $('themePop').classList
 $('themePop').onclick = e => e.stopPropagation();
 document.addEventListener('click', () => { $('themePop').classList.add('hidden'); $('themeToggle').classList.remove('open'); });
 document.querySelectorAll('[data-open-settings]').forEach(b => b.onclick = () => { $('themePop').classList.add('hidden'); showPage('settings'); });
-$('resetTheme').onclick = () => applyTheme('#e3121d');
+$('resetTheme').onclick = () => applyTheme('#b14cff');
 $('loginMicrosoft').onclick = async () => {
   const btn = $('loginMicrosoft');
   try {

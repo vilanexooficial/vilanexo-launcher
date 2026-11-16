@@ -1,73 +1,54 @@
 {
-  "minecraft": {
-    "version": "1.21.1",
-    "loader": "neoforge",
-    "loaderVersion": "21.1.249",
-    "neoforgeVersion": "21.1.249",
-    "memoryMinMb": 2048,
-    "memoryMaxMb": 6144,
-    "serverAddress": "poke.vilanexo.com",
-    "serverPort": 25566,
-    "performance": "balanced"
-  },
-  "profiles": {
-    "cobblemon": {
-      "name": "VilaNexo Cobblemon",
-      "localModsDir": "mods",
-      "requiresDiscordLogin": false,
-      "requiresWhitelist": false,
-      "serverAddress": "poke.vilanexo.com",
-      "serverPort": 25566,
-      "minecraft": {
-        "version": "1.21.1",
-        "loader": "neoforge",
-        "loaderVersion": "21.1.249",
-        "neoforgeVersion": "21.1.249"
-      },
-      "distribution": {
-        "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
-      }
-    },
-    "rpg": {
-      "name": "VilaNexo RPG",
-      "localModsDir": "profiles/rpg/mods",
-      "requiresDiscordLogin": false,
-      "requiresWhitelist": false,
-      "serverAddress": "jogar.vilanexo.com",
-      "serverPort": 25565,
-      "minecraft": {
-        "version": "1.21.1",
-        "loader": "neoforge",
-        "loaderVersion": "21.1.250",
-        "neoforgeVersion": "21.1.250",
-        "memoryMinMb": 3072,
-        "memoryMaxMb": 6144
-      },
-      "distribution": {
-        "manifestUrl": "https://www.vilanexo.com/launcher/rpg/manifest.json"
-      }
-    }
-  },
-  "distribution": {
-    "manifestUrl": "https://www.vilanexo.com/launcher/manifest.json"
-  },
-  "skins": {
-    "uploadUrl": "https://www.vilanexo.com/skins/skin.ashx",
-    "indexUrl": "https://www.vilanexo.com/skins/index.ashx",
-    "baseUrl": "https://www.vilanexo.com/skins/skin.ashx?name="
-  },
-  "launcher": {
-    "updateUrl": "https://www.vilanexo.com/launcher/update.json",
-    "displayVersion": "1.0"
-  },
-  "auth": {
-    "launcherStartUrl": "https://www.vilanexo.com/auth/launcher-start.ashx",
-    "launcherStatusUrl": "https://www.vilanexo.com/auth/launcher-status.ashx",
-    "verifyUrl": "https://www.vilanexo.com/auth/verify.ashx"
-  },
-  "links": {
-    "store": "https://www.vilanexo.com/loja",
-    "wiki": "https://www.vilanexo.com/",
-    "support": "https://discord.gg/vilanexo"
-  }
+    "minecraft":  {
+                      "version":  "1.21.1",
+                      "loader":  "neoforge",
+                      "loaderVersion":  "21.1.249",
+                      "neoforgeVersion":  "21.1.249",
+                      "memoryMinMb":  2048,
+                      "memoryMaxMb":  6144,
+                      "serverAddress":  "poke.vilanexo.com",
+                      "serverPort":  25566,
+                      "performance":  "balanced"
+                  },
+    "profiles":  {
+                     "cobblemon":  {
+                                       "name":  "VilaNexo Cobblemon",
+                                       "localModsDir":  "mods",
+                                       "requiresDiscordLogin":  false,
+                                       "requiresWhitelist":  false,
+                                       "serverAddress":  "poke.vilanexo.com",
+                                       "serverPort":  25566,
+                                       "minecraft":  {
+                                                         "version":  "1.21.1",
+                                                         "loader":  "neoforge",
+                                                         "loaderVersion":  "21.1.249",
+                                                         "neoforgeVersion":  "21.1.249"
+                                                     },
+                                       "distribution":  {
+                                                            "manifestUrl":  "https://www.vilanexo.com/launcher/manifest.json"
+                                                        }
+                                   }
+                 },
+    "distribution":  {
+                         "manifestUrl":  "https://www.vilanexo.com/launcher/manifest.json"
+                     },
+    "skins":  {
+                  "uploadUrl":  "https://www.vilanexo.com/skins/skin.ashx",
+                  "indexUrl":  "https://www.vilanexo.com/skins/index.ashx",
+                  "baseUrl":  "https://www.vilanexo.com/skins/skin.ashx?name="
+              },
+    "launcher":  {
+                     "updateUrl":  "https://www.vilanexo.com/launcher/update.json",
+                     "displayVersion":  "1.0"
+                 },
+    "auth":  {
+                 "launcherStartUrl":  "https://www.vilanexo.com/auth/launcher-start.ashx",
+                 "launcherStatusUrl":  "https://www.vilanexo.com/auth/launcher-status.ashx",
+                 "verifyUrl":  "https://www.vilanexo.com/auth/verify.ashx"
+             },
+    "links":  {
+                  "store":  "https://www.vilanexo.com/loja",
+                  "wiki":  "https://www.vilanexo.com/",
+                  "support":  "https://discord.gg/9uD2p843M"
+              }
 }
