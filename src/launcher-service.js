@@ -7,6 +7,7 @@ const zlib = require('zlib');
 const { spawn } = require('child_process');
 const { ensureServerEntry } = require('./server-list');
 const { migrateMapConfig } = require('./map-config');
+const { DiscordRPC } = require('./discord-rpc');
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -370,6 +371,8 @@ class LauncherService {
   }
 
   loadAuth() { try { return JSON.parse(fs.readFileSync(this.paths.authFile, 'utf8')); } catch { return null; } }
+  // 2.7.3: o site entrega mods extras (ex.: Replay) so para contas com cargo de criador.
+  manifestComConta(url) { try { const a = this.loadAuth(); const n = String(a?.profile?.name || a?.profile?.username || '').trim(); if (!n) return url; return url + (url.includes('?') ? '&' : '?') + 'conta=' + encodeURIComponent(n); } catch { return url; } }
   saveAuth(auth) { fs.mkdirSync(this.paths.root, { recursive: true }); fs.writeFileSync(this.paths.authFile, JSON.stringify(auth, null, 2)); }
   loadDiscordAuth() { try { return JSON.parse(fs.readFileSync(this.paths.discordAuthFile, 'utf8')); } catch { return null; } }
   saveDiscordAuth(auth) { fs.mkdirSync(this.paths.root, { recursive: true }); fs.writeFileSync(this.paths.discordAuthFile, JSON.stringify(auth, null, 2)); }
@@ -1200,7 +1203,7 @@ class LauncherService {
     }
     if (this.gameProcess && this.gameProcess.exitCode === null) throw new Error('Feche o Minecraft antes de sincronizar os arquivos.');
     this.progress('Sincronizando modpack', 65); this.log('Verificando mods, configs e recursos do servidor...');
-    const manifest = await this.fetchJson(url);
+    const manifest = await this.fetchJson(this.manifestComConta(url));
     let previous = { files: [] };
     try { if (fs.existsSync(this.paths.managedFile)) previous = JSON.parse(fs.readFileSync(this.paths.managedFile,'utf8')) || previous; } catch { this.log('Lista de arquivos antiga corrompida; refazendo.', 'AVISO'); }
     const wanted = new Set((manifest.files || []).map(f => f.path.replace(/\\/g,'/')));
@@ -1567,6 +1570,7 @@ ClientEvents.tick(event => {
        await this.syncDistribution();
        if (this.profileId === 'cobblemon') migrateMapConfig(this.paths.gameDir);
        if (this.profileId === 'cobblemon') this.tuneDistantHorizons();
+       if (this.profileId === 'cobblemon') this.tuneDistantHorizonsRaio();
        this.preferDedicatedGpu(java);
         try { await this.ensureCustomSkinLoader(); this.ensureCustomSkinLoaderConfig(); }
         catch (e) { this.log(`Suporte a skins indisponível agora: ${e.message}`, 'AVISO'); }
@@ -1610,7 +1614,8 @@ LauncherService.prototype.startGame = function (launch, gameEnv, java, auth, pro
   p.stderr.on('data', d => { const t = String(d); keep(t); watchVisible(t); this.log(t.trim(), 'JOGO'); });
   p.on('error', err => { this.log(`Não foi possível abrir o Minecraft: ${err.message}`, 'ERRO'); try { this.hooks.gameExited?.(-1, 'O Java não abriu. Clique em Jogar de novo; se continuar, reinstale o launcher.'); } catch {} });
   this.gameProcess = p; this.state.gameRunning = true;
-  const gone = () => { this.gameProcess = null; this.state.gameRunning = false; this.emit('launcher:state', this.state); };
+  try { this.discordPresence(true, profileId); } catch {}
+  const gone = () => { this.gameProcess = null; this.state.gameRunning = false; try { this.discordPresence(false); } catch {} this.emit('launcher:state', this.state); };
   p.on('error', gone);
   p.on('exit', async code => {
     gone();
@@ -1695,5 +1700,58 @@ LauncherService.prototype.tuneDistantHorizons = function () {
   } catch (e) { this.log(`Não foi possível ajustar o Distant Horizons: ${e.message}`, 'AVISO'); }
 };
 
+// 2.7.7: o DH vinha mostrando 128 chunks de distancia (pesado para a maioria dos PCs).
+// Baixa uma vez para 48; se o jogador aumentar depois no jogo, fica o que ele escolheu.
+LauncherService.prototype.tuneDistantHorizonsRaio = function () {
+  try {
+    if (this.preferences.dhRaio48v277) return;
+    const f = path.join(this.paths.gameDir, 'config', 'DistantHorizons.toml');
+    let t = fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '';
+    const re = /^(\s*)lodChunkRenderDistanceRadius\s*=\s*(\d+)\s*$/m;
+    const m = t.match(re);
+    if (m) {
+      if (parseInt(m[2], 10) > 48) t = t.replace(re, `${m[1]}lodChunkRenderDistanceRadius = 48`);
+    } else if (/^\[client\.advanced\.graphics\.quality\]\s*$/m.test(t)) {
+      t = t.replace(/^\[client\.advanced\.graphics\.quality\]\s*$/m, s => s + '\n\tlodChunkRenderDistanceRadius = 48');
+    } else {
+      t = t + (t && !t.endsWith('\n') ? '\n' : '') + '\n[client.advanced.graphics.quality]\n\tlodChunkRenderDistanceRadius = 48\n';
+    }
+    fs.mkdirSync(path.dirname(f), { recursive: true });
+    fs.writeFileSync(f, t, 'utf8');
+    this.preferences.dhRaio48v277 = true; this.savePreferences();
+    this.log('Distant Horizons: distancia ajustada para 48 chunks (mais FPS).', 'SUCESSO');
+  } catch (e) { this.log(`Não foi possível ajustar a distância do Distant Horizons: ${e.message}`, 'AVISO'); }
+};
+
 module.exports = { LauncherService };
 
+// 2.7.4: mostra no Discord "Jogando VilaNexo Cobblemon" enquanto o jogo esta aberto.
+// A configuracao (id do app, textos, imagem, botoes) vem do update.json do site,
+// entao da para mudar sem lancar outro launcher.
+LauncherService.prototype.discordPresence = async function (on, profileId) {
+  try {
+    if (!this._rpc) this._rpc = new DiscordRPC((m, l) => this.log(m, l));
+    if (this._rpcTimer) { clearInterval(this._rpcTimer); this._rpcTimer = null; }
+    if (!on) { this._rpc.clear(); return; }
+    const url = this.config.launcher?.updateUrl || 'https://www.vilanexo.com/launcher/update.json';
+    const remote = await this.fetchJson(url);
+    const all = remote && remote.discord;
+    if (!all || !all.appId || all.enabled === false) return;
+    const cfg = Object.assign({}, all, (all.profiles && all.profiles[profileId || this.profileId]) || {});
+    const appId = String(cfg.appId);
+    const activity = { timestamps: { start: Date.now() }, instance: false };
+    if (cfg.details) activity.details = String(cfg.details).slice(0, 120);
+    if (cfg.state) activity.state = String(cfg.state).slice(0, 120);
+    if (cfg.largeImage) activity.assets = { large_image: String(cfg.largeImage), large_text: String(cfg.largeText || 'VilaNexo').slice(0, 120) };
+    if (Array.isArray(cfg.buttons) && cfg.buttons.length) activity.buttons = cfg.buttons.slice(0, 2).filter(b => b && b.label && b.url).map(b => ({ label: String(b.label).slice(0, 32), url: String(b.url) }));
+    const ok = await this._rpc.set(appId, activity);
+    this.log(ok ? 'Discord: mostrando "Jogando" nas atividades.' : 'Discord não está aberto: atividade não exibida.', 'INFO');
+    // se o Discord abrir/reiniciar com o jogo aberto, tenta de novo
+    this._rpcTimer = setInterval(() => {
+      if (!this.gameProcess || this.gameProcess.exitCode !== null) { clearInterval(this._rpcTimer); this._rpcTimer = null; return; }
+      if (!this._rpc.sock) this._rpc.set(appId, activity).catch(() => {});
+    }, 60000);
+  } catch (e) {
+    try { this.log(`Discord: ${e.message}`, 'AVISO'); } catch {}
+  }
+};
