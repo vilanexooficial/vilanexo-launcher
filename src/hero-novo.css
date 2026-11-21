@@ -1,0 +1,19 @@
+/* 2026-11: inicio novo (logo sozinha num palco limpo) */
+.hero { background: radial-gradient(55% 75% at 50% 36%, rgba(177,76,255,.34), transparent 70%), radial-gradient(35% 60% at 6% 100%, rgba(255,80,200,.12), transparent 70%), radial-gradient(35% 60% at 94% 100%, rgba(110,80,255,.14), transparent 70%), linear-gradient(180deg, #08030f, #0e0620 70%, #0a0516); }
+.hero-art img { display: none; }
+.hero-art::before { content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(1.5px 1.5px at 8% 18%, #fff 98%, transparent), radial-gradient(1.5px 1.5px at 22% 40%, #e2c4ff 98%, transparent), radial-gradient(2px 2px at 35% 12%, #fff 98%, transparent), radial-gradient(1.5px 1.5px at 64% 16%, #d9b3ff 98%, transparent), radial-gradient(2px 2px at 79% 30%, #fff 98%, transparent), radial-gradient(1.5px 1.5px at 92% 14%, #f0dcff 98%, transparent), radial-gradient(1.5px 1.5px at 13% 62%, #cfa6ff 98%, transparent), radial-gradient(2px 2px at 88% 58%, #fff 98%, transparent), radial-gradient(1.5px 1.5px at 50% 6%, #fff 98%, transparent);
+  animation: hpiscar 5s steps(2) infinite; }
+@keyframes hpiscar { 50% { opacity: .45; } }
+.hero-art::after { content: ""; position: absolute; left: -50%; right: -50%; bottom: -10%; height: 38%;
+  background-image: linear-gradient(rgba(190,110,255,.30) 1px, transparent 1px), linear-gradient(90deg, rgba(190,110,255,.30) 1px, transparent 1px);
+  background-size: 48px 48px; transform: perspective(420px) rotateX(64deg); transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%, #000 70%, transparent); animation: handar 6s linear infinite; }
+@keyframes handar { to { background-position: 0 48px, 0 0; } }
+.hero-shade { background: linear-gradient(0deg, rgba(8,3,16,.7) 0%, transparent 30%); }
+.hero-logo { position: absolute; left: 50%; top: 41%; width: min(42%, 540px); transform: translate(-50%, -50%); pointer-events: none; z-index: 0; }
+.hero-logo img { display: block; width: 100%; height: auto; filter: drop-shadow(0 14px 30px rgba(0,0,0,.7)) drop-shadow(0 0 50px rgba(177,76,255,.5)); animation: hflut 6s ease-in-out infinite; }
+@keyframes hflut { 50% { transform: translateY(-8px); } }
+.hero-chips { gap: 0; background: rgba(14,6,28,.7); box-shadow: inset 0 0 0 1px rgba(206,166,255,.18); clip-path: var(--px-corner-sm); backdrop-filter: blur(10px); }
+.hero-chips span { background: none; box-shadow: none; clip-path: none; backdrop-filter: none; min-width: 0; padding: 9px 16px; }
+.hero-chips span + span { box-shadow: inset 1px 0 0 rgba(206,166,255,.16); }
